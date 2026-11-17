@@ -1,4 +1,4 @@
-# hrishavjoshi.com
+# hrishavrajjoshi.com.np
 
 The personal website of **Hrishav Raj Joshi**: civil engineer, heritage practitioner and educator
 in Lalitpur, Nepal. It presents the work (hiti and groundwater studies, the Rajkulo canal,
@@ -202,7 +202,7 @@ For other images (portrait, covers, drawings) just put the file at the path list
 2. GitHub Actions (`.github/workflows/deploy.yml`) installs the packages, builds the site with
    Eleventy and publishes `_site/` to GitHub Pages. It takes a minute or two; the **Actions** tab
    shows progress and any error.
-3. `src/CNAME` tells GitHub Pages to serve the site at **https://hrishavjoshi.com** (the domain's
+3. `src/CNAME` tells GitHub Pages to serve the site at **https://hrishavrajjoshi.com.np** (the domain's
    DNS must point to GitHub; see the launch checklist).
 
 If a build fails, the previous version stays online. The most common cause is an image written

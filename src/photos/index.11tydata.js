@@ -187,7 +187,7 @@ export default {
     structuredData: async (data) => {
       const g = await buildGallery(data);
       const site = data.site || {};
-      const base = site.url || "https://hrishavjoshi.com";
+      const base = site.url || "https://hrishavrajjoshi.com.np";
       const url = `${base}${data.page.url}`;
       const person = { "@type": "Person", "@id": `${base}/#person`, name: site.name, url: `${base}/` };
       const gallery = {

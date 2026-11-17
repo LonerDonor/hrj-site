@@ -47,7 +47,7 @@ Colour roles (do not use gold for everything):
   `data-focus`, stack spacing via `.stack--s/--l/…`, grid density via `.grid--2/3/4`. Need another
   value? Add a class in your page CSS. Setting `el.style.x = …` from an external script is fine
   (CSSOM isn't blocked), `setAttribute("style", …)` / `innerHTML` with `style=` is not.
-- Deployed by GitHub Actions to GitHub Pages at **https://hrishavjoshi.com** (`src/CNAME` passthrough).
+- Deployed by GitHub Actions to GitHub Pages at **https://hrishavrajjoshi.com.np** (`src/CNAME` passthrough).
 
 ## 3. Folder layout & ownership
 

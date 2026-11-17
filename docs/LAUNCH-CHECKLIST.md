@@ -18,7 +18,7 @@ uses them: `/assets/images/…` means the file `src/assets/images/…`.
   - [ ] Send one test enquiry and check the email subject reads
         `Website enquiry: <topic> — <name>`.
   - [ ] Submit once **with JavaScript turned off**. Visitors should land on
-        `https://hrishavjoshi.com/thanks/`. Formspree only honours that redirect (the hidden
+        `https://hrishavrajjoshi.com.np/thanks/`. Formspree only honours that redirect (the hidden
         `_next` field) on some plans; if it shows Formspree's own thank-you page instead, either
         set the redirect in the Formspree dashboard or remove the `_next` line from
         `src/work-with-me/index.njk`.
@@ -27,15 +27,15 @@ uses them: `/assets/images/…` means the file `src/assets/images/…`.
 - [ ] **GitHub Pages source.** In the GitHub repository: Settings → Pages → Build and deployment →
       Source: **GitHub Actions**. Every push to `main` then builds and publishes the site
       (`.github/workflows/deploy.yml`).
-- [ ] **Domain (DNS for hrishavjoshi.com → GitHub Pages).** `src/CNAME` already contains
-      `hrishavjoshi.com`. At your domain registrar, add (check GitHub's "Managing a custom domain"
-      page for the current values):
-  - `A` records for `hrishavjoshi.com` → `185.199.108.153`, `185.199.109.153`,
-    `185.199.110.153`, `185.199.111.153` (and the matching `AAAA` records if you want IPv6:
-    `2606:50c0:8000::153` … `2606:50c0:8003::153`);
-  - `CNAME` for `www` → `<your-github-username>.github.io`.
-  - Then in Settings → Pages enter `hrishavjoshi.com` as the custom domain, wait for the
-    certificate, and tick **Enforce HTTPS**.
+- [ ] **Domain (hrishavrajjoshi.com.np → GitHub Pages).** The domain's DNS is on Cloudflare and
+      already reaches GitHub Pages. The custom domain is set in the repository under
+      Settings → Pages → Custom domain (`src/CNAME` holds the same value for reference).
+  - In Cloudflare, the apex and `www` records should point at GitHub Pages: `A` records
+    `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` (or a `CNAME` to
+    `lonerdonor.github.io`). Check GitHub's "Managing a custom domain" page for current values.
+  - Cloudflare's orange-cloud proxy is on. Set Cloudflare → SSL/TLS mode to **Full**, so
+    Cloudflare connects to GitHub over HTTPS. GitHub can only issue its own certificate (and let
+    you tick **Enforce HTTPS**) if you switch the records to "DNS only" (grey cloud).
 - [ ] **Map basemap (optional).** CARTO now needs a key for street-map tiles. Request a free
       non-commercial key at https://carto.com/basemaps/apikey and put it in `src/_data/site.yml` →
       `mapTileKey: "…"`. Without it, project maps draw their lines on plain paper (still useful).

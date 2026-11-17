@@ -63,7 +63,7 @@ const provider = (site, base) =>
 /** schema.org TouristTrip for one walk page, plus its breadcrumb trail. */
 function walkStructuredData(data) {
   const site = data.site || {};
-  const base = site.url || "https://hrishavjoshi.com";
+  const base = site.url || "https://hrishavrajjoshi.com.np";
   const url = absolute(base, data.page.url);
   const stops = Array.isArray(data.stops) ? data.stops : [];
 
@@ -111,7 +111,7 @@ function walkStructuredData(data) {
 /** schema.org Service for the /walks/ index (the walk programme as a whole). */
 function indexStructuredData(data) {
   const site = data.site || {};
-  const base = site.url || "https://hrishavjoshi.com";
+  const base = site.url || "https://hrishavrajjoshi.com.np";
   const items = (data.services && data.services.items) || [];
   const service = items.find((s) => s.slug === "heritage-walks") || {};
   return [

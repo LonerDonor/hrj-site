@@ -67,7 +67,7 @@ function linkInfo(link) {
 
 async function projectStructuredData(data) {
   const site = data.site || {};
-  const base = site.url || "https://hrishavjoshi.com";
+  const base = site.url || "https://hrishavrajjoshi.com.np";
   const url = absolute(base, data.page.url);
   const image = data.ogImage && data.ogImage !== site.ogImage ? absolute(base, data.ogImage) : undefined;
   const domain = workDomains[data.domain];
@@ -105,7 +105,7 @@ async function projectStructuredData(data) {
 
 function indexStructuredData(data) {
   const site = data.site || {};
-  const base = site.url || "https://hrishavjoshi.com";
+  const base = site.url || "https://hrishavrajjoshi.com.np";
   const items = (data.collections && data.collections.work) || [];
   return [
     clean({
