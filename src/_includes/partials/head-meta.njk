@@ -1,0 +1,59 @@
+{#- <head> contents for every page. Front matter keys: see docs/DESIGN.md §10. -#}
+{%- set pageTitle = metaTitle or ((title + " — " + site.name) if title else site.name) -%}
+{%- set pageDescription = description or summary or site.description -%}
+{%- set canonicalUrl = page.url | absoluteUrl(site.url) -%}
+{%- set ogImageUrl = (ogImage or site.ogImage) | absoluteUrl(site.url) -%}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.basemaps.cartocdn.com https://basemaps.cartocdn.com; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; frame-src https://www.youtube-nocookie.com; base-uri 'self'; object-src 'none'">
+<title>{{ pageTitle }}</title>
+<meta name="description" content="{{ pageDescription | excerpt(155) }}">
+<link rel="canonical" href="{{ canonicalUrl }}">
+{%- if noindex %}
+<meta name="robots" content="noindex, follow">
+{%- endif %}
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="{{ site.themeColor }}">
+<meta name="author" content="{{ site.name }}">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:locale" content="{{ site.locale }}">
+<meta property="og:type" content="{{ ogType or 'website' }}">
+<meta property="og:title" content="{{ ogTitle or metaTitle or title or site.name }}">
+<meta property="og:description" content="{{ pageDescription | excerpt(200) }}">
+<meta property="og:url" content="{{ canonicalUrl }}">
+<meta property="og:image" content="{{ ogImageUrl }}">
+{%- if not ogImage %}
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+{%- endif %}
+<meta property="og:image:alt" content="{{ ogImageAlt or site.ogImageAlt }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ ogTitle or metaTitle or title or site.name }}">
+<meta name="twitter:description" content="{{ pageDescription | excerpt(200) }}">
+<meta name="twitter:image" content="{{ ogImageUrl }}">
+
+{#- Tiny blocking script: swaps html.no-js → html.js before first paint, so the
+    mobile nav never flashes open while the deferred scripts load. -#}
+<script src="/assets/js/js-flag.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400&family=JetBrains+Mono:wght@400;500&family=Public+Sans:ital,wght@0,400..600;1,400&family=Tiro+Devanagari+Hindi&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+{%- for sheet in pageCss | arrayify %}
+<link rel="stylesheet" href="{{ sheet if sheet.startsWith('/') else '/assets/css/pages/' + sheet + '.css' }}">
+{%- endfor %}
+
+<script src="/assets/js/site.js" defer></script>
+{%- for script in pageJs | arrayify %}
+<script src="{{ script if script.startsWith('/') else '/assets/js/' + script + '.js' }}" defer></script>
+{%- endfor %}
+
+{%- if jsonld == "person" %}
+{% include "partials/jsonld-person.njk" %}
+{%- endif %}
+{%- for block in structuredData | arrayify %}
+<script type="application/ld+json">{{ block | jsonify | safe }}</script>
+{%- endfor %}

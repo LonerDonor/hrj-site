@@ -1,0 +1,209 @@
+/* About page (/about/) — page-specific layout only.
+   Components (page hero, ledger, timeline, cards, quote, tags, hiti diagram,
+   CTA band) come from main.css; this file only places them. */
+@layer page {
+
+  /* ---------- 1. Hero: framed portrait with field-record corner ticks ---------- */
+  .about-hero__aside {
+    display: grid;
+    gap: var(--space-xs);
+    justify-items: start;
+    margin-block-start: var(--space-l);
+  }
+  .about-hero__portrait {
+    position: relative;
+    inline-size: min(100%, 20rem);
+    padding: var(--space-xs);
+  }
+  .about-hero__portrait::before,
+  .about-hero__portrait::after {
+    content: "";
+    position: absolute;
+    inline-size: var(--space-m);
+    block-size: var(--space-m);
+    border: 1.5px solid var(--decor);
+    pointer-events: none;
+  }
+  .about-hero__portrait::before {
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    border-inline-end: 0;
+    border-block-end: 0;
+  }
+  .about-hero__portrait::after {
+    inset-block-end: 0;
+    inset-inline-end: 0;
+    border-inline-start: 0;
+    border-block-start: 0;
+  }
+  .about-hero__note { padding-inline: var(--space-xs); }
+
+  @media (min-width: 56rem) {
+    .about-hero__aside {
+      justify-items: end;
+      margin-block-start: 0;
+    }
+    .about-hero__portrait { inline-size: min(100%, 24rem); }
+    .about-hero__note { text-align: end; }
+  }
+
+
+  /* ---------- 2. Bio: prose column + quote/photo column ---------- */
+  .about-bio {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  .about-bio__head { margin-block-end: 0; }
+
+  /* Drop cap on the opening paragraph (field-notebook flourish). */
+  .about-bio__text > .lede:first-child::first-letter {
+    float: left;
+    margin: 0.06em 0.12em 0 0;
+    font-family: var(--font-display);
+    font-size: var(--step-5);
+    font-weight: 600;
+    font-style: normal;
+    line-height: 0.8;
+    font-variation-settings: "opsz" 144;
+    color: var(--accent);
+  }
+
+  @media (min-width: 60rem) {
+    .about-bio {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+      column-gap: var(--space-2xl);
+      row-gap: var(--space-l);
+    }
+    .about-bio__head,
+    .about-bio__text { grid-column: 1; }
+    .about-bio__aside {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      align-self: start;
+      padding-block-start: var(--space-2xl);
+    }
+  }
+
+
+  /* ---------- 3. How I work: numbered principles + sticky hiti section ---------- */
+  .about-how {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  .about-principles { display: grid; }
+  .about-principles__item {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    column-gap: var(--space-s);
+    row-gap: var(--space-2xs);
+    padding-block: var(--space-m);
+    border-block-start: 1px solid var(--line-strong);
+  }
+  .about-principles__item:last-child { border-block-end: 1px solid var(--line-strong); }
+  .about-principles__num {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    padding-block-start: 0.55em;
+  }
+  .about-principles__title,
+  .about-principles__text { grid-column: 2; }
+  .about-principles__text {
+    color: var(--text-2);
+    max-inline-size: 58ch;
+  }
+  .about-how__figure {
+    justify-self: center;
+    inline-size: 100%;
+    max-inline-size: 34rem;
+  }
+
+  @media (min-width: 60rem) {
+    .about-how {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: var(--space-2xl);
+      align-items: start;
+    }
+    .about-how__figure {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-l));
+      padding-block-start: var(--space-m);
+    }
+  }
+
+
+  /* ---------- 4. Career logbook: sticky head + timeline ---------- */
+  .about-log {
+    display: grid;
+    gap: var(--space-l);
+  }
+  .about-log__head > .section-head { margin-block-end: var(--space-m); }
+  .about-log__type { margin-block-start: var(--space-2xs); }
+  .about-log__list > .timeline__item:last-child { padding-block-end: 0; }
+
+  @media (min-width: 64rem) {
+    .about-log {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      column-gap: var(--space-2xl);
+      align-items: start;
+    }
+    .about-log__head {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-l));
+    }
+  }
+
+
+  /* ---------- 5. Skills: spec-sheet rows (group | items) ---------- */
+  .about-skills { border-block-start: 1px solid var(--line-strong); }
+  .about-skills__row {
+    display: grid;
+    gap: var(--space-xs) var(--space-l);
+    padding-block: var(--space-m);
+    border-block-end: 1px dashed var(--line-strong);
+  }
+  .about-skills__group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+  /* Icon in the group's domain colour ([data-domain] in skills.yml). */
+  .about-skills__group .icon { color: var(--domain-text, var(--text-3)); }
+  /* Items: a .dot-list (main.css). */
+  .about-skills__items {
+    --dot-gap: 0.7rem;
+    --dot-size: 0.3rem;
+    row-gap: var(--space-3xs);
+    color: var(--text-2);
+  }
+
+  @media (min-width: 52rem) {
+    .about-skills__row {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      align-items: baseline;
+    }
+  }
+
+
+  /* ---------- 6–7. Recognition grid + beyond-work line ---------- */
+  .about-record { --grid-gap: var(--space-l) var(--space-xl); }
+  .about-record__foot {
+    margin-block-start: var(--space-l);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--text-3);
+  }
+
+  .about-beyond {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2xs) var(--space-s);
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-m);
+    border-block-start: 1px dashed var(--line-strong);
+    font-size: var(--step--1);
+    color: var(--text-2);
+  }
+  .about-beyond__label { flex: none; }
+  .about-beyond__text { flex: 1 1 24rem; max-inline-size: var(--measure); }
+}

@@ -1,0 +1,206 @@
+/* ==========================================================================
+   Walks — /walks/ (src/walks/index.njk) and /walks/<slug>/ (layouts/walk.njk)
+   Page-specific layout only. Components (cards, ledgers, steps, FAQ, CTA band,
+   hiti diagram) come from main.css. Tokens only — no hex, no ad-hoc sizes.
+   ========================================================================== */
+@layer page {
+
+  /* ---------- Heroes (index + detail) ------------------------------------ */
+  /* Portrait cover beside the text on wide screens; a landscape crop when the
+     hero stacks, so the photo doesn't push the page down on phones. */
+  :is(.walks-hero, .walk-hero) .page-hero__aside { margin-block-start: var(--space-m); }
+  @media (min-width: 56rem) {
+    :is(.walks-hero, .walk-hero) .page-hero__aside { margin-block-start: 0; }
+  }
+  @media (width < 56rem) {
+    :is(.walks-hero, .walk-hero) .page-hero__aside .media[data-ratio] { --ratio: 3 / 2; }
+  }
+  .walks-hero .page-hero__title { max-inline-size: 17ch; }
+
+
+  /* ---------- What a walk is like (index) -------------------------------- */
+  .walks-like__figure { justify-items: center; }
+  .walks-like__figure .hiti { inline-size: 100%; margin-inline: auto; }
+  .walks-like__note {
+    max-inline-size: 36rem;
+    margin-inline: auto;
+    padding-block-start: var(--space-xs);
+    border-block-start: 1px dashed var(--line-strong);
+  }
+
+
+  /* ---------- The walks: signature walk + pair (index) ------------------- */
+  .walks-list { display: grid; gap: var(--space-l); }
+
+  /* Signature walk: .card--horizontal .card--feature (main.css), taller media. */
+  .walk-feature { --card-media-min: 24rem; }
+  .walk-feature__route { margin-block-start: var(--space-2xs); }
+
+  /* Route as a notebook contents list: name · dotted leader · gloss. */
+  .walk-route {
+    counter-reset: route;
+    display: grid;
+    gap: var(--space-3xs);
+    font-size: var(--step--1);
+  }
+  .walk-route > li {
+    counter-increment: route;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--space-2xs);
+  }
+  .walk-route > li::before {
+    content: counter(route, decimal-leading-zero);
+    content: counter(route, decimal-leading-zero) / "";
+    min-inline-size: 1.75rem;
+    font-family: var(--font-mono);
+    font-size: var(--label);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--domain-text, var(--accent-water));
+  }
+  .walk-route__name { font-weight: 600; color: var(--text); }
+  .walk-route__dots {
+    flex: 1 1 1.5rem;
+    min-inline-size: 1.5rem;
+    border-block-end: 1px dotted var(--line-strong);
+    transform: translateY(-0.3em);
+  }
+  .walk-route__gloss { font-style: italic; color: var(--text-2); }
+
+
+  /* ---------- Who comes on these walks (index) --------------------------- */
+  .walks-logos { margin-block-end: var(--space-xl); }
+  .walks-who { display: grid; gap: var(--space-xl); }
+  @media (min-width: 56rem) {
+    .walks-who {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: var(--space-2xl);
+      align-items: start;
+    }
+    /* Stack the two figures beside the ledger so each value stays on one line. */
+    .walks-who .stats { grid-template-columns: minmax(0, 1fr); }
+  }
+
+
+  /* ---------- FAQ note (index) ------------------------------------------- */
+  .walks-faq__note { margin-block-start: var(--space-l); }
+
+
+  /* ---------- Along the way: annotated stops (detail) -------------------- */
+  /* A numbered route down the page: each stop has a ringed marker, and a
+     dashed "footpath" joins the markers. */
+  .walk-stops {
+    --marker: 2.75rem;
+    display: grid;
+    max-inline-size: 64rem;
+  }
+
+  .walk-stop {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--marker) minmax(0, 1fr);
+    column-gap: var(--space-s);
+    row-gap: var(--space-m);
+    padding-block-end: var(--space-xl);
+  }
+  .walk-stop:last-child { padding-block-end: 0; }
+
+  /* Marker: stop number in a ring (.marker, aria-hidden — the <ol> carries
+     the order; the ring takes the walk's domain colour). */
+  .walk-stop__marker {
+    --marker-size: var(--marker);
+    grid-column: 1;
+    grid-row: 1;
+    position: relative;
+    z-index: 1;
+  }
+  /* Footpath to the next stop. */
+  .walk-stop::after {
+    content: "";
+    position: absolute;
+    inset-block: var(--marker) 0;
+    inset-inline-start: calc(var(--marker) / 2);
+    border-inline-start: 1.5px dashed var(--line-strong);
+  }
+  .walk-stop:last-child::after { display: none; }
+
+  .walk-stop__body {
+    grid-column: 2;
+    grid-row: 1;
+    display: grid;
+    gap: var(--space-xs);
+    align-content: start;
+    padding-block-start: 0.35rem;
+  }
+  .walk-stop__title { font-size: var(--step-2); line-height: 1.15; }
+  .walk-stop__gloss {
+    display: block;
+    margin-block-start: var(--space-3xs);
+    font-size: var(--step-0);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--text-2);
+  }
+  .walk-stop__note { max-inline-size: 60ch; color: var(--text-2); }
+  .walk-stop__image { max-inline-size: 40rem; margin-block-start: var(--space-xs); }
+
+  @media (min-width: 56rem) {
+    /* Field-note columns: name on the left, annotation on the right. */
+    .walk-stop__body {
+      grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+      column-gap: var(--space-xl);
+      align-items: start;
+    }
+    .walk-stop__body > :not(.walk-stop__title) { grid-column: 2; }
+  }
+
+  /* The detailed stop (parts list + hiti cross-section): a pinned field
+     sheet — a .card with the walk's domain rule. It spans the marker column on
+     phones so the drawing keeps its width; overflow stays visible so the
+     diagram's labels aren't clipped. */
+  .walk-stop__detail {
+    --surface: var(--surface-raised);
+    grid-column: 1 / -1;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-l);
+    align-items: center;
+    padding: var(--space-m) var(--space-s);
+    overflow: visible;
+  }
+  @media (min-width: 40rem) {
+    .walk-stop__detail { padding: var(--space-l); }
+  }
+  @media (min-width: 56rem) {
+    .walk-stop__detail { grid-column: 2; }
+  }
+  @media (min-width: 64rem) {
+    .walk-stop__detail { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+    .walk-stop__detail > .walk-stop__image { grid-column: 1 / -1; }
+  }
+  .walk-stop__figure .hiti { margin-inline: auto; }
+  .walk-stop__parts { display: grid; gap: var(--space-xs); }
+
+  /* Parts of a hiti: Devanagari term, romanised name, note. */
+  .walk-parts { display: grid; }
+  .walk-parts__row {
+    display: grid;
+    gap: 0.15rem;
+    padding-block: var(--space-xs);
+    border-block-end: 1px dashed var(--line-strong);
+  }
+  .walk-parts__row:first-child { border-block-start: 1px solid var(--line-strong); }
+  .walk-parts__row dt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem var(--space-xs);
+  }
+  .walk-parts__deva { font-size: var(--step-1); line-height: 1.3; color: var(--text); }
+  .walk-parts__row dd { font-size: var(--step--1); line-height: 1.5; color: var(--text-2); }
+
+  /* About this walk: the aside lists are .checklist / .checklist--dots. */
+}

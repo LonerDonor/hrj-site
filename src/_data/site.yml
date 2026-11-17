@@ -1,0 +1,52 @@
+# Site-wide facts. Source: docs/FACTS.md — change facts there first.
+url: https://hrishavjoshi.com
+lang: en
+locale: en_GB
+name: Hrishav Raj Joshi
+shortName: HRJ
+roles:
+  - Civil engineer
+  - Heritage practitioner
+  - Educator
+# Draft positioning line — owner may edit.
+positioning: "I work to keep the Kathmandu Valley’s traditional water systems alive — as an engineer, a heritage guide and a teacher."
+tagline: Engineering the ancient. Educating the future.
+# ≤ 155 characters (default meta description).
+description: "Civil engineer, heritage practitioner and educator in Lalitpur, Nepal, working to keep the Kathmandu Valley’s traditional water systems alive."
+
+email: JocHrishav@gmail.com
+phone: "+977 984-9592287"
+phoneHref: "tel:+9779849592287"
+whatsapp: https://wa.me/9779849592287
+location: Mangalbazar, Lalitpur, Nepal
+locality: Lalitpur
+country: Nepal
+countryCode: NP
+coordinates:
+  lat: 27.6588
+  lng: 85.3247
+
+nec: "78562"
+necLine: Nepal Engineering Council (NEC) registration no. 78562
+education: "Bachelor of Civil & Rural Engineering, Nepal Engineering College (2013–2022)"
+
+# Rendered only if the file exists (filter: fileExists).
+cv: /assets/cv/HRJ_CV.pdf
+
+social:
+  linkedin: https://linkedin.com/in/hrishav-raj-joshi
+  medium: https://medium.com/@JocHrishav
+
+# Formspree form ID (e.g. "xyzabcd"). Empty → the form is replaced by direct
+# contact options until it is set.
+formspree: ""
+
+# CARTO basemaps key (free for non-commercial use; request one at
+# https://carto.com/basemaps/apikey). Empty → project maps draw without a
+# basemap (GeoJSON layers on paper). Public by design (sent in tile URLs).
+mapTileKey: ""
+replyTime: within 2–3 working days
+
+ogImage: /assets/og/og-default.png
+ogImageAlt: "Hrishav Raj Joshi — civil engineer, heritage practitioner and educator. Line drawing of a hiti stone-spout cross-section."
+themeColor: "#f3ede1"

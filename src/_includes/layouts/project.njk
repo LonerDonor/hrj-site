@@ -1,0 +1,197 @@
+---
+layout: layouts/base.njk
+---
+{#-
+  Work case study — src/work/<slug>.md. Front matter: see src/work/work.11tydata.js
+  (computed there: projectLinks, galleryItems, mapData, ogImage, structuredData,
+  pageCss/pageJs). `ctaTopic` overrides the enquiry topic of the closing CTA.
+  Every optional block is hidden when its field is empty.
+-#}
+{%- set d = workDomains[domain] or workDomains.water -%}
+{%- set coverDrawing = coverKind or d.kind -%}
+<article class="project" data-domain="{{ domain }}">
+  <header class="page-hero page-hero--split project-hero">
+    <div class="container page-hero__inner">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/work/">Work</a></li>
+          <li><span aria-current="page">{{ title }}</span></li>
+        </ol>
+      </nav>
+      <p class="eyebrow {{ d.eyebrow }}">{{ category or d.label }}{% if years %} · {{ years }}{% endif %}</p>
+      <h1 class="page-hero__title">{% if heroTitle %}{{ heroTitle | safe }}{% else %}{{ title }}{% endif %}</h1>
+      {%- if summary %}
+      <p class="lede">{{ summary }}</p>
+      {%- endif %}
+      <dl class="ledger ledger--compact page-hero__meta">
+        {%- if role %}<div><dt>Role</dt><dd>{{ role }}</dd></div>{% endif %}
+        {%- if client %}<div><dt>Client</dt><dd>{{ client }}</dd></div>{% endif %}
+        {%- if location %}<div><dt>Location</dt><dd>{{ location }}</dd></div>{% endif %}
+        {%- if years %}<div><dt>Years</dt><dd>{{ years }}</dd></div>{% endif %}
+        <div><dt>Domain</dt><dd class="project-hero__domain">{% icon d.icon %}{{ d.label }}</dd></div>
+      </dl>
+      <div class="page-hero__aside project-hero__cover">
+        {% media cover, coverAlt, { ratio: "4/3", kind: coverDrawing, eager: true, sizes: "(min-width: 72rem) 28rem, (min-width: 56rem) 40vw, 100vw", class: "media--framed" } %}
+      </div>
+    </div>
+  </header>
+
+  <div class="section project-body">
+    <div class="container with-aside">
+      <div class="with-aside__main stack stack--xl">
+        <div class="prose project-prose">
+          {{ content | safe }}
+        </div>
+
+        {%- if diagram == "hiti" %}
+        <section class="project-diagram stack stack--s" aria-labelledby="project-diagram-title">
+          <p class="eyebrow eyebrow--water">Field drawing</p>
+          <h2 id="project-diagram-title" class="project-section-title">How a hiti works</h2>
+          <p class="project-diagram__intro">A natural spring pushes water up into the <span class="deva" lang="new">नाभिमण्डल</span> (nabhi mandal), a domed chamber that calms the flow. From there it runs sideways through the <span class="deva" lang="new">हितिदुं</span> (hiti duun) conduit and pours out at the carved <span class="deva" lang="new">ग हिति</span> (ga hiti) spout.</p>
+          {% include "partials/hiti-diagram.njk" %}
+        </section>
+        {%- endif %}
+
+        {%- if scope and scope.length %}
+        <section class="project-scope stack stack--m" aria-labelledby="project-scope-title">
+          <h2 id="project-scope-title" class="project-section-title">What the work covered</h2>
+          <ol class="steps">
+            {%- for s in scope %}
+            <li><h3 class="steps__title">{{ s.title }}</h3>{% if s.text %}<p class="steps__text">{{ s.text }}</p>{% endif %}</li>
+            {%- endfor %}
+          </ol>
+        </section>
+        {%- endif %}
+      </div>
+
+      {%- if (highlights and highlights.length) or projectLinks.length or (tags and tags.length) %}
+      <aside class="with-aside__aside" aria-label="Project notes">
+        <div class="card project-aside" data-domain="{{ domain }}">
+          <div class="card__body stack stack--l">
+            {%- if highlights and highlights.length %}
+            <section class="stack stack--xs">
+              <h2 class="label">Highlights</h2>
+              <ol class="project-notes" role="list">
+                {%- for h in highlights %}
+                <li>{{ h }}</li>
+                {%- endfor %}
+              </ol>
+            </section>
+            {%- endif %}
+            {%- if projectLinks.length %}
+            <section class="stack stack--xs">
+              <h2 class="label">Read and see more</h2>
+              <ul class="project-links" role="list">
+                {%- for l in projectLinks %}
+                <li>
+                  <a class="link-arrow" href="{{ l.url }}"{% if l.external %} rel="noopener"{% endif %}>{{ l.label }}{% if l.external %}{% icon "arrow-up-right" %}{% else %}{% icon "arrow-right" %}{% endif %}</a>
+                  {%- if l.host %}<span class="label label--plain project-links__host">{{ l.host }}</span>{% endif %}
+                </li>
+                {%- endfor %}
+              </ul>
+            </section>
+            {%- endif %}
+            {%- if tags and tags.length %}
+            <ul class="tags" role="list" aria-label="Topics">
+              {%- for t in tags %}
+              <li class="tag">{{ t }}</li>
+              {%- endfor %}
+            </ul>
+            {%- endif %}
+          </div>
+        </div>
+      </aside>
+      {%- endif %}
+    </div>
+  </div>
+
+  {%- if mapData %}
+  <section class="section section--alt project-map-section" aria-labelledby="project-map-title">
+    <div class="container stack stack--l">
+      <header class="section-head">
+        <p class="eyebrow eyebrow--water">Field map</p>
+        <h2 id="project-map-title">Where the work is</h2>
+        {%- if map.intro %}<p class="lede">{{ map.intro }}</p>{% endif %}
+      </header>
+      <div class="project-map" data-map data-center="{{ mapData.center | dump | escape }}" data-zoom="{{ mapData.zoom }}" data-layers="{{ mapData.layers | dump | escape }}" data-label="{{ mapData.label }}"{% if site.mapTileKey %} data-tile-key="{{ site.mapTileKey }}"{% endif %}>
+        <div class="project-map__canvas js-only" data-map-canvas role="region" aria-label="Map: {{ mapData.label }}"></div>
+        <p class="project-map__hint js-only" data-map-hint>Drag to pan; use the + and − buttons to zoom.</p>
+        <ul class="label project-map__legend" role="list" data-map-legend hidden></ul>
+        {%- set lat = mapData.center[0] -%}
+        {%- set lng = mapData.center[1] -%}
+        <p class="project-map__caption">
+          <span class="pointer project-map__place">{{ mapData.label }}</span>
+          <span class="project-map__coords">{{ lat }}° N, {{ lng }}° E</span>
+          <a class="link-arrow" href="https://www.openstreetmap.org/?mlat={{ lat }}&amp;mlon={{ lng }}#map={{ mapData.zoom }}/{{ lat }}/{{ lng }}" rel="noopener">Open in OpenStreetMap{% icon "arrow-up-right" %}</a>
+        </p>
+      </div>
+    </div>
+  </section>
+  {%- endif %}
+
+  {%- if galleryItems and galleryItems.length %}
+  <section class="section project-gallery" aria-labelledby="project-gallery-title">
+    <div class="container stack stack--l">
+      <header class="section-head">
+        <p class="eyebrow">From the field</p>
+        <h2 id="project-gallery-title">Photos and drawings</h2>
+      </header>
+      <ul class="gallery" role="list">
+        {%- for g in galleryItems %}
+        <li class="gallery__item{% if loop.first and galleryItems.length > 2 %} gallery__item--wide{% endif %}">
+          <a href="{{ g.href }}">
+            {% media g.src, g.alt, { sizes: "(min-width: 72rem) 24rem, (min-width: 40rem) 50vw, 100vw" } %}
+            {%- if g.caption %}<span class="gallery__caption">{{ g.caption }}</span>{% endif %}
+          </a>
+        </li>
+        {%- endfor %}
+      </ul>
+    </div>
+  </section>
+  {%- endif %}
+</article>
+
+{#- Next / previous project (wraps around). Rendered inside the loop, where the index is known. -#}
+{%- set all = collections.work -%}
+{%- for item in all %}
+{%- if item.url == page.url and all.length > 1 %}
+{%- set next = all[loop.index0 + 1] if (loop.index0 + 1) < all.length else all[0] -%}
+{%- set prev = all[loop.index0 - 1] if loop.index0 > 0 else all[all.length - 1] -%}
+{%- set nd = workDomains[next.data.domain] or workDomains.water -%}
+<nav class="section section--tight project-next" aria-label="More projects">
+  <div class="container stack stack--m">
+    <div class="cluster cluster--between cluster--baseline">
+      <p class="eyebrow">Next project</p>
+      <a class="link-arrow" href="/work/">{% icon "arrow-left" %}All work</a>
+    </div>
+    <article class="card card--link card--horizontal card--feature project-next__card" data-domain="{{ next.data.domain }}">
+      <div class="card__media">{% media next.data.cover, "", { ratio: "3/2", kind: next.data.coverKind or nd.kind, sizes: "(min-width: 48rem) 40rem, 100vw" } %}</div>
+      <div class="card__body">
+        <p class="card__meta"><span>{{ nd.label }}</span>{% if next.data.years %}<span>{{ next.data.years }}</span>{% endif %}</p>
+        <h2 class="card__title"><a href="{{ next.url }}">{{ next.data.title }}</a></h2>
+        {%- if next.data.summary %}<p class="card__text">{{ next.data.summary }}</p>{% endif %}
+        <div class="card__footer"><span class="card__cue" aria-hidden="true">Read the case study{% icon "arrow-right" %}</span></div>
+      </div>
+    </article>
+    {%- if prev and prev.url != next.url %}
+    <p class="project-next__prev"><a class="link-arrow" href="{{ prev.url }}">{% icon "arrow-left" %}Previous: {{ prev.data.title }}</a></p>
+    {%- endif %}
+  </div>
+</nav>
+{%- endif %}
+{%- endfor %}
+
+<section class="band--dark band--edge" aria-labelledby="project-cta-title">
+  <div class="container cta-band">
+    <div class="stack stack--s">
+      <p class="eyebrow">Work with me</p>
+      <h2 class="cta-band__title" id="project-cta-title">{{ (ctaTitle or d.cta) | safe }}</h2>
+      <p class="lede">Tell me about the site, the group or the school and what you need. I usually reply {{ site.replyTime }}.</p>
+    </div>
+    <div class="cluster">
+      <a class="btn btn--primary" href="/work-with-me/?topic={{ ctaTopic or d.topic }}#enquire">Work with me{% icon "arrow-right" %}</a>
+      <a class="btn btn--on-dark" href="mailto:{{ site.email }}">{% icon "mail" %}Email me</a>
+    </div>
+  </div>
+</section>

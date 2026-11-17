@@ -1,0 +1,376 @@
+/* ==========================================================================
+   Home page (/) — page-specific layout only.
+   Components (buttons, cards, stats, ledger, logo row, media, CTA band, hiti
+   diagram) come from main.css; this file composes them. Tokens only.
+   Breakpoints: 40rem, 56rem, 60rem, 64rem (docs/DESIGN.md §10).
+   ========================================================================== */
+@layer page {
+
+  /* ---------- 1. Hero ---------------------------------------------------- */
+  .home-hero {
+    padding-block: clamp(var(--space-xl), 7vw, var(--space-3xl)) clamp(var(--space-xl), 6vw, var(--space-2xl));
+  }
+  .home-hero__grid {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: end;
+  }
+  .home-hero__text {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+    align-content: end;
+  }
+
+  .home-hero__name {
+    font-size: var(--step-5);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    font-variation-settings: "opsz" 144;
+  }
+  .home-hero__given,
+  .home-hero__surname { display: block; }
+  .home-hero__surname {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  /* Roles: one dot per domain colour — water, heritage, education. */
+  .home-hero__roles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs) var(--space-m);
+    color: var(--text-2);
+  }
+  .home-hero__roles > li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+  }
+  .home-hero__roles > li::before {
+    content: "";
+    inline-size: 0.55em;
+    block-size: 0.55em;
+    border-radius: 50%;
+    background: var(--role-dot, var(--decor));
+  }
+  .home-hero__roles > li:nth-child(1) { --role-dot: var(--accent-water); }
+  .home-hero__roles > li:nth-child(2) { --role-dot: var(--accent); }
+  .home-hero__roles > li:nth-child(3) { --role-dot: var(--decor); }
+
+  .home-hero__lede { max-inline-size: 38ch; }
+
+  /* Audience routes: who it is for (mono) above what to do next. */
+  .home-hero__routes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-m) var(--space-l);
+    margin-block-start: var(--space-2xs);
+  }
+  .home-hero__route {
+    display: grid;
+    gap: var(--space-2xs);
+    justify-items: start;
+  }
+  .home-hero__route > .link-arrow { min-block-size: 2.75rem; }
+
+  /* The drawing, framed like a sheet with crop marks. */
+  .home-hero__sheet {
+    --tick: var(--line-strong);
+    --tick-len: var(--space-s);
+    display: grid;
+    gap: var(--space-s);
+    inline-size: 100%;
+    max-inline-size: 38rem;
+    padding: var(--space-s);
+    background:
+      linear-gradient(var(--tick), var(--tick)) left top / var(--tick-len) 1px no-repeat,
+      linear-gradient(var(--tick), var(--tick)) left top / 1px var(--tick-len) no-repeat,
+      linear-gradient(var(--tick), var(--tick)) right top / var(--tick-len) 1px no-repeat,
+      linear-gradient(var(--tick), var(--tick)) right top / 1px var(--tick-len) no-repeat,
+      linear-gradient(var(--tick), var(--tick)) left bottom / var(--tick-len) 1px no-repeat,
+      linear-gradient(var(--tick), var(--tick)) left bottom / 1px var(--tick-len) no-repeat,
+      linear-gradient(var(--tick), var(--tick)) right bottom / var(--tick-len) 1px no-repeat,
+      linear-gradient(var(--tick), var(--tick)) right bottom / 1px var(--tick-len) no-repeat;
+  }
+  .home-hero__fig {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3xs) var(--space-m);
+    padding-block-end: var(--space-2xs);
+    border-block-end: 1px dashed var(--line);
+  }
+  .home-hero__sheet .hiti { max-inline-size: none; }
+
+  @media (min-width: 40rem) {
+    .home-hero__sheet { padding: var(--space-m); }
+  }
+
+  /* Phones: all three audience routes above the fold (360 × 740). The lede
+     already names the three roles, and the coordinates are decoration. */
+  @media (max-width: 39.99rem) {
+    .home-hero { padding-block-start: var(--space-l); }
+    .home-hero__text { gap: var(--space-s); }
+    .home-hero__coords,
+    .home-hero__roles { display: none; }
+    .home-hero__routes {
+      display: grid;
+      gap: var(--space-s);
+      margin-block-start: 0;
+    }
+    .home-hero__route { gap: var(--space-3xs); }
+  }
+
+  @media (min-width: 56rem) {
+    .home-hero__grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 6fr);
+      column-gap: clamp(var(--space-l), 4vw, var(--space-2xl));
+    }
+    /* Notebook margin rule beside the text column. */
+    .home-hero__text {
+      padding-inline-start: var(--space-l);
+      border-inline-start: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    }
+    .home-hero__sheet { justify-self: end; }
+  }
+
+
+  /* ---------- 2. Field record (stats on the hero's dark foot) ------------ */
+  .home-record__title {
+    display: block;
+    margin-block-end: var(--space-l);
+  }
+  .home-record .stats {
+    gap: var(--space-l) var(--space-m);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* An odd last item spans the row on the two-column phone layout. */
+  .home-record .stats__item:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .home-record .stats__detail { display: none; }
+
+  @media (min-width: 40rem) {
+    .home-record .stats {
+      gap: var(--space-l);
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    }
+    .home-record .stats__item:last-child:nth-child(odd) { grid-column: auto; }
+    .home-record .stats__detail { display: block; }
+  }
+  @media (min-width: 64rem) {
+    /* One row, however many figures stats.yml holds. */
+    .home-record .stats {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+    }
+  }
+
+
+  /* ---------- 3. Three ways — grid lines and bubbles -------------------- */
+  .home-ways__list {
+    --bubble: 2.75rem;
+    position: relative;
+    display: grid;
+    gap: var(--space-xl);
+  }
+  /* --domain / --domain-text come from [data-domain] (main.css tokens). */
+  .home-ways__item {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+  }
+
+  .home-ways__mark {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-block-size: var(--bubble);
+  }
+  /* The number sits in a .marker (main.css); the list keeps the order. */
+  .home-ways__bubble { --marker-size: var(--bubble); }
+  .home-ways__deva {
+    font-size: var(--step-2);
+    line-height: 1;
+    color: var(--domain-text);
+    background: var(--surface) var(--grain);
+    padding-inline: var(--space-2xs) var(--space-3xs);
+  }
+  .home-ways__roman {
+    background: var(--surface) var(--grain);
+    padding-inline-end: var(--space-2xs);
+  }
+
+  /* Body hangs off a dashed grid line dropped from the bubble. */
+  .home-ways__body {
+    position: relative;
+    display: grid;
+    gap: var(--space-xs);
+    justify-items: start;
+    padding-inline-start: calc(var(--bubble) / 2 + var(--space-m));
+  }
+  .home-ways__body::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc(var(--bubble) / 2);
+    inset-block: calc(var(--space-s) * -1) 0;
+    border-inline-start: 1px dashed var(--line-strong);
+  }
+  .home-ways__icon {
+    font-size: var(--step-2);
+    line-height: 1;
+    color: var(--domain-text);
+  }
+  .home-ways__text {
+    max-inline-size: 38ch;
+    font-size: var(--step--1);
+    color: var(--text-2);
+  }
+
+  @media (min-width: 56rem) {
+    .home-ways__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-l);
+    }
+    /* Datum line through the three bubbles. */
+    .home-ways__list::before {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      inset-block-start: calc(var(--bubble) / 2);
+      border-block-start: 1px solid var(--line);
+    }
+    /* Equal-height columns; the links line up along the bottom. */
+    .home-ways__item { grid-template-rows: auto 1fr; }
+    .home-ways__body { grid-template-rows: auto auto 1fr auto; }
+    .home-ways__link { align-self: end; }
+  }
+
+
+  /* ---------- 4. Selected work ------------------------------------------ */
+  .home-work__grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  .home-work__ledger { margin-block-start: var(--space-2xs); }
+
+  .home-work__more {
+    display: grid;
+    gap: var(--space-l);
+    align-content: start;
+  }
+  .home-work__more-label { margin-block-end: calc(var(--space-s) * -1); }
+
+  @media (min-width: 40rem) and (max-width: 59.99rem) {
+    .home-work__more { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-l); }
+    .home-work__more-label { grid-column: 1 / -1; }
+  }
+  @media (min-width: 60rem) {
+    .home-work__grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: var(--space-2xl);
+      align-items: start;
+    }
+    /* A single featured item spans the row (.card--horizontal). */
+    .home-work__grid--solo { grid-template-columns: minmax(0, 1fr); }
+  }
+
+
+  /* ---------- 5. Worked with -------------------------------------------- */
+  /* Same paper as the section above it when Selected work is absent. */
+  .home-ways + .home-clients { border-block-start: 1px solid var(--line); }
+
+  .home-clients__inner {
+    display: grid;
+    gap: var(--space-m);
+  }
+  .home-clients__title { display: block; }
+
+  @media (min-width: 56rem) {
+    .home-clients__inner {
+      grid-template-columns: 11rem minmax(0, 1fr);
+      column-gap: var(--space-xl);
+      align-items: baseline;
+    }
+  }
+
+
+  /* ---------- 6. Recognition -------------------------------------------- */
+  .home-press__list {
+    display: grid;
+    gap: var(--space-l);
+  }
+  .home-press__item .card__body { gap: var(--space-2xs); }
+  /* The role reads as a kicker above the outlet; it follows the h3 in the DOM. */
+  .home-press__role {
+    order: -1;
+    color: var(--accent);
+  }
+  .home-press__title {
+    font-size: var(--step--1);
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .home-press__foot {
+    margin-block-start: var(--space-xl);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--text-3);
+  }
+
+  @media (min-width: 40rem) {
+    .home-press__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 64rem) {
+    .home-press__list {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+      column-gap: var(--space-l);
+    }
+  }
+
+
+  /* ---------- 7. Photographs — contact-sheet strip ---------------------- */
+  .home-photos__strip {
+    display: grid;
+    gap: var(--space-l) var(--space-s);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .home-photos__frame {
+    display: grid;
+    gap: var(--space-2xs);
+    align-content: start;
+  }
+  .home-photos__frame > .media :is(img, .placeholder) { border-radius: var(--radius-s); }
+  .home-photos__meta {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2xs);
+    font-size: var(--step--1);
+    line-height: 1.4;
+    color: var(--text-3);
+  }
+
+  @media (min-width: 40rem) {
+    .home-photos__strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (min-width: 64rem) {
+    .home-photos__strip {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+      column-gap: var(--space-m);
+      align-items: start;
+    }
+    /* Staggered like prints laid out on a table. */
+    .home-photos__frame:nth-child(even) { margin-block-start: var(--space-xl); }
+  }
+
+
+  /* ---------- 8. Closing CTA -------------------------------------------- */
+  .home-cta__actions { justify-items: start; }
+}

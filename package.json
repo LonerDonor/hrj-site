@@ -1,0 +1,20 @@
+{
+  "name": "hrj-site",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Personal website of Hrishav Raj Joshi — civil engineer, heritage practitioner, educator.",
+  "type": "module",
+  "scripts": {
+    "start": "eleventy --serve --port 8080",
+    "build": "eleventy"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.1.2",
+    "@11ty/eleventy-img": "^6.0.4",
+    "js-yaml": "^4.1.0",
+    "leaflet": "1.9.4"
+  }
+}

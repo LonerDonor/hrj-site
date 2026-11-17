@@ -1,0 +1,53 @@
+{#- Site footer — a dark band. Social links open in the same tab (rel="me" for identity). -#}
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__intro stack stack--s">
+        <a class="wordmark" href="/">HRJ<span class="wordmark__dot" aria-hidden="true">.</span><span class="visually-hidden"> {{ site.name }}, home</span></a>
+        <p class="site-footer__line">{{ site.positioning }}</p>
+        <p class="label">{{ site.roles | join(" · ") }}</p>
+      </div>
+
+      <div>
+        <h2 class="site-footer__heading">Contact</h2>
+        <ul class="site-footer__list" role="list">
+          <li><a href="mailto:{{ site.email }}">{% icon "mail" %}{{ site.email }}</a></li>
+          <li><a class="nowrap" href="{{ site.whatsapp }}" rel="noopener">{% icon "whatsapp" %}<span class="visually-hidden">WhatsApp </span>{{ site.phone }}</a></li>
+          <li><span>{% icon "map-pin" %}{{ site.location }}</span></li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="site-footer__heading">Elsewhere</h2>
+        <ul class="site-footer__list" role="list">
+          {%- if site.social.linkedin %}
+          <li><a href="{{ site.social.linkedin }}" rel="me noopener">{% icon "linkedin" %}LinkedIn</a></li>
+          {%- endif %}
+          {%- if site.social.medium %}
+          <li><a href="{{ site.social.medium }}" rel="me noopener">{% icon "medium" %}Medium</a></li>
+          {%- endif %}
+          {%- if site.cv | fileExists %}
+          <li><a href="{{ site.cv }}" download>{% icon "download" %}CV (PDF)</a></li>
+          {%- endif %}
+        </ul>
+      </div>
+
+      <nav aria-label="Footer">
+        <h2 class="site-footer__heading">Site</h2>
+        <ul class="site-footer__list" role="list">
+          {%- for item in nav.items %}
+          {%- if not (item.needs == "photos" and not photosLive) %}
+          <li><a href="{{ item.url }}">{{ item.label }}</a></li>
+          {%- endif %}
+          {%- endfor %}
+          <li><a href="{{ nav.cta.url }}">{{ nav.cta.label }}</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="site-footer__base">
+      <p>{{ site.necLine }}</p>
+      <p>© {{ build.year }} {{ site.name }}</p>
+    </div>
+  </div>
+</footer>

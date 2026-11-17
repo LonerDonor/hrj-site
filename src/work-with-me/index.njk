@@ -1,0 +1,550 @@
+---
+layout: layouts/base.njk
+permalink: /work-with-me/
+title: Work with me
+description: "Commission a hiti or groundwater study, book a heritage walk for your group or bring robotics to your school. Services, process and how to reach me."
+pageCss: wwm
+pageJs: form
+
+# Enquiry configuration. Topic values come from services.yml (`topic`); the
+# entries below add the non-service choices, tie topics to the follow-up
+# questions, and map short ?topic= values used elsewhere on the site.
+# Everything is rendered into the page — form.js holds no copies of it.
+enquiry:
+  extraTopics:
+    - topic: media
+      title: Press and media
+    - topic: other
+      title: Something else
+  # Follow-up question group → the topic values that show it.
+  groups:
+    walk: [heritage-walk]
+    project: [heritage-engineering, groundwater]
+    school: [education]
+  # Short ?topic= values → a topic value (service slugs are accepted too).
+  aliases:
+    walk: heritage-walk
+    walks: heritage-walk
+    consultancy: heritage-engineering
+    engineering: heritage-engineering
+    hiti: heritage-engineering
+    restoration: heritage-engineering
+    study: groundwater
+    recharge: groundwater
+    water: groundwater
+    school: education
+    schools: education
+    robotics: education
+    stem: education
+    writing: research-writing
+    research: research-writing
+    talk: speaking
+    talks: speaking
+    press: media
+  # Budget bands from the old services enquiry form.
+  budgetBands:
+    - Under NPR 50,000
+    - NPR 50,000 – 150,000
+    - NPR 150,000 – 500,000
+    - NPR 500,000+
+    - International budget (US dollars)
+---
+{#-
+  /work-with-me/ — services, process, enquiry, FAQ and contact on one page.
+  Data: services.yml (items, process), faq.yml, clients.yml, site.yml
+  (email, phone, whatsapp, replyTime, formspree, social), collections.walks.
+  Styles: /assets/css/pages/wwm.css · Script: /assets/js/form.js (optional).
+
+  #enquire has two branches, chosen at build time:
+    site.formspree set   → the enquiry form. It posts to Formspree without JS;
+                           form.js adds topic logic, inline validation and
+                           sending in place.
+    site.formspree empty → direct contact (email / WhatsApp / phone) plus a
+                           short "what to include" brief per topic; form.js
+                           pre-fills the email for the chosen topic.
+  Both branches read ?topic= (values or aliases above) and ?walk=<walk slug>.
+-#}
+{%- macro req() -%}
+<span class="field__req" aria-hidden="true">*</span><span class="visually-hidden"> (required)</span>
+{%- endmacro -%}
+{%- macro err(id) -%}
+<p class="field__error" id="{{ id }}-error" hidden>{% icon "close" %}<span data-error-text></span></p>
+{%- endmacro -%}
+{%- macro pad(n) -%}{{ ("0" + n) if n < 10 else n }}{%- endmacro -%}
+
+{%- set hasForm = site.formspree and (site.formspree | trim) -%}
+{%- set eduService = services.items | where("topic", "education") | first -%}
+{%- set domainFor = { "heritage-engineering": "water", "groundwater": "water", "heritage-walk": "heritage", "education": "education" } -%}
+{%- set topicList = [] -%}
+{%- for s in services.items %}{% set _ = topicList.push({ value: s.topic, title: s.title, slug: s.slug }) %}{% endfor -%}
+{%- for t in enquiry.extraTopics %}{% set _ = topicList.push({ value: t.topic, title: t.title }) %}{% endfor -%}
+{%- set mailSubject = "Enquiry via " + (site.url | replace("https://", "")) -%}
+{#- Short visible labels (the full URLs break badly on phones). -#}
+{%- set linkedinLabel = site.social.linkedin | replace("https://", "") | replace("www.", "") | replace("linkedin.com/", "") -%}
+{%- set mediumLabel = site.social.medium | replace("https://", "") | replace("www.", "") | replace("medium.com/", "") -%}
+
+{# ======================================================================= #}
+{# 1. Hero — what this page is for, availability, quick contact           #}
+{# ======================================================================= #}
+<header class="page-hero page-hero--split wwm-hero">
+  <div class="container page-hero__inner">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><span aria-current="page">Work with me</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow">Commissions · walks · school programmes</p>
+    <h1 class="page-hero__title">Work with <em>me</em></h1>
+    <p class="lede">Restoring a stone spout, planning groundwater recharge, bringing a group on a heritage walk or starting robotics in your school — tell me what you need and I’ll tell you plainly how I can help.</p>
+    <div class="cluster page-hero__actions">
+      <a class="btn btn--primary" href="mailto:{{ site.email }}?subject={{ mailSubject | urlencode }}">{% icon "mail" %}Email me</a>
+      <a class="btn btn--secondary" href="{{ site.whatsapp }}" rel="noopener">{% icon "whatsapp" %}Message on WhatsApp</a>
+      <a class="link-arrow" href="{{ site.phoneHref }}">{% icon "phone" %}<span><span class="visually-hidden">Call </span><span class="nowrap">{{ site.phone }}</span></span></a>
+    </div>
+    <dl class="ledger ledger--compact page-hero__meta">
+      <div><dt>Availability</dt><dd><span class="wwm-status">Open to new projects and collaborations</span></dd></div>
+      <div><dt>Replies</dt><dd>{{ site.replyTime | capitalize }}</dd></div>
+      <div><dt>Fastest</dt><dd>WhatsApp, for anything urgent</dd></div>
+      <div><dt>Based in</dt><dd>{{ site.location }}</dd></div>
+    </dl>
+
+    <div class="page-hero__aside">
+      <nav class="wwm-index" aria-labelledby="wwm-index-title">
+        <p class="label wwm-index__title" id="wwm-index-title">On this page</p>
+        <ol class="wwm-index__list" role="list">
+          <li><a href="#services"><span class="wwm-index__num" aria-hidden="true">01</span><span class="wwm-index__text">What I can help with</span>{% icon "arrow-right" %}</a></li>
+          <li><a href="#process"><span class="wwm-index__num" aria-hidden="true">02</span><span class="wwm-index__text">How a project runs</span>{% icon "arrow-right" %}</a></li>
+          <li><a href="#enquire"><span class="wwm-index__num" aria-hidden="true">03</span><span class="wwm-index__text">{{ "Send an enquiry" if hasForm else "Get in touch" }}</span>{% icon "arrow-right" %}</a></li>
+          {%- if faq and faq.length %}
+          <li><a href="#faq"><span class="wwm-index__num" aria-hidden="true">04</span><span class="wwm-index__text">Questions people ask</span>{% icon "arrow-right" %}</a></li>
+          {%- endif %}
+          <li><a href="#contact"><span class="wwm-index__num" aria-hidden="true">{{ "05" if (faq and faq.length) else "04" }}</span><span class="wwm-index__text">Contact details</span>{% icon "arrow-right" %}</a></li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</header>
+
+
+{# ======================================================================= #}
+{# 2. Services — a numbered register, one row per service                 #}
+{# ======================================================================= #}
+<section class="section wwm-services" id="services" aria-labelledby="services-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">01 · Services</p>
+      <h2 id="services-title">What I can help with</h2>
+      <p class="lede">I work with municipalities, non-profits, schools, researchers and visiting groups — from site surveys and computer-aided design (CAD) drawings to heritage walks and hands-on robotics workshops. If your project sits between two of these, tell me about it anyway.</p>
+    </header>
+
+    <nav class="wwm-jump" aria-label="Services on this page">
+      <ul class="cluster cluster--tight wwm-jump__list" role="list">
+        {%- for s in services.items %}
+        <li><a class="link-arrow" href="#service-{{ s.slug }}">{{ s.title }}{% icon "arrow-right" %}</a></li>
+        {%- endfor %}
+      </ul>
+    </nav>
+
+    <ol class="wwm-register" role="list">
+      {%- for s in services.items %}
+      <li class="wwm-service" id="service-{{ s.slug }}"{% if domainFor[s.topic] %} data-domain="{{ domainFor[s.topic] }}"{% endif %}>
+        <div class="wwm-service__mark" aria-hidden="true">
+          <span class="wwm-service__num">{{ pad(loop.index) }}</span>
+          <span class="marker marker--icon wwm-service__icon">{% icon s.icon, "icon--l" %}</span>
+        </div>
+        <div class="wwm-service__main">
+          <h3 class="wwm-service__title">{{ s.title }}</h3>
+          <p class="wwm-service__summary">{{ s.summary }}</p>
+          {%- if s.idealFor %}
+          <dl class="wwm-service__ideal">
+            <dt class="label">Ideal for</dt>
+            <dd>{{ s.idealFor }}</dd>
+          </dl>
+          {%- endif %}
+        </div>
+        <div class="wwm-service__side">
+          {%- if s.deliverables and s.deliverables.length %}
+          <p class="label" id="service-{{ s.slug }}-get">What you get</p>
+          <ul class="checklist" role="list" aria-labelledby="service-{{ s.slug }}-get">
+            {%- for d in s.deliverables %}
+            <li>{% icon "check" %}<span>{{ d }}</span></li>
+            {%- endfor %}
+          </ul>
+          {%- endif %}
+          <div class="cluster cluster--tight wwm-service__actions">
+            <a class="link-arrow" href="{{ page.url }}?topic={{ s.topic }}#enquire" data-topic-link="{{ s.topic }}">Enquire about this<span class="visually-hidden">: {{ s.title }}</span>{% icon "arrow-right" %}</a>
+            {%- if s.topic == "heritage-walk" %}
+            <a class="link-arrow wwm-service__more" href="/walks/">See the walks{% icon "arrow-right" %}</a>
+            {%- endif %}
+          </div>
+        </div>
+      </li>
+      {%- endfor %}
+    </ol>
+
+    {%- if clients and clients.length %}
+    <div class="wwm-clients">
+      <h3 class="label wwm-clients__title" id="clients-title">Worked with and for</h3>
+      <div>
+        {%- set clientsLabelledBy = "clients-title" %}
+        {% include "partials/clients.njk" %}
+      </div>
+    </div>
+    {%- endif %}
+  </div>
+</section>
+
+
+{# ======================================================================= #}
+{# 3. Process — the four steps, left to right (top to bottom on phones)   #}
+{# ======================================================================= #}
+<section class="section section--alt wwm-process" id="process" aria-labelledby="process-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">02 · Process</p>
+      <h2 id="process-title">How a project runs</h2>
+      <p class="lede">The same four steps whether you’re booking a walk or commissioning a study — so you know the scope and the cost before any work starts.</p>
+      <a class="link-arrow section-head__action" href="#enquire">Start with step 01{% icon "arrow-right" %}</a>
+    </header>
+    <ol class="steps wwm-steps">
+      {%- for p in services.process %}
+      <li><h3 class="steps__title">{{ p.step }}</h3><p class="steps__text">{{ p.text }}</p></li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>
+
+
+{# ======================================================================= #}
+{# 4. Enquire (#enquire) — the form, or direct contact while no form ID   #}
+{# ======================================================================= #}
+<section class="section wwm-enquire" id="enquire" aria-labelledby="enquire-title"
+  data-enquiry
+  data-topics="{{ topicList | dump }}"
+  data-aliases="{{ enquiry.aliases | dump }}"
+  data-email="{{ site.email }}">
+  <div class="container wwm-enquire__grid">
+
+    <div class="wwm-enquire__intro stack stack--l">
+      <header class="stack stack--xs">
+        <p class="eyebrow">03 · {{ "Enquire" if hasForm else "Get in touch" }}</p>
+        <h2 id="enquire-title" data-enquiry-heading>Tell me what you need</h2>
+        {%- if hasForm %}
+        <p class="lede">A few lines is enough to start: what you need, where, and by when. I reply {{ site.replyTime }}, usually with a couple of questions or a time for the free 30-minute scoping call.</p>
+        {%- else %}
+        <p class="lede">The quickest way to reach me is email or WhatsApp. A few lines is enough to start — what you need, where, and by when — and I reply {{ site.replyTime }}.</p>
+        {%- endif %}
+      </header>
+
+      <div class="notice notice--success" data-topic-note hidden>{% icon "check" %}<p>You’re asking about <strong data-topic-note-text></strong>.</p></div>
+
+      <div class="stack stack--s">
+        <p class="label" id="channels-title">{{ "Prefer to write directly?" if hasForm else "Ways to reach me" }}</p>
+        <ul class="wwm-channels" role="list" aria-labelledby="channels-title">
+          <li class="card card--link wwm-channel">
+            <div class="card__body">
+              <p class="card__meta"><span class="wwm-channel__kind">{% icon "mail" %}Email</span></p>
+              <p class="card__title wwm-channel__value"><a href="mailto:{{ site.email }}?subject={{ mailSubject | urlencode }}" data-channel="email">{{ site.email }}</a></p>
+              <p class="card__text">Best for briefs, documents and anything detailed.</p>
+            </div>
+          </li>
+          <li class="card card--link wwm-channel">
+            <div class="card__body">
+              <p class="card__meta"><span class="wwm-channel__kind">{% icon "whatsapp" %}WhatsApp</span></p>
+              <p class="card__title wwm-channel__value"><a href="{{ site.whatsapp }}" rel="noopener" data-channel="whatsapp"><span class="visually-hidden">WhatsApp </span><span class="nowrap">{{ site.phone }}</span></a></p>
+              <p class="card__text">Fastest for anything urgent.</p>
+            </div>
+          </li>
+          <li class="card card--link wwm-channel">
+            <div class="card__body">
+              <p class="card__meta"><span class="wwm-channel__kind">{% icon "phone" %}Phone</span></p>
+              <p class="card__title wwm-channel__value"><a href="{{ site.phoneHref }}" data-channel="phone"><span class="visually-hidden">Call </span><span class="nowrap">{{ site.phone }}</span></a></p>
+              <p class="card__text">Call me directly.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    {%- if hasForm %}
+    {# ---------------- 4a. Enquiry form (Formspree) ---------------- #}
+    <div class="card band--edge wwm-sheet">
+      <div class="wwm-sheet__head" data-enquiry-head>
+        <h3 class="wwm-sheet__title" id="enquiry-form-title">Enquiry</h3>
+        <p class="label" aria-hidden="true"><span class="field__req">*</span> Required</p>
+      </div>
+
+      <form class="form wwm-form" id="enquiry-form" action="https://formspree.io/f/{{ site.formspree | trim }}" method="POST" accept-charset="utf-8" aria-labelledby="enquiry-form-title" data-enquiry-form>
+        <input type="hidden" name="_subject" value="Website enquiry — {{ site.name }}" data-enquiry-subject data-subject-pattern="Website enquiry: {topic}">
+        <input type="hidden" name="_next" value="{{ site.url }}/thanks/">
+        <div class="visually-hidden" aria-hidden="true">
+          <label for="enq-gotcha">Leave this field empty</label>
+          <input type="text" id="enq-gotcha" name="_gotcha" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="form__row">
+          <div class="field">
+            <label class="field__label" for="enq-name">Your name{{ req() }}</label>
+            <input id="enq-name" name="name" type="text" autocomplete="name" required maxlength="150" data-label="Your name" data-error-required="Please tell me your name.">
+            {{ err("enq-name") }}
+          </div>
+          <div class="field">
+            <label class="field__label" for="enq-email">Email{{ req() }}</label>
+            <input id="enq-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required maxlength="200" data-label="Email" data-error-required="Enter your email address so I can reply." data-error-format="Enter an email address like name@example.com.">
+            {{ err("enq-email") }}
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="field">
+            <label class="field__label" for="enq-org">Organisation <span class="field__optional">(optional)</span></label>
+            <input id="enq-org" name="organisation" type="text" autocomplete="organization" maxlength="200">
+          </div>
+          <div class="field">
+            <label class="field__label" for="enq-phone">Phone or WhatsApp <span class="field__optional">(optional)</span></label>
+            <input id="enq-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="40">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="enq-topic">What is it about?{{ req() }}</label>
+          <p class="field__hint" id="enq-topic-hint">Pick the closest match. There are a few extra questions for walks, projects and schools.</p>
+          <select id="enq-topic" name="topic" required aria-describedby="enq-topic-hint" data-enquiry-topic data-label="Topic" data-error-required="Choose what your enquiry is about.">
+            <option value="">Choose one…</option>
+            {%- for t in topicList %}
+            <option value="{{ t.value }}">{{ t.title }}</option>
+            {%- endfor %}
+          </select>
+          {{ err("enq-topic") }}
+        </div>
+
+        {#- Follow-up questions. Without JS all three show, each introduced by its
+            legend. form.js shows only the group for the chosen topic and
+            disables the others, so they are not sent. All are optional. -#}
+        <fieldset class="wwm-box wwm-fieldset" data-group="walk" data-topics="{{ enquiry.groups.walk | join(' ') }}">
+          <legend class="wwm-fieldset__legend"><span class="wwm-fieldset__q">If you’re booking a walk…</span><span class="label">All optional</span></legend>
+          <div class="field">
+            <label class="field__label" for="enq-walk">Which walk?</label>
+            <select id="enq-walk" name="walk" data-enquiry-walk>
+              <option value="">Not sure yet — help me choose</option>
+              {%- for w in collections.walks %}
+              <option value="{{ w.data.title }}" data-slug="{{ w.fileSlug }}">{{ w.data.title }}</option>
+              {%- endfor %}
+              <option value="A custom route">A custom route</option>
+            </select>
+          </div>
+          <div class="form__row">
+            <div class="field">
+              <label class="field__label" for="enq-dates">Preferred dates</label>
+              <p class="field__hint" id="enq-dates-hint">A date, a range or a month is fine.</p>
+              <input id="enq-dates" name="preferred_dates" type="text" maxlength="200" aria-describedby="enq-dates-hint">
+            </div>
+            <div class="field">
+              <label class="field__label" for="enq-group">Group size</label>
+              <p class="field__hint" id="enq-group-hint">Roughly how many people.</p>
+              <input id="enq-group" name="group_size" type="text" maxlength="60" aria-describedby="enq-group-hint">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="enq-language">Language</label>
+            <p class="field__hint" id="enq-language-hint">Which language should the walk be in?</p>
+            <input id="enq-language" name="walk_language" type="text" maxlength="120" aria-describedby="enq-language-hint">
+          </div>
+        </fieldset>
+
+        <fieldset class="wwm-box wwm-fieldset" data-group="project" data-topics="{{ enquiry.groups.project | join(' ') }}">
+          <legend class="wwm-fieldset__legend"><span class="wwm-fieldset__q">If it’s a study or a restoration project…</span><span class="label">All optional</span></legend>
+          <div class="field">
+            <label class="field__label" for="enq-site">Site or location</label>
+            <p class="field__hint" id="enq-site-hint">Where is the spout, site or land? A ward, town or district is enough to start.</p>
+            <input id="enq-site" name="site_location" type="text" maxlength="200" aria-describedby="enq-site-hint">
+          </div>
+          <div class="form__row">
+            <div class="field">
+              <label class="field__label" for="enq-timeline">Timeline</label>
+              <p class="field__hint" id="enq-timeline-hint">When do you need it by?</p>
+              <input id="enq-timeline" name="timeline" type="text" maxlength="200" aria-describedby="enq-timeline-hint">
+            </div>
+            <div class="field">
+              <label class="field__label" for="enq-budget">Budget band</label>
+              <p class="field__hint" id="enq-budget-hint">In Nepalese rupees (NPR). A rough band helps me shape the proposal.</p>
+              <select id="enq-budget" name="budget" aria-describedby="enq-budget-hint">
+                <option value="">Prefer not to say</option>
+                {%- for b in enquiry.budgetBands %}
+                <option>{{ b }}</option>
+                {%- endfor %}
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="wwm-box wwm-fieldset" data-group="school" data-topics="{{ enquiry.groups.school | join(' ') }}">
+          <legend class="wwm-fieldset__legend"><span class="wwm-fieldset__q">If you’re a school…</span><span class="label">All optional</span></legend>
+          <div class="form__row">
+            <div class="field">
+              <label class="field__label" for="enq-school">School name</label>
+              <input id="enq-school" name="school_name" type="text" autocomplete="organization" maxlength="200">
+            </div>
+            <div class="field">
+              <label class="field__label" for="enq-students">Students and grades</label>
+              <p class="field__hint" id="enq-students-hint">Roughly how many students, and which grades.</p>
+              <input id="enq-students" name="students_and_grades" type="text" maxlength="200" aria-describedby="enq-students-hint">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="enq-programme">What interests you?</label>
+            <select id="enq-programme" name="programme_interest">
+              <option value="">A mix, or not sure yet</option>
+              {%- if eduService %}{% for d in eduService.deliverables %}
+              <option>{{ d }}</option>
+              {%- endfor %}{% endif %}
+            </select>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label class="field__label" for="enq-message">Your message{{ req() }}</label>
+          <p class="field__hint" id="enq-message-hint">What you need, where, and by when. A few lines is plenty.</p>
+          <textarea id="enq-message" name="message" rows="6" required maxlength="5000" aria-describedby="enq-message-hint" data-label="Your message" data-error-required="Write a few lines about what you need."></textarea>
+          {{ err("enq-message") }}
+        </div>
+
+        <div class="form__actions wwm-form__actions">
+          <button class="btn btn--primary" type="submit" data-enquiry-submit data-sending-label="Sending…"><span data-submit-label>Send enquiry</span>{% icon "arrow-right" %}</button>
+          <div class="wwm-form__status" role="status" aria-live="polite" data-enquiry-status></div>
+        </div>
+        <p class="form__note">I reply {{ site.replyTime }}. Prefer email? Write to <a href="mailto:{{ site.email }}">{{ site.email }}</a>.</p>
+      </form>
+
+      <div class="wwm-sent" data-enquiry-success hidden>
+        <span class="marker marker--icon wwm-sent__mark" aria-hidden="true">{% icon "check", "icon--l" %}</span>
+        <h3 class="wwm-sent__title" tabindex="-1" data-enquiry-success-heading>Thank you — your enquiry is on its way</h3>
+        <p>I’ll reply {{ site.replyTime }}. If it’s urgent, WhatsApp is the fastest way to reach me.</p>
+        <div class="cluster">
+          <a class="link-arrow" href="{{ site.whatsapp }}" rel="noopener">{% icon "whatsapp" %}<span>Message on WhatsApp <span class="nowrap">{{ site.phone }}</span></span></a>
+          <a class="link-arrow" href="/work/">See the work{% icon "arrow-right" %}</a>
+        </div>
+      </div>
+
+      {#- Status messages, cloned into the live region by form.js. -#}
+      <template data-enquiry-template="sending">
+        <div class="notice">{% icon "clock" %}<p>Sending your enquiry…</p></div>
+      </template>
+      <template data-enquiry-template="invalid">
+        <div class="notice notice--error">{% icon "close" %}<p><strong class="notice__title">A few details are missing</strong>Please check: <span data-slot="fields">the highlighted fields</span>.</p></div>
+      </template>
+      <template data-enquiry-template="error">
+        <div class="notice notice--error">{% icon "close" %}<p><strong class="notice__title">That didn’t go through</strong>Please try again in a moment, or <a href="mailto:{{ site.email }}" data-enquiry-mailto>email me directly</a> — your message will be filled in for you.</p></div>
+      </template>
+    </div>
+
+    {%- else %}
+    {# ---------------- 4b. Direct contact (no form ID yet) ---------------- #}
+    <div class="card band--edge wwm-sheet wwm-brief" data-enquiry-direct
+      data-mail-subject="Enquiry: {topic}"
+      data-mail-greeting="Hello Hrishav,"
+      data-mail-prompts="Name and organisation|What I need|By when">
+      <div class="wwm-sheet__head">
+        <h3 class="wwm-sheet__title">What helps me reply quickly</h3>
+      </div>
+      <p class="wwm-brief__intro">Start with who you are, what you need and by when. Then, depending on what it’s about:</p>
+      <div class="wwm-brief__groups">
+        <div class="wwm-box wwm-brief__group" data-group="walk" data-topics="{{ enquiry.groups.walk | join(' ') }}">
+          <h4 class="wwm-brief__title"><span class="label" aria-hidden="true">Walks</span> Booking a walk</h4>
+          <ul class="checklist" role="list">
+            <li data-prompt="Which walk">{% icon "check" %}<span>Which walk{% if collections.walks.length %} — {% for w in collections.walks %}<a href="{{ w.url }}">{{ w.data.title }}</a>{% if loop.revindex0 == 1 %} or {% elif not loop.last %}, {% endif %}{% endfor %} —{% endif %} or a custom route</span></li>
+            <li data-prompt="Preferred dates">{% icon "check" %}<span>Preferred dates</span></li>
+            <li data-prompt="Group size">{% icon "check" %}<span>Group size</span></li>
+            <li data-prompt="Language">{% icon "check" %}<span>The language for the walk</span></li>
+          </ul>
+        </div>
+        <div class="wwm-box wwm-brief__group" data-group="project" data-topics="{{ enquiry.groups.project | join(' ') }}">
+          <h4 class="wwm-brief__title"><span class="label" aria-hidden="true">Studies</span> A study or restoration</h4>
+          <ul class="checklist" role="list">
+            <li data-prompt="Site or location">{% icon "check" %}<span>Where the site is</span></li>
+            <li data-prompt="Timeline">{% icon "check" %}<span>Your timeline</span></li>
+            <li data-prompt="Budget band">{% icon "check" %}<span>A rough budget in Nepalese rupees (NPR), if you have one</span></li>
+          </ul>
+        </div>
+        <div class="wwm-box wwm-brief__group" data-group="school" data-topics="{{ enquiry.groups.school | join(' ') }}">
+          <h4 class="wwm-brief__title"><span class="label" aria-hidden="true">Schools</span> A school programme</h4>
+          <ul class="checklist" role="list">
+            <li data-prompt="School name">{% icon "check" %}<span>Your school’s name</span></li>
+            <li data-prompt="Students and grades">{% icon "check" %}<span>Roughly how many students, and which grades</span></li>
+            <li data-prompt="What interests you">{% icon "check" %}<span>What interests you{% if eduService and eduService.deliverables %} — {{ eduService.deliverables | join(", ") | lower }}{% endif %}</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="wwm-brief__foot">
+        <a class="btn btn--secondary" href="mailto:{{ site.email }}?subject={{ mailSubject | urlencode }}" data-channel="email">{% icon "mail" %}Write the email</a>
+        <p class="form__note">Opens your email app, addressed to {{ site.email }}.</p>
+      </div>
+    </div>
+    {%- endif %}
+
+  </div>
+</section>
+
+
+{# ======================================================================= #}
+{# 5. FAQ                                                                  #}
+{# ======================================================================= #}
+{%- if faq and faq.length %}
+<section class="section section--alt wwm-faq" id="faq" aria-labelledby="faq-title">
+  <div class="container wwm-faq__grid">
+    <header class="section-head wwm-faq__head">
+      <p class="eyebrow">04 · Questions</p>
+      <h2 id="faq-title">Questions people ask first</h2>
+      <p class="lede">Something not covered here? Ask me directly by <a href="mailto:{{ site.email }}">email</a> or <a href="{{ site.whatsapp }}" rel="noopener">WhatsApp</a>.</p>
+    </header>
+    <div class="faq wwm-faq__list">
+      {%- for f in faq %}
+      <details class="faq__item"{% if loop.first %} open{% endif %}>
+        <summary>{{ f.question }}</summary>
+        <div class="faq__answer"><p>{{ f.answer | safe }}</p></div>
+      </details>
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+{%- endif %}
+
+
+{# ======================================================================= #}
+{# 6. Contact details ledger                                               #}
+{# ======================================================================= #}
+<section class="section wwm-contact" id="contact" aria-labelledby="contact-title">
+  <div class="container wwm-contact__grid">
+    <div class="wwm-contact__main">
+      <header class="section-head wwm-contact__head">
+        <p class="eyebrow">05 · Contact details</p>
+        <h2 id="contact-title">Where to find me</h2>
+        <p class="lede">I’m based in Mangalbazar, Lalitpur. Field work happens here in the Kathmandu Valley; research, documentation and writing can be done remotely.</p>
+      </header>
+      <dl class="ledger wwm-contact__ledger">
+        <div><dt>Email</dt><dd><a href="mailto:{{ site.email }}">{{ site.email }}</a></dd></div>
+        <div><dt>WhatsApp</dt><dd><a class="nowrap" href="{{ site.whatsapp }}" rel="noopener">{{ site.phone }}</a></dd></div>
+        <div><dt>Phone</dt><dd><a class="nowrap" href="{{ site.phoneHref }}">{{ site.phone }}</a></dd></div>
+        <div><dt>Location</dt><dd>{{ site.location }}</dd></div>
+        <div><dt>Replies</dt><dd>{{ site.replyTime | capitalize }}</dd></div>
+        {%- if site.social.linkedin %}
+        <div><dt>LinkedIn</dt><dd><a href="{{ site.social.linkedin }}" rel="me noopener">{{ linkedinLabel }}</a></dd></div>
+        {%- endif %}
+        {%- if site.social.medium %}
+        <div><dt>Medium</dt><dd><a href="{{ site.social.medium }}" rel="me noopener">{{ mediumLabel }}</a></dd></div>
+        {%- endif %}
+        {%- if site.cv | fileExists %}
+        <div><dt>CV</dt><dd><a href="{{ site.cv }}" download>Download my CV (PDF)</a></dd></div>
+        {%- endif %}
+        {%- if site.necLine %}
+        <div><dt>Registration</dt><dd>{{ site.necLine }}</dd></div>
+        {%- endif %}
+      </dl>
+    </div>
+    <div class="wwm-contact__aside">
+      {% media "/assets/images/portrait/hrishav-raj-joshi.jpg", "Hrishav Raj Joshi", { ratio: "4/5", kind: "portrait", focus: "top", class: "media--framed", sizes: "(min-width: 56rem) 20rem, 80vw" } %}
+      <p class="label wwm-contact__coords">{{ site.locality }} · {{ site.coordinates.lat }}° N · {{ site.coordinates.lng }}° E</p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,340 @@
+---
+layout: layouts/base.njk
+permalink: /writing/
+title: Research, writing & media
+description: Articles, features, media quotes and citations by Hrishav Raj Joshi on the Kathmandu Valley’s traditional water systems, heritage and engineering.
+pageCss: writing
+# Default display label per `type` (an item's own `typeLabel` wins).
+typeLabels:
+  article: Article
+  feature: Feature
+  quote: Media quote
+  citation: Citation
+  video: Video series
+  talk: Talk
+---
+{#-
+  /writing/ — a publication list, not a card grid.
+  Items: src/writing/*.md (data only; schema in writing.11tydata.js).
+    collections.writing → dated items, newest first, grouped by year (h2)
+    undated items       → kept out of that collection; gathered from
+                          collections.all and listed under their `group`.
+  No JavaScript: everything is server-rendered. (Type filters were left out on
+  purpose while the list is this short — the year groups do the work.)
+-#}
+{%- set items = collections.writing -%}
+{%- set lead = items | where("data.featured", true) | first -%}
+
+{%- set undated = [] -%}
+{%- for item in collections.all -%}
+  {%- if item.data.undated and ("src/writing/" in item.inputPath) -%}{%- set _ = undated.push(item) -%}{%- endif -%}
+{%- endfor -%}
+
+{%- set years = [] -%}
+{%- for item in items -%}
+  {%- set y = item.date | year -%}
+  {%- if not (y in years) -%}{%- set _ = years.push(y) -%}{%- endif -%}
+{%- endfor -%}
+
+{%- set groups = [] -%}
+{%- for item in undated -%}
+  {%- set g = item.data.group or "Other work" -%}
+  {%- if not (g in groups) -%}{%- set _ = groups.push(g) -%}{%- endif -%}
+{%- endfor -%}
+
+{#- "Appeared in": press and citations only (not venues or employers), plus
+    republishers — in record order, newest first, no duplicates. Items with
+    `appearedIn: false` (e.g. the TU Berlin thesis citation) are left out. -#}
+{%- set outlets = [] -%}
+{%- set outletNames = [] -%}
+{%- for item in items -%}
+  {%- if item.data.type in ["article", "feature", "quote", "citation"] and item.data.appearedIn !== false -%}
+    {%- set names = [item.data.outlet] -%}
+    {%- for r in item.data.republishedBy or [] -%}{%- set _ = names.push(r) -%}{%- endfor -%}
+    {%- for name in names -%}
+      {%- if name and not (name in outletNames) -%}
+        {%- set _ = outletNames.push(name) -%}
+        {%- set _ = outlets.push({ name: name, long: (item.data.outletLong if name == item.data.outlet else "") }) -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- set total = (items | length) + (undated | length) -%}
+{%- set newestItem = items | first -%}
+{%- set oldestItem = items | last -%}
+{%- set newest = (newestItem.date | year) if newestItem else "" -%}
+{%- set oldest = (oldestItem.date | year) if oldestItem else "" -%}
+
+{#- "A and B" / "A, B and C" -#}
+{%- macro andList(list) -%}
+  {%- for x in list -%}{{ x }}{% if not loop.last %}{{ " and " if loop.revindex == 2 else ", " }}{% endif %}{%- endfor -%}
+{%- endmacro -%}
+
+{#- <time> for an item, honouring datePrecision (month | year). -#}
+{%- macro when(item) -%}
+  {%- set iso = item.date | isoDate -%}
+  {%- if item.data.datePrecision == "year" -%}
+    <time datetime="{{ iso.slice(0, 4) }}">{{ item.date | year }}</time>
+  {%- else -%}
+    <time datetime="{{ iso.slice(0, 7) }}">{{ item.date | readableDate }}</time>
+  {%- endif -%}
+{%- endmacro -%}
+
+{#- One entry in the record. Macros can't see page data, so pass what's needed. -#}
+{%- macro entry(item, labels, email) -%}
+{%- set d = item.data -%}
+{%- if d.domain == "water" -%}{%- set eyebrowMod = " eyebrow--water" -%}
+{%- elif d.domain == "heritage" -%}{%- set eyebrowMod = " eyebrow--heritage" -%}
+{%- else -%}{%- set eyebrowMod = "" -%}{%- endif -%}
+<li class="entry" id="{{ item.fileSlug }}">
+  <p class="entry__kicker">
+    <span class="eyebrow{{ eyebrowMod }}">{{ d.typeLabel or labels[d.type] or d.type }}</span>
+    {%- if not d.undated %}
+    <span class="label entry__date">{{ when(item) }}</span>
+    {%- endif %}
+  </p>
+  <h3 class="entry__title">
+    {%- if d.url -%}
+    <a href="{{ d.url }}" rel="noopener">{{ d.title }}<span class="visually-hidden"> (external site)</span>{% icon "arrow-up-right", "icon--s" %}</a>
+    {%- else -%}
+    {{ d.title }}
+    {%- endif -%}
+  </h3>
+  {%- if d.deck %}
+  <p class="entry__deck">{{ d.deck }}</p>
+  {%- endif %}
+  {%- if d.outlet or d.role or (d.coAuthors and d.coAuthors | length) %}
+  <dl class="entry__facts">
+    {%- if d.outlet %}
+    <div><dt class="label">Where</dt><dd><cite>{% if d.outletLong %}<abbr title="{{ d.outletLong }}">{{ d.outlet }}</abbr>{% else %}{{ d.outlet }}{% endif %}</cite>{% if d.platform %} on {{ d.platform }}{% endif %}{% if d.place %}, {{ d.place }}{% endif %}</dd></div>
+    {%- endif %}
+    {%- if d.role %}
+    <div><dt class="label">Role</dt><dd>{{ d.role }}</dd></div>
+    {%- endif %}
+    {%- if d.coAuthors and d.coAuthors | length %}
+    <div><dt class="label">With</dt><dd>{{ andList(d.coAuthors) }}</dd></div>
+    {%- endif %}
+  </dl>
+  {%- endif %}
+  {%- if d.summary %}
+  <p class="entry__summary">{{ d.summary }}</p>
+  {%- endif %}
+  {%- if (d.republishedBy and d.republishedBy | length) or (d.notes and d.notes | length) or d.onRequest %}
+  <ul class="entry__notes" role="list">
+    {%- if d.republishedBy and d.republishedBy | length %}
+    <li class="pointer pointer--hang">Republished by {{ andList(d.republishedBy) }}</li>
+    {%- endif %}
+    {%- for n in d.notes %}
+    <li class="pointer pointer--hang">{% if n.ref %}<a href="#{{ n.ref }}">{{ n.text }}</a>{% else %}{{ n.text }}{% endif %}</li>
+    {%- endfor %}
+    {%- if d.onRequest %}
+    <li class="pointer pointer--hang">The {{ d.onRequest }} is available on request: <a href="mailto:{{ email }}?subject={{ ('Request for the ' + d.onRequest + ': ' + d.title) | urlencode }}">email me for a copy{% icon "mail" %}</a></li>
+    {%- endif %}
+  </ul>
+  {%- endif %}
+</li>
+{%- endmacro -%}
+
+{# ======================================================================= #}
+{# Hero                                                                     #}
+{# ======================================================================= #}
+<header class="page-hero writing-hero">
+  <div class="container page-hero__inner">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><span aria-current="page">Writing</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow">Writing &amp; media{% if oldest %} · {{ oldest }}{% if newest != oldest %}–{{ newest }}{% endif %}{% endif %}</p>
+    <h1 class="page-hero__title">Research, writing &amp; <em>media</em></h1>
+    <p class="lede">What I’ve co-written, the features my drawings and analysis went into, and where my work has been quoted or cited — on the Kathmandu Valley’s traditional water systems, its heritage and its engineering.</p>
+    {%- if outlets | length %}
+    <div class="writing-hero__outlets">
+      <p class="label" id="appeared-in">Appeared in</p>
+      <ul class="logo-row" role="list" aria-labelledby="appeared-in">
+        {%- for o in outlets %}
+        <li>{% if o.long %}<abbr title="{{ o.long }}">{{ o.name }}</abbr>{% else %}{{ o.name }}{% endif %}</li>
+        {%- endfor %}
+      </ul>
+    </div>
+    {%- endif %}
+  </div>
+</header>
+
+{# ======================================================================= #}
+{# Lead item (featured: true)                                               #}
+{# ======================================================================= #}
+{%- if lead %}
+{%- set ld = lead.data %}
+<section class="section writing-lead" aria-labelledby="lead-title">
+  <div class="container">
+    <article class="lead">
+      <div class="lead__body">
+        <p class="eyebrow eyebrow--heritage">Lead item · {{ ld.typeLabel or typeLabels[ld.type] }}</p>
+        <h2 class="lead__title" id="lead-title">{{ ld.title }}</h2>
+        {%- if ld.deck %}
+        <p class="lead__deck">{{ ld.deck }}</p>
+        {%- endif %}
+        <p class="lede lead__summary">{{ ld.summary }}</p>
+        <dl class="ledger ledger--compact lead__ledger">
+          <div><dt>Published in</dt><dd><cite>{{ ld.outlet }}</cite>{% if ld.place %}, {{ ld.place }}{% endif %}</dd></div>
+          {%- if ld.coAuthors and ld.coAuthors | length %}
+          <div><dt>Written with</dt><dd>{{ andList(ld.coAuthors) }}</dd></div>
+          {%- elif ld.role %}
+          <div><dt>Role</dt><dd>{{ ld.role }}</dd></div>
+          {%- endif %}
+        </dl>
+        {%- for n in ld.notes %}
+        <p class="pointer pointer--hang lead__note">{% if n.ref %}<a href="#{{ n.ref }}">{{ n.text }}</a>{% else %}{{ n.text }}{% endif %}</p>
+        {%- endfor %}
+        {%- if ld.url %}
+        <div class="cluster lead__actions">
+          <a class="btn btn--primary" href="{{ ld.url }}" rel="noopener">Read it on {{ ld.outlet }}<span class="visually-hidden"> (external site)</span>{% icon "arrow-up-right" %}</a>
+        </div>
+        {%- endif %}
+      </div>
+      {%- set leadIso = lead.date | isoDate %}
+      {%- set leadReadable = lead.date | readableDate %}
+      <p class="lead__stamp">
+        <span class="label lead__stamp-kicker">Published</span>
+        {%- if ld.datePrecision == "year" %}
+        <time class="lead__stamp-date" datetime="{{ leadIso.slice(0, 4) }}"><span class="lead__stamp-year">{{ lead.date | year }}</span></time>
+        {%- else %}
+        <time class="lead__stamp-date" datetime="{{ leadIso.slice(0, 7) }}"><span class="lead__stamp-month">{{ leadReadable.split(" ")[0] }}</span> <span class="lead__stamp-year">{{ lead.date | year }}</span></time>
+        {%- endif %}
+      </p>
+    </article>
+  </div>
+</section>
+{%- endif %}
+
+{# ======================================================================= #}
+{# The record — every item, grouped by year (h2 per year)                   #}
+{# ======================================================================= #}
+<section class="section section--alt writing-record" aria-label="The record, by year">
+  <div class="container">
+    <div class="record__intro">
+      <p class="eyebrow">The record · {{ total }} {{ "entry" if total == 1 else "entries" }}</p>
+      <p class="lede">Newest first. A title with an arrow opens the original on the publisher’s site; the rest are listed for the record.</p>
+    </div>
+
+    <div class="record">
+      {%- for y in years %}
+      {%- set yearItems = [] %}
+      {%- for item in items %}{% if (item.date | year) == y %}{% set _ = yearItems.push(item) %}{% endif %}{% endfor %}
+      <div class="record__group reveal">
+        <div class="record__when">
+          <h2 class="record__year" id="year-{{ y }}">{{ y }}</h2>
+          <p class="label record__count">{{ yearItems | length }} {{ "entry" if (yearItems | length) == 1 else "entries" }}</p>
+        </div>
+        <ol class="record__list" role="list">
+          {%- for item in yearItems %}
+          {{ entry(item, typeLabels, site.email) }}
+          {%- endfor %}
+        </ol>
+      </div>
+      {%- endfor %}
+
+      {%- for g in groups %}
+      {%- set groupItems = [] %}
+      {%- for item in undated %}{% if (item.data.group or "Other work") == g %}{% set _ = groupItems.push(item) %}{% endif %}{% endfor %}
+      <div class="record__group record__group--undated reveal">
+        <div class="record__when">
+          <h2 class="record__year record__year--text" id="{{ g | slugify }}">{{ g }}</h2>
+          <p class="label record__count">Undated</p>
+        </div>
+        <ol class="record__list" role="list">
+          {%- for item in groupItems %}
+          {{ entry(item, typeLabels, site.email) }}
+          {%- endfor %}
+        </ol>
+      </div>
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# Citation trail — where the hiti drawings went                            #}
+{# ======================================================================= #}
+{%- set nt = items | where("fileSlug", "nepali-times-water-spouts") | first -%}
+{%- set tu = items | where("fileSlug", "tu-berlin-thesis-citation") | first -%}
+{%- if nt %}
+{%- set republishers = nt.data.republishedBy or [] -%}
+{%- set rc = republishers | length -%}
+{%- set placeCount = 1 + (1 if tu else 0) + rc -%}
+{%- set numberWords = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"] -%}
+{%- set cadDrawing = "/assets/images/drawings/hiti-cross-section-cad.png" -%}
+<section class="section writing-trail" aria-labelledby="trail-title">
+  <div class="container">
+    <div class="split split--top split--text-wide">
+      <div class="writing-trail__text">
+        <header class="section-head">
+          <p class="eyebrow eyebrow--water">Citation trail</p>
+          <h2 id="trail-title">One set of drawings, {{ numberWords[placeCount] or placeCount }} {{ "place" if placeCount == 1 else "places" }}</h2>
+          <p class="lede">How my hiti cross-sections travelled from a pro bono field investigation to a newspaper feature{% if tu %}, a university thesis{% endif %}{% if rc %} and {{ numberWords[rc] or rc }} architecture {{ "platform" if rc == 1 else "platforms" }}{% endif %}.</p>
+        </header>
+        <ol class="timeline">
+          <li class="timeline__item" data-type="water">
+            <p class="timeline__years">Field work</p>
+            <h3 class="timeline__role">Field investigation and drawings</h3>
+            <p class="timeline__org">Pro bono</p>
+            <p class="timeline__desc">I investigated the internal hydraulic structure of the Valley’s hiti (stone water spouts) and drew it as computer-aided design (CAD) cross-sections.</p>
+          </li>
+          <li class="timeline__item" data-type="water">
+            <p class="timeline__years">{{ when(nt) }}</p>
+            <h3 class="timeline__role">Primary technical source for a feature</h3>
+            <p class="timeline__org"><cite>{{ nt.data.outlet }}</cite></p>
+            <p class="timeline__desc">The drawings and my engineering analysis were the primary technical source for <a href="#{{ nt.fileSlug }}">“{{ nt.data.title }}”</a>.</p>
+          </li>
+          {%- if tu %}
+          <li class="timeline__item" data-type="water">
+            <p class="timeline__years">{{ when(tu) }}</p>
+            <h3 class="timeline__role">Cited in a master’s thesis</h3>
+            <p class="timeline__org">{% if tu.data.outletLong %}{{ tu.data.outletLong }} ({{ tu.data.outlet }}){% else %}{{ tu.data.outlet }}{% endif %}</p>
+            <p class="timeline__desc"><a href="#{{ tu.fileSlug }}">A master’s thesis cited the cross-sections</a>.</p>
+          </li>
+          {%- endif %}
+          {%- if rc %}
+          <li class="timeline__item" data-type="water">
+            <p class="timeline__years">Online</p>
+            <h3 class="timeline__role">Republished</h3>
+            <p class="timeline__org">{{ andList(republishers) }}</p>
+            <p class="timeline__desc">Online architecture {{ "platform" if rc == 1 else "platforms" }} republished the drawings.</p>
+          </li>
+          {%- endif %}
+        </ol>
+      </div>
+      <div class="writing-trail__figure">
+        {%- if cadDrawing | imageExists %}
+        {% media cadDrawing, "Computer-aided design cross-section of a hiti, showing its internal hydraulic structure", { caption: "My CAD cross-section of a hiti’s internal hydraulic structure" } %}
+        {%- else %}
+        {% include "partials/hiti-diagram.njk" %}
+        <p class="writing-trail__note">A simplified section of the system my drawings describe: spring, chamber, conduit and spout.</p>
+        {%- endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{%- endif %}
+
+{# ======================================================================= #}
+{# Medium + commissions                                                      #}
+{# ======================================================================= #}
+{%- if site.social.medium %}
+<section class="band--dark band--edge" aria-labelledby="medium-title">
+  <div class="container cta-band">
+    <div class="stack stack--s">
+      <p class="eyebrow">Keep reading</p>
+      <h2 class="cta-band__title" id="medium-title">Read more on <em>Medium</em></h2>
+      <p class="lede">I also publish on Medium. Need something written — a research report, technical documentation or an explainer for non-specialists? I take on research and technical writing too.</p>
+    </div>
+    <div class="cluster">
+      <a class="btn btn--primary" href="{{ site.social.medium }}" rel="me noopener">{% icon "medium" %}Read on Medium<span class="visually-hidden"> (external site)</span></a>
+      <a class="btn btn--on-dark" href="/work-with-me/?topic=research-writing#enquire">Commission writing{% icon "arrow-right" %}</a>
+    </div>
+  </div>
+</section>
+{%- endif %}

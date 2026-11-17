@@ -1,0 +1,36 @@
+# "Worked with / for" — institutions named in existing content (docs/FACTS.md).
+# `name` is the full name (use on first mention); `short` is the acronym or
+# short form for the typographic logo row. No URLs: none are verified yet.
+- name: Kathmandu Metropolitan City
+  short: KMC
+  kind: municipality
+- name: Lalitpur Metropolitan City
+  short: LMC
+  kind: municipality
+- name: Centre for Integrated Urban Development
+  short: CIUD
+  kind: ngo
+- name: Open Learning Exchange Nepal
+  short: OLE Nepal
+  kind: ngo
+- name: KDDI Foundation (Japan)
+  short: KDDI Foundation
+  kind: foundation
+- name: Prakriti Foundation
+  short: Prakriti Foundation
+  kind: foundation
+- name: Global Shapers Community (World Economic Forum)
+  short: Global Shapers
+  kind: network
+- name: Brunel University — MSc research field guide
+  short: Brunel University
+  kind: university
+- name: Kathmandu Valley Water Supply Management Board
+  short: KVWSB
+  kind: public-body
+- name: Nepal Reconstruction Authority
+  short: Reconstruction Authority
+  kind: public-body
+- name: Catalyst for Change
+  short: Catalyst for Change
+  kind: ngo

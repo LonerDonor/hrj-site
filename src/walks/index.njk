@@ -1,0 +1,277 @@
+---
+layout: layouts/base.njk
+permalink: /walks/
+title: Heritage walks
+description: "Custom heritage walks in Lalitpur and the Kathmandu Valley: water, food and urban heritage, planned around your group. 50+ walks led since 2017."
+
+heroImage: /assets/images/walks/hero.jpg
+heroImageAlt: A walking group listening at a sunken hiti stone-spout courtyard in Lalitpur
+
+# "Who comes on these walks" — from the old site (content.js water-heritage-walks,
+# about.html, contact.html FAQ). Named institutions also appear in clients.yml.
+groups:
+  - kind: Water sector
+    who: Senior technical water professionals with Prakriti Foundation
+  - kind: Global networks
+    who: World Economic Forum Global Shapers
+  - kind: Universities
+    who: Academic field guide for Brunel University master’s (MSc) research
+  - kind: Diplomacy
+    who: Diplomats and visiting delegations
+  - kind: Research
+    who: Researchers and international organisations
+# Short names from clients.yml to show as typographic wordmarks.
+walkInstitutions:
+  - Prakriti Foundation
+  - Global Shapers
+  - Brunel University
+---
+{#-
+  /walks/ — the heritage-walk offering. Data: collections.walks (src/walks/*.md),
+  services.yml (heritage-walks), stats.yml (walks), timeline.yml (walk guide
+  since), faq.yml (walk-related subset). Styles: /assets/css/pages/walks.css.
+-#}
+{%- set walkService = services.items | where("slug", "heritage-walks") | first -%}
+{%- set walksStat = stats | where("id", "walks") | first -%}
+{%- set guideRole = timeline | where("role", "Heritage Walk Guide (freelance)") | first -%}
+{%- set guideSince = guideRole.years.split("–")[0] if guideRole else "" -%}
+{%- set featuredWalk = collections.walks | where("data.featured") | first -%}
+
+{#- Walk-related FAQ: entries tagged "walks" once faq.yml has tags; until then,
+    a keyword match on the question/answer. Questions about walks come first. -#}
+{%- set walkFaq = faq | where("tags", "walks") -%}
+{%- if not (faq | where("tags")).length -%}
+  {%- set walkFaq = [] -%}
+  {%- for f in faq -%}
+    {%- if "walk" in (f.question | lower) %}{% set _ = walkFaq.push(f) %}{% endif -%}
+  {%- endfor -%}
+  {%- for f in faq -%}
+    {%- set hay = (f.question + " " + f.answer) | lower -%}
+    {%- if not ("walk" in (f.question | lower)) and ("walk" in hay or "guide" in hay or "reply" in (f.question | lower)) %}{% set _ = walkFaq.push(f) %}{% endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{# ======================================================================= #}
+{# 1. Hero                                                                 #}
+{# ======================================================================= #}
+<header class="page-hero page-hero--split walks-hero">
+  <div class="container page-hero__inner">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><span aria-current="page">Walks</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow eyebrow--water">Heritage walks · Kathmandu Valley</p>
+    <h1 class="page-hero__title">Walk the water system that has fed the Valley for <em>1,500 years</em></h1>
+    <p class="lede">Stone spouts, royal canals, ponds and the community institutions that keep them running — seen on foot with the civil engineer who measures and draws them. Every walk is planned around your group.</p>
+    <div class="cluster page-hero__actions">
+      <a class="btn btn--primary" href="{{ enquiryUrl }}">Request a walk{% icon "arrow-right" %}</a>
+      <a class="btn btn--secondary" href="{{ site.whatsapp }}" rel="noopener">{% icon "whatsapp" %}Message on WhatsApp</a>
+    </div>
+    <dl class="ledger ledger--compact page-hero__meta">
+      {%- if walksStat %}
+      <div><dt>Walks led</dt><dd>{{ walksStat.value }}{% if guideSince %} since {{ guideSince }}{% endif %}</dd></div>
+      {%- endif %}
+      <div><dt>Programmes</dt><dd>{% for w in collections.walks %}{{ w.data.programme or w.data.title }}{% if not loop.last %} · {% endif %}{% endfor %}</dd></div>
+      {%- if walkService and walkService.idealFor %}
+      <div><dt>Ideal for</dt><dd>{{ walkService.idealFor | replace(r/\.$/, "") }}</dd></div>
+      {%- endif %}
+      <div><dt>Based in</dt><dd>{{ site.location }}</dd></div>
+    </dl>
+    <div class="page-hero__aside">
+      {% media heroImage, heroImageAlt, { ratio: "4/5", kind: "walk", eager: true, sizes: "(min-width: 56rem) 28rem, 100vw" } %}
+    </div>
+  </div>
+</header>
+
+{# ======================================================================= #}
+{# 2. What a walk is like — prose + the hiti cross-section                 #}
+{# ======================================================================= #}
+<section class="section" aria-labelledby="like-title">
+  <div class="container split split--text-wide walks-like">
+    <div class="stack stack--m">
+      <header class="stack stack--xs">
+        <p class="eyebrow">What a walk is like</p>
+        <h2 id="like-title">Heritage you can read from the street</h2>
+      </header>
+      <div class="prose">
+        <p>A walk with me is not a tour of monuments. We look at how the old town actually works. On the water walk that means the canals, ponds and stone spouts that still carry water, and the community institutions and rituals that have looked after them.</p>
+        <p>I am a civil engineer as well as a guide. I measure and draw hiti in cross-section, so I can explain how each part works as well as what it means — standing where you can see it.</p>
+        <p>No two walks are the same. I plan each route around your group — water, food or urban heritage, or a mix — and agree timing and logistics with you before the day.</p>
+      </div>
+    </div>
+    <div class="walks-like__figure stack stack--s">
+      {% include "partials/hiti-diagram.njk" %}
+      <p class="label walks-like__note">On the water walk we read a hiti like this, from spring to spout.</p>
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 3. The walks — signature walk featured, the others as a pair           #}
+{# ======================================================================= #}
+<section class="section section--alt" aria-labelledby="walks-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">The walks</p>
+      <h2 id="walks-title">Choose a starting point</h2>
+      <p class="lede">Each walk is a starting point, not a fixed script. Pick the one closest to your group’s interests and I will shape the route from there.</p>
+    </header>
+
+    <div class="walks-list">
+      {%- if featuredWalk %}
+      {%- set f = featuredWalk %}
+      <article class="card card--link card--horizontal card--feature walk-feature" data-domain="{{ f.data.domain or 'water' }}">
+        <div class="card__media">
+          {% media f.data.cover, "", { ratio: "4/3", kind: f.data.coverKind or "water", sizes: "(min-width: 64rem) 40rem, 100vw" } %}
+        </div>
+        <div class="card__body">
+          <p class="card__meta"><span>Signature walk</span>{% if f.data.programme %}<span>{{ f.data.programme }}</span>{% endif %}{% if f.data.duration %}<span>{{ f.data.duration }}</span>{% endif %}</p>
+          <h3 class="card__title"><a href="{{ f.url }}">{{ f.data.title }}</a></h3>
+          <p class="card__text">{{ f.data.summary }}</p>
+          {%- if f.data.stops and f.data.stops.length %}
+          <div class="walk-feature__route stack stack--2xs">
+            <p class="label">The route follows</p>
+            <ol class="walk-route" role="list">
+              {%- for s in f.data.stops %}
+              <li><span class="walk-route__name">{{ s.name }}</span><span class="walk-route__dots" aria-hidden="true"></span>{% if s.gloss %}<span class="visually-hidden">, </span><span class="walk-route__gloss">{{ s.gloss }}</span>{% endif %}</li>
+              {%- endfor %}
+            </ol>
+          </div>
+          {%- endif %}
+          <div class="card__footer"><span class="card__cue" aria-hidden="true">See the route{% icon "arrow-right" %}</span></div>
+        </div>
+      </article>
+      {%- endif %}
+
+      <div class="grid grid--2">
+        {%- for w in collections.walks %}
+        {%- if not featuredWalk or w.url != featuredWalk.url %}
+        <article class="card card--link" data-domain="{{ w.data.domain or 'heritage' }}">
+          <div class="card__media">
+            {% media w.data.cover, "", { ratio: "3/2", kind: w.data.coverKind or "walk", sizes: "(min-width: 64rem) 34rem, 100vw" } %}
+          </div>
+          <div class="card__body">
+            <p class="card__meta">{% if w.data.programme %}<span>{{ w.data.programme }}</span>{% endif %}{% if w.data.duration %}<span>{{ w.data.duration }}</span>{% endif %}</p>
+            <h3 class="card__title"><a href="{{ w.url }}">{{ w.data.title }}</a></h3>
+            <p class="card__text">{{ w.data.summary }}</p>
+            {%- if w.data.themes %}
+            <ul class="tags" role="list">
+              {%- for t in w.data.themes %}
+              <li class="tag {{ 'tag--water' if w.data.domain == 'water' else 'tag--heritage' }}">{{ t }}</li>
+              {%- endfor %}
+            </ul>
+            {%- endif %}
+            <div class="card__footer"><span class="card__cue" aria-hidden="true">See the walk{% icon "arrow-right" %}</span></div>
+          </div>
+        </article>
+        {%- endif %}
+        {%- endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 4. How a walk comes together                                            #}
+{# ======================================================================= #}
+<section class="section" aria-labelledby="steps-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Booking</p>
+      <h2 id="steps-title">How a walk comes together</h2>
+      <p class="lede">Walks are arranged directly with me and shaped around your group, in four steps.</p>
+    </header>
+    <ol class="steps">
+      {%- for st in bookingSteps %}
+      <li><h3 class="steps__title">{{ st.title }}</h3><p class="steps__text">{{ st.text }}</p></li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 5. Who comes on these walks                                             #}
+{# ======================================================================= #}
+<section class="section section--alt" aria-labelledby="who-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Who comes on these walks</p>
+      <h2 id="who-title">Researchers, diplomats and water professionals</h2>
+      <p class="lede">I have guided groups from international networks, universities and the water sector, as well as visiting delegations.</p>
+    </header>
+
+    <ul class="logo-row walks-logos" role="list" aria-label="Institutions I have guided">
+      {%- for c in clients %}
+      {%- if c.short in walkInstitutions %}
+      <li>{{ c.short }}</li>
+      {%- endif %}
+      {%- endfor %}
+    </ul>
+
+    <div class="walks-who">
+      <dl class="ledger">
+        {%- for g in groups %}
+        <div><dt>{{ g.kind }}</dt><dd>{{ g.who }}</dd></div>
+        {%- endfor %}
+      </dl>
+      <ul class="stats" role="list">
+        {%- if walksStat %}
+        <li class="stats__item">
+          <span class="stats__value">{{ walksStat.value }}</span>
+          <span class="stats__label">{{ walksStat.label }}</span>
+          <span class="stats__detail">{{ walksStat.detail }}</span>
+        </li>
+        {%- endif %}
+        {%- if guideSince %}
+        <li class="stats__item">
+          <span class="stats__value">Since {{ guideSince }}</span>
+          <span class="stats__label">guiding walks</span>
+          <span class="stats__detail">Freelance walk guide in {{ guideRole.org }}</span>
+        </li>
+        {%- endif %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 6. Questions                                                            #}
+{# ======================================================================= #}
+{%- if walkFaq.length %}
+<section class="section" aria-labelledby="faq-title">
+  <div class="container container--narrow">
+    <header class="section-head">
+      <p class="eyebrow">Questions</p>
+      <h2 id="faq-title">Before you book</h2>
+    </header>
+    <div class="faq">
+      {%- for f in walkFaq %}
+      <details class="faq__item"{% if loop.first %} open{% endif %}>
+        <summary>{{ f.question }}</summary>
+        <div class="faq__answer"><p>{{ f.answer | safe }}</p></div>
+      </details>
+      {%- endfor %}
+    </div>
+    <div class="notice notice--info walks-faq__note" role="note">{% icon "whatsapp" %}<p><strong class="notice__title">Something not covered here?</strong>Ask me directly — <a href="{{ site.whatsapp }}" rel="noopener">WhatsApp</a> is the fastest way to reach me.</p></div>
+  </div>
+</section>
+{%- endif %}
+
+{# ======================================================================= #}
+{# 7. Booking CTA band                                                     #}
+{# ======================================================================= #}
+<section class="band--dark band--edge" aria-labelledby="cta-title">
+  <div class="container cta-band">
+    <div class="stack stack--s">
+      <p class="eyebrow">Request a walk</p>
+      <h2 class="cta-band__title" id="cta-title">Tell me about your <em>group</em></h2>
+      <p class="lede">Who is coming, roughly when, and what they want to understand. I usually reply {{ site.replyTime }}; WhatsApp is fastest.</p>
+    </div>
+    <div class="cluster">
+      <a class="btn btn--primary" href="{{ enquiryUrl }}">Request a walk{% icon "arrow-right" %}</a>
+      <a class="btn btn--on-dark" href="{{ site.whatsapp }}" rel="noopener">{% icon "whatsapp" %}Message on WhatsApp</a>
+    </div>
+  </div>
+</section>

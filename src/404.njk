@@ -1,0 +1,31 @@
+---
+layout: layouts/base.njk
+permalink: /404.html
+title: Page not found
+description: This page doesn't exist — it may have moved when the site was rebuilt.
+eleventyExcludeFromCollections: true
+noindex: true
+---
+<section class="page-hero">
+  <div class="container page-hero__inner">
+    <p class="eyebrow">Error 404</p>
+    <h1 class="page-hero__title">This spout has run <em>dry</em>.</h1>
+    <p class="lede">The page you were looking for isn’t here — it may have moved when the site was rebuilt. These are the places most people are after:</p>
+    <div class="cluster page-hero__actions">
+      <a class="btn btn--primary" href="/">Go to the home page{% icon "arrow-right" %}</a>
+      <a class="btn btn--secondary" href="/work/">See the work</a>
+    </div>
+  </div>
+</section>
+<section class="section section--tight">
+  <div class="container">
+    <ul class="cluster cluster--loose" role="list">
+      {%- for item in nav.items %}
+      {%- if not (item.needs == "photos" and not photosLive) %}
+      <li><a class="link-arrow" href="{{ item.url }}">{{ item.label }}{% icon "arrow-right" %}</a></li>
+      {%- endif %}
+      {%- endfor %}
+      <li><a class="link-arrow" href="{{ nav.cta.url }}">{{ nav.cta.label }}{% icon "arrow-right" %}</a></li>
+    </ul>
+  </div>
+</section>

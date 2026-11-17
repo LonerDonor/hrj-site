@@ -1,0 +1,40 @@
+# FAQ — ported from the old contact page and corrected per docs/FACTS.md.
+# `answer` may contain inline HTML (render with | safe).
+# `tags` (optional) pick which pages show an entry besides /work-with-me/
+# (which shows them all). /walks/ shows entries tagged `walks`. Once any entry
+# has tags, /walks/ uses tags only — tag every walk-related entry.
+- question: Do you work with international organisations?
+  tags: [walks]
+  answer: >-
+    Yes. I regularly guide visiting researchers, delegations and international
+    groups, and I have been a field guide for Brunel University MSc research.
+    My hiti cross-section drawings were cited in a TU Berlin master’s thesis
+    (2023) and featured in Nepali Times. Research, documentation and writing can
+    be done remotely; field work happens here in the Kathmandu Valley.
+
+- question: Can you lead a heritage walk for a visiting delegation?
+  tags: [walks]
+  answer: >-
+    Yes. I have led walks for diplomats, World Economic Forum Global Shapers,
+    water professionals, academic researchers and institutional groups. Routes
+    are planned around your group’s interests — water heritage, food heritage,
+    urban history or Newar culture.
+
+- question: What is your availability for long-term projects?
+  answer: >-
+    I take on a limited number of long-term engagements at a time so each one
+    gets proper attention. Get in touch early and we can talk through timing and
+    scope.
+
+- question: Do you do pro bono or NGO work?
+  answer: >-
+    Sometimes. I have done pro bono technical work on heritage water
+    infrastructure — including the full technical groundwork for a stone spout in
+    Thecho — where the community benefit is clear. Tell me about your
+    organisation and the project and I will consider it case by case.
+
+- question: How quickly will you reply?
+  tags: [walks, contact]
+  answer: >-
+    Usually within 2–3 working days. If it is urgent, WhatsApp is the fastest way
+    to reach me.

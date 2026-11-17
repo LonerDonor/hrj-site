@@ -1,0 +1,127 @@
+# Photographs for the /photos/ gallery (src/photos/index.njk).
+# Owned by the Photos page. Other templates may read it — guard with {% if photos %}.
+#
+# One entry per photograph, in the order they appear on the page.
+#
+#   src       Required. /assets/images/photos/<category>/<file-name>.jpg
+#             The file lives in src/assets/images/photos/<category>/.
+#             Entries whose file doesn't exist yet are simply left out (the
+#             build never breaks). /photos/, its menu item and the home page
+#             strip appear once the first file exists.
+#   alt       Required. What the photograph shows, in one plain sentence, for
+#             people who can't see it. Describe the photo, not the subject's history.
+#   caption   Required. Short title under the photo. Up to ~28 characters stays
+#             on one line on wide screens (the full text shows in the viewer).
+#   place     Where it was taken, e.g. "Patan Durbar Square". Keep it short.
+#   year      Optional. The year it was taken, e.g. 2024. Leave it out if unsure.
+#   category  Required. One of: water | heritage | walks | robotics | portfolio
+#   shape     Optional tile shape on the page:
+#               (leave out)  normal tile — landscape photos
+#               tall         portrait (vertical) photos — twice as tall
+#               large        a favourite landscape photo — twice as wide and tall
+#               wide         panoramas — twice as wide, same height
+#   focus     Optional. Which part to keep when a tile crops the photo:
+#             top | bottom | left | right   (centre is the default)
+#   featured  Optional. true → used as the page's social-share image (first one wins).
+#   home      Optional. true → shown in the home page strip (up to 6; without
+#             any `home: true`, the first 6 photos that exist are used).
+#
+# The entries below are SLOTS, listed on the page only once their file is
+# added (plates are numbered in order of the photos that exist). When you add a photo, rewrite alt / caption / place so they describe
+# the photograph you actually used, and add a year only if you know it.
+# The shapes are arranged so the grid packs without gaps (2, 3 and 4 columns):
+#   large, tall, tall, wide, wide, tall, tall, large, then four normal tiles.
+# If you change shapes, check the page still looks even.
+
+# ---- 01 -------------------------------------------------------------------
+- src: /assets/images/photos/water/hiti-spout.jpg
+  alt: Water running from a carved stone spout into a sunken hiti basin.
+  caption: Stone spout (hiti)
+  place: Lalitpur
+  category: water
+  shape: large
+  featured: true
+
+# ---- 02 -------------------------------------------------------------------
+- src: /assets/images/photos/heritage/repousse-sculpture.jpg
+  alt: Detail of a repoussé metal sculpture, hammered from the reverse side.
+  caption: Repoussé metalwork
+  place: Kathmandu Valley
+  category: heritage
+  shape: tall
+
+# ---- 03 -------------------------------------------------------------------
+- src: /assets/images/photos/walks/courtyard-lane.jpg
+  alt: A narrow lane opening into a courtyard on a heritage walk route.
+  caption: Into the courtyard
+  place: Lalitpur
+  category: walks
+  shape: tall
+
+# ---- 04 -------------------------------------------------------------------
+- src: /assets/images/photos/water/rajkulo-canal.jpg
+  alt: A stretch of the Rajkulo, the historic irrigation canal, running through fields.
+  caption: Rajkulo canal
+  place: Lalitpur
+  category: water
+  shape: wide
+
+# ---- 05 -------------------------------------------------------------------
+- src: /assets/images/photos/portfolio/valley-panorama.jpg
+  alt: A wide view across the Kathmandu Valley.
+  caption: The valley, wide
+  place: Kathmandu Valley
+  category: portfolio
+  shape: wide
+
+# ---- 06 -------------------------------------------------------------------
+- src: /assets/images/photos/robotics/robotics-class.jpg
+  alt: Students building and testing a robot during a robotics class.
+  caption: Robotics class
+  place: Public school, Lalitpur
+  category: robotics
+  shape: tall
+
+# ---- 07 -------------------------------------------------------------------
+- src: /assets/images/photos/water/spout-head.jpg
+  alt: Close-up of the carved head of a stone water spout.
+  caption: Carved spout head
+  place: Kathmandu Valley
+  category: water
+  shape: tall
+
+# ---- 08 -------------------------------------------------------------------
+- src: /assets/images/photos/heritage/patan-durbar-square.jpg
+  alt: Tiered temple roofs at Patan Durbar Square.
+  caption: Temple roofs
+  place: Patan Durbar Square
+  category: heritage
+  shape: large
+
+# ---- 09 -------------------------------------------------------------------
+- src: /assets/images/photos/walks/walk-group.jpg
+  alt: A walking group gathered around a stone spout, listening.
+  caption: A walk group at a hiti
+  place: Lalitpur
+  category: walks
+
+# ---- 10 -------------------------------------------------------------------
+- src: /assets/images/photos/robotics/robotics-challenge.jpg
+  alt: School teams with their robots at the inter-school robotics challenge.
+  caption: Robotics challenge
+  place: Lalitpur
+  category: robotics
+
+# ---- 11 -------------------------------------------------------------------
+- src: /assets/images/photos/portfolio/old-city-street.jpg
+  alt: A street in the old city.
+  caption: Street, old city
+  place: Lalitpur
+  category: portfolio
+
+# ---- 12 -------------------------------------------------------------------
+- src: /assets/images/photos/portfolio/light-and-texture.jpg
+  alt: Light falling across a textured wall.
+  caption: Light and texture
+  place: Kathmandu Valley
+  category: portfolio

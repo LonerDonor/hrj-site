@@ -1,0 +1,35 @@
+{#- schema.org Person — included on pages with `jsonld: person` (home, about). -#}
+{%- set sameAs = [site.social.linkedin, site.social.medium] | arrayify -%}
+{%- set person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": site.url + "/#person",
+  "name": site.name,
+  "url": site.url + "/",
+  "description": site.description,
+  "jobTitle": "Civil Engineer",
+  "email": "mailto:" + site.email,
+  "telephone": site.phoneHref | replace("tel:", ""),
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": site.locality,
+    "addressCountry": site.countryCode
+  },
+  "alumniOf": {
+    "@type": "CollegeOrUniversity",
+    "name": "Nepal Engineering College"
+  },
+  "hasCredential": {
+    "@type": "EducationalOccupationalCredential",
+    "name": site.necLine
+  },
+  "knowsAbout": [
+    "Traditional water systems",
+    "Hiti (dhunge dhara) stone spouts",
+    "Groundwater recharge",
+    "Heritage conservation",
+    "Robotics education"
+  ],
+  "sameAs": sameAs
+} -%}
+<script type="application/ld+json">{{ person | jsonify | safe }}</script>

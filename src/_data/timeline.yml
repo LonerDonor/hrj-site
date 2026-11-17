@@ -1,0 +1,74 @@
+# Career logbook (old content.js timeline, acronyms expanded).
+# `type`: engineering | heritage | education | community — drives the dot colour.
+# Ordered newest first.
+- years: 2024–present
+  role: Project Coordinator, Robotics Education
+  org: Open Learning Exchange (OLE) Nepal
+  type: education
+  desc: Leading the robotics programme across 10+ public schools in Lalitpur, reaching 300+ students.
+
+- years: 2024–present
+  role: Board Member and Secretary
+  org: Catalyst for Change
+  type: community
+  desc: One of a founding team of five at a non-profit working on environmental and social projects.
+
+- years: Jun–Dec 2024
+  role: Technical Advisor, Hiti Reconstruction
+  org: Kathmandu Metropolitan City (KMC)
+  type: heritage
+  desc: Technical input on two hiti reconstruction projects, on the recommendation of Padma Sundar Joshi.
+
+- years: 2022–present
+  role: Consultant Engineer and Research Consultant
+  org: Centre for Integrated Urban Development (CIUD)
+  type: engineering
+  desc: Lead engineer on three groundwater-recharge projects; research on traditional water systems.
+
+- years: "2023"
+  role: Robotics Associate
+  org: Open Learning Exchange (OLE) Nepal
+  type: education
+  desc: Pilot programme in 10 schools; created the inter-school robotics challenge that grew into the annual Yala Mayor’s Cup.
+
+- years: "2023"
+  role: Pro Bono Technical Consultant
+  org: Kathmandu Valley Water Supply Management Board (KVWSB)
+  type: heritage
+  desc: Full technical groundwork for a new dhunge dhara (stone spout) in Thecho — survey, hydraulic calculations, CAD drawings and cost estimate.
+
+- years: 2020–2021
+  role: Civil Engineer
+  org: Onmetal Art and Craft
+  type: engineering
+  desc: Structural support for the 40 ft Little Buddha statue and the 74 ft Bhairav face, with the late master artist Rajkumar Shakya.
+
+- years: 2019–2020
+  role: Trainee Structural Engineer (remote)
+  org: Shangrila Engineers, Texas
+  type: engineering
+  desc: Hand calculations and steel design to American Society of Civil Engineers (ASCE) 7-05/7-10 and American Institute of Steel Construction (AISC) 360-10.
+
+- years: 2018–2020
+  role: Civil Engineer
+  org: Mandala Engineering Consultancy
+  type: engineering
+  desc: Structural analysis, estimation and site supervision.
+
+- years: 2017–present
+  role: Heritage Walk Guide (freelance)
+  org: Lalitpur and the Kathmandu Valley
+  type: heritage
+  desc: 50+ walks on water, food and urban heritage.
+
+- years: "2017"
+  role: Civil Engineer, Post-Earthquake Assessment
+  org: Nepal Reconstruction Authority
+  type: engineering
+  desc: Structural assessment of earthquake-damaged buildings in Hawa, Dolakha.
+
+- years: 2013–2022
+  role: Bachelor of Civil & Rural Engineering
+  org: Nepal Engineering College
+  type: education
+  desc: Final project on green building. Nepal Engineering Council (NEC) registration no. 78562.

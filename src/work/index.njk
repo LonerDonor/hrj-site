@@ -1,0 +1,152 @@
+---
+layout: layouts/base.njk
+permalink: /work/
+title: Work
+description: "Case studies from Nepal: hiti stone-spout research, groundwater recharge, the Rajkulo canal, heritage walks and robotics in Lalitpur’s public schools."
+pageJs: work-filter
+---
+{#-
+  /work/ — all case studies. Filters are progressive enhancement: without JS
+  every project is listed; work-filter.js adds the chips' behaviour, the live
+  count and ?domain= in the URL. Featured projects get the large layout.
+-#}
+{%- set work = collections.work -%}
+{%- set domainKeys = ["water", "heritage", "education"] -%}
+{%- set featuredItems = work | where("data.featured", true) -%}
+{%- set featuredCount = featuredItems | length -%}
+
+<header class="page-hero page-hero--split work-hero">
+  <div class="container page-hero__inner">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><span aria-current="page">Work</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow">Case studies</p>
+    <h1 class="page-hero__title">Spouts, canals and <em>classrooms</em></h1>
+    <p class="lede">Projects from my work as a civil engineer, heritage practitioner and educator in the Kathmandu Valley — what each one needed, what I did, and what came of it.</p>
+    <div class="page-hero__aside card work-key">
+      <div class="card__body">
+      <p class="label work-key__title">Field index</p>
+      <dl class="ledger">
+        {%- for key in domainKeys %}
+        {%- set n = (work | where("data.domain", key)) | length %}
+        {%- if n %}
+        <div>
+          <dt>{{ workDomains[key].label }}</dt>
+          <dd><span class="work-key__count">{{ n }}</span> {{ workDomains[key].blurb }}</dd>
+        </div>
+        {%- endif %}
+        {%- endfor %}
+      </dl>
+      <p class="label work-key__coords">{% icon "map-pin" %}{{ site.locality }} · {{ site.coordinates.lat }}° N, {{ site.coordinates.lng }}° E</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section work-catalogue" aria-label="Projects">
+  <div class="container">
+    <div class="filter-bar js-only" data-work-filter>
+      <div class="chips" role="group" aria-label="Filter projects by domain">
+        <button class="chip" type="button" aria-pressed="true" data-filter="all">All <span class="chip__count">{{ work.length }}</span></button>
+        {%- for key in domainKeys %}
+        {%- set n = (work | where("data.domain", key)) | length %}
+        <button class="chip" type="button" aria-pressed="false" data-filter="{{ key }}" data-noun="{{ workDomains[key].noun }}"{% if not n %} disabled{% endif %}>{{ workDomains[key].label }} <span class="chip__count">{{ n }}</span></button>
+        {%- endfor %}
+      </div>
+      <p class="label label--plain filter-bar__status" role="status" data-filter-status>Showing all {{ work.length }} projects</p>
+    </div>
+
+    {%- if featuredCount %}
+    <div class="work-group" data-filter-group>
+      <h2 class="visually-hidden">Featured projects</h2>
+      <ul class="work-features" role="list" data-filter-layout>
+        {#- Unfiltered, the 1st and 4th are wide horizontal cards (work.css). #}
+        {%- for item in featuredItems %}
+        {%- set d = workDomains[item.data.domain] or workDomains.water %}
+        {%- set wide = loop.index == 1 or loop.index == 4 %}
+        <li class="work-features__item" data-filter-item data-domain="{{ item.data.domain }}">
+          <article class="card card--link work-card{% if wide %} card--horizontal card--feature{% endif %}{% if loop.index == 4 %} card--reverse{% endif %}" data-domain="{{ item.data.domain }}">
+            <div class="card__media">{% media item.data.cover, "", { ratio: "3/2", kind: item.data.coverKind or d.kind, sizes: "(min-width: 72rem) 40rem, (min-width: 40rem) 50vw, 100vw" } %}</div>
+            <div class="card__body">
+              <p class="card__meta"><span>{{ d.label }}</span>{% if item.data.years %}<span>{{ item.data.years }}</span>{% endif %}</p>
+              <h3 class="card__title"><a href="{{ item.url }}">{{ item.data.title }}</a></h3>
+              {%- if item.data.summary %}<p class="card__text">{{ item.data.summary }}</p>{% endif %}
+              {%- if item.data.role %}<p class="work-card__role"><span class="label">Role</span> {{ item.data.role }}</p>{% endif %}
+              <div class="card__footer"><span class="card__cue" aria-hidden="true">Read the case study{% icon "arrow-right" %}</span></div>
+            </div>
+          </article>
+        </li>
+        {%- endfor %}
+      </ul>
+    </div>
+    {%- endif %}
+
+    {%- if work.length > featuredCount %}
+    <div class="work-group work-more" data-filter-group>
+      <header class="section-head work-more__head">
+        <p class="eyebrow">Also in the notebook</p>
+        <h2>More projects</h2>
+      </header>
+      <ul class="work-rows" role="list">
+        {%- for item in work %}
+        {%- if not item.data.featured %}
+        {%- set d = workDomains[item.data.domain] or workDomains.water %}
+        <li data-filter-item data-domain="{{ item.data.domain }}">
+          <article class="card card--link work-row" data-domain="{{ item.data.domain }}">
+            <div class="card__media">{% media item.data.cover, "", { ratio: "4/3", kind: item.data.coverKind or d.kind, sizes: "(min-width: 40rem) 14rem, 100vw" } %}</div>
+            <div class="card__body">
+              <p class="card__meta"><span>{{ d.label }}</span>{% if item.data.years %}<span>{{ item.data.years }}</span>{% endif %}</p>
+              <h3 class="card__title"><a href="{{ item.url }}">{{ item.data.title }}</a></h3>
+              {%- if item.data.summary %}<p class="card__text">{{ item.data.summary }}</p>{% endif %}
+            </div>
+          </article>
+        </li>
+        {%- endif %}
+        {%- endfor %}
+      </ul>
+    </div>
+    {%- endif %}
+  </div>
+</section>
+
+<section class="section section--alt work-method" aria-labelledby="work-method-title">
+  <div class="container stack stack--2xl">
+    <div>
+      <header class="section-head">
+        <p class="eyebrow">How I work</p>
+        <h2 id="work-method-title">Measure, calculate, draw, <em>hand over</em></h2>
+        <p class="lede">Most of my engineering work runs through the same four steps. They are the scope I delivered for the Thecho stone spout, and what you get when you bring me a site.</p>
+      </header>
+      <ol class="steps">
+        <li><h3 class="steps__title">Survey</h3><p class="steps__text">Every job starts on site, with a measured survey and notes on the condition of what is there.</p></li>
+        <li><h3 class="steps__title">Calculate</h3><p class="steps__text">Hydraulic discharge calculations and structural analysis, so the design is grounded in numbers.</p></li>
+        <li><h3 class="steps__title">Draw</h3><p class="steps__text">Computer-aided design (CAD) plans and cross-sections that a builder, a municipality or a researcher can read.</p></li>
+        <li><h3 class="steps__title">Hand over</h3><p class="steps__text">Recommendations and a cost estimate, documented so the work can go ahead.</p></li>
+      </ol>
+    </div>
+    <div class="work-clients">
+      <h2 class="label work-clients__title" id="work-clients-title">Worked with and for</h2>
+      <div>
+        {%- set clientsLabelledBy = "work-clients-title" %}
+        {% include "partials/clients.njk" %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band--dark band--edge" aria-labelledby="work-cta-title">
+  <div class="container cta-band">
+    <div class="stack stack--s">
+      <p class="eyebrow">Work with me</p>
+      <h2 class="cta-band__title" id="work-cta-title">A spout, a site or a school <em>in mind</em>?</h2>
+      <p class="lede">Tell me what you need and by when. I usually reply {{ site.replyTime }}.</p>
+    </div>
+    <div class="cluster">
+      <a class="btn btn--primary" href="/work-with-me/#enquire">Work with me{% icon "arrow-right" %}</a>
+      <a class="btn btn--on-dark" href="mailto:{{ site.email }}">{% icon "mail" %}Email me</a>
+    </div>
+  </div>
+</section>

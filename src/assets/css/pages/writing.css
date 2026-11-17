@@ -1,0 +1,272 @@
+/* ==========================================================================
+   /writing/ — Research, writing & media.
+   Page layout only: components (eyebrow, label, lede, ledger, logo-row,
+   timeline, cta-band, buttons) come from main.css. Tokens only.
+   ========================================================================== */
+@layer page {
+
+  /* ---------- Hero: "Appeared in" row ---------- */
+  .writing-hero__outlets {
+    display: grid;
+    gap: var(--space-2xs);
+    max-inline-size: 54rem;
+    margin-block-start: var(--space-m);
+    padding-block-start: var(--space-s);
+    border-block-start: 1px dashed var(--line-strong);
+  }
+
+
+  /* ---------- Lead item: a clipping between newspaper rules ---------- */
+  .writing-lead { padding-block-end: calc(var(--section-pad) * 0.75); }
+
+  .lead {
+    display: grid;
+    gap: var(--space-l);
+    padding-block: var(--space-l) var(--space-xl);
+    border-block-start: 4px double var(--text);
+    border-block-end: 1px solid var(--line-strong);
+  }
+
+  .lead__body {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+    max-inline-size: 48rem;
+  }
+  /* h2 under the page's h1: one step below it (step-5 is the home hero's). */
+  .lead__title {
+    font-size: var(--step-3);
+    line-height: 1.05;
+  }
+  .lead__deck {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--text-2);
+    max-inline-size: 32ch;
+  }
+  .lead__summary {
+    max-inline-size: 56ch;
+    margin-block-start: var(--space-2xs);
+    color: var(--text);
+  }
+  .lead__ledger {
+    max-inline-size: 34rem;
+    margin-block-start: var(--space-xs);
+  }
+  .lead__actions { margin-block-start: var(--space-xs); }
+
+  /* Cross-references carry .pointer.pointer--hang (main.css). */
+  .lead__note { font-size: var(--step--1); color: var(--text-2); }
+
+  /* Date stamp — like a rubber stamp in the margin of a notebook. */
+  .lead__stamp {
+    order: -1;
+    justify-self: end;
+    margin-inline-end: var(--space-xs);
+    display: grid;
+    justify-items: center;
+    gap: var(--space-3xs);
+    padding: var(--space-xs) var(--space-m);
+    color: var(--accent);
+    border: 2px solid currentColor;
+    border-radius: var(--radius-s);
+    outline: 1px solid currentColor;
+    outline-offset: 3px;
+    text-align: center;
+    transform: rotate(-4deg);
+  }
+  .lead__stamp-kicker { color: inherit; } /* a .label in the stamp's colour */
+  .lead__stamp-date { display: grid; justify-items: center; }
+  .lead__stamp-month {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-style: italic;
+    line-height: 1.1;
+  }
+  .lead__stamp-year {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 600;
+    font-variation-settings: "opsz" 144;
+    font-variant-numeric: lining-nums;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  @media (min-width: 56rem) {
+    .lead {
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: var(--space-2xl);
+      align-items: start;
+    }
+    .lead__stamp {
+      order: 0;
+      margin-block-start: var(--space-xl);
+      margin-inline-end: var(--space-m);
+      padding: var(--space-s) var(--space-l);
+    }
+    .lead__stamp-month { font-size: var(--step-2); }
+    .lead__stamp-year { font-size: var(--step-4); }
+  }
+
+
+  /* ---------- The record (year-grouped publication list) ---------- */
+  .record__intro {
+    display: grid;
+    gap: var(--space-xs);
+    margin-block-end: var(--space-xl);
+  }
+
+  .record { display: grid; gap: var(--space-2xl); }
+
+  .record__group {
+    display: grid;
+    gap: var(--space-m);
+    padding-block-start: var(--space-s);
+    border-block-start: 1px solid var(--line-strong);
+  }
+
+  .record__when {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2xs) var(--space-s);
+  }
+  .record__year {
+    font-size: var(--step-3);
+    font-variation-settings: "opsz" 144;
+    font-variant-numeric: lining-nums;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .record__year--text {
+    font-size: var(--step-2);
+    line-height: 1.15;
+    letter-spacing: -0.012em;
+  }
+
+  @media (min-width: 56rem) {
+    .record__group {
+      grid-template-columns: 10rem minmax(0, 1fr);
+      column-gap: var(--space-xl);
+      padding-block-start: var(--space-m);
+    }
+    .record__when {
+      position: sticky;
+      inset-block-start: calc(var(--header-h) + var(--space-m));
+      align-self: start;
+      display: grid;
+      justify-content: start;
+      gap: var(--space-2xs);
+    }
+  }
+
+  .record__list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+  }
+
+  .entry {
+    display: grid;
+    gap: var(--space-2xs);
+    max-inline-size: 48rem;
+    padding-block: var(--space-m);
+    border-block-end: 1px dashed var(--line-strong);
+  }
+  .entry:first-child { padding-block-start: var(--space-2xs); }
+  .entry:last-child { border-block-end: 0; padding-block-end: 0; }
+
+  /* Arriving from a cross-reference: a soft gilt wash marks the entry. */
+  .entry:target {
+    background-image: linear-gradient(to right, var(--decor-tint), transparent 75%);
+    box-shadow: -0.75rem 0 0 var(--decor-tint);
+  }
+
+  .entry__kicker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3xs) var(--space-s);
+  }
+
+  .entry__title {
+    font-size: var(--step-1);
+    line-height: 1.2;
+    max-inline-size: 36ch;
+  }
+  .entry__title a {
+    color: inherit;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 0.18em;
+  }
+  .entry__title a:hover { text-decoration-color: var(--accent); }
+  .entry__title .icon {
+    margin-inline-start: 0.25em;
+    color: var(--link);
+    vertical-align: -0.05em;
+  }
+
+  .entry__deck {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--text-2);
+    line-height: 1.35;
+  }
+
+  .entry__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs) var(--space-m);
+    font-size: var(--step--1);
+    line-height: 1.5;
+  }
+  .entry__facts > div {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-2xs);
+  }
+  .entry__facts dd { color: var(--text); }
+
+  .entry__summary {
+    max-inline-size: 62ch;
+    color: var(--text-2);
+  }
+
+  .entry__notes {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3xs);
+    font-size: var(--step--1);
+    color: var(--text-2);
+  }
+  .entry__notes .icon { margin-inline-start: 0.3em; }
+
+
+  /* ---------- Citation trail ---------- */
+  .writing-trail__figure {
+    display: grid;
+    gap: var(--space-s);
+    justify-items: center;
+  }
+  .writing-trail__figure > * { inline-size: 100%; }
+  .writing-trail__note {
+    max-inline-size: 36rem;
+    font-size: var(--step--1);
+    color: var(--text-3);
+  }
+
+  @media (min-width: 52rem) {
+    .writing-trail__figure {
+      position: sticky;
+      inset-block-start: calc(var(--header-h) + var(--space-l));
+      padding-block-start: var(--space-xl);
+    }
+  }
+}

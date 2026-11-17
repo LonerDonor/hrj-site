@@ -1,0 +1,50 @@
+# Grouped skills and tools — no self-rated percentages (docs/FACTS.md → Tone).
+# `icon` is an {% icon %} name; `domain` (water | heritage | education) colours it.
+# Acronyms are expanded on first use (they appear on /about/).
+- group: Engineering & analysis
+  icon: water
+  domain: water
+  items:
+    - Structural analysis and design (ASCE 7, AISC 360)
+    - Hydraulic discharge calculations
+    - Estimation and costing
+    - Site supervision
+    - Post-earthquake structural assessment
+
+- group: Heritage & documentation
+  icon: pen
+  domain: heritage
+  items:
+    - Hiti (dhunge dhara) water systems
+    - Measured survey and CAD cross-sections
+    - Heritage walk design and interpretation
+    - Heritage advocacy and public writing
+
+- group: Water & geographic information systems (GIS)
+  icon: water
+  domain: water
+  items:
+    - Groundwater-recharge design
+    - Water auditing
+    - Hydrogeological field surveys
+    - Stable-isotope and physico-chemical water analysis
+    - GIS mapping
+
+- group: Education & making
+  icon: robot
+  domain: education
+  items:
+    - Robotics curriculum design
+    - Teacher and trainer training
+    - Workshop facilitation
+    - Arduino and mBlock
+    - 3D printing and fabrication
+
+- group: Software
+  icon: globe
+  items:
+    - AutoCAD
+    - GIS mapping tools
+    - Python
+    - mBlock
+    - Arduino IDE

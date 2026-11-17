@@ -1,0 +1,22 @@
+{#- Site header. Without JS the nav panel is simply shown; site.js turns it into a disclosure on small screens. -#}
+<header class="site-header">
+  <div class="container site-header__bar">
+    <a class="wordmark" href="/"{% if page.url == "/" %} aria-current="page"{% endif %}>HRJ<span class="wordmark__dot" aria-hidden="true">.</span><span class="visually-hidden"> {{ site.name }}, home</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      {%- icon "menu" -%}{%- icon "close" -%}
+      <span class="nav-toggle__label">Menu</span>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="site-nav__list" role="list">
+        {%- for item in nav.items %}
+        {%- if not (item.needs == "photos" and not photosLive) %}
+        {%- set isPage = page.url == item.url -%}
+        {%- set inSection = page.url and page.url.startsWith(item.url) -%}
+        <li><a class="site-nav__link" href="{{ item.url }}"{% if isPage %} aria-current="page"{% elif inSection %} aria-current="true"{% endif %}>{{ item.label }}</a></li>
+        {%- endif %}
+        {%- endfor %}
+      </ul>
+      <a class="btn btn--secondary btn--small site-nav__cta" href="{{ nav.cta.url }}"{% if page.url and page.url.startsWith(nav.cta.url) %} aria-current="page"{% endif %}>{{ nav.cta.label }}</a>
+    </nav>
+  </div>
+</header>

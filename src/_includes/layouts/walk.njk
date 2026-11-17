@@ -1,0 +1,249 @@
+---
+layout: layouts/base.njk
+---
+{#-
+  Walk detail page — src/walks/<slug>.md → /walks/<slug>/.
+  `enquiryUrl` (computed in walks.11tydata.js) books this walk:
+  /work-with-me/?topic=heritage-walk&walk=<slug>#enquire.
+  Front matter schema: see the header of src/walks/walks.11tydata.js.
+  Every optional field is hidden when empty; `practical` (hero ledger rows)
+  and `structuredData` (TouristTrip + BreadcrumbList) are computed there.
+  Styles: /assets/css/pages/walks.css.
+-#}
+{%- set isWater = domain == "water" -%}
+{%- set eyebrowDomain = "eyebrow--water" if isWater else "eyebrow--heritage" -%}
+{%- set tagDomain = "tag--water" if isWater else "tag--heritage" -%}
+{%- set stopList = stops | arrayify -%}
+
+{# ======================================================================= #}
+{# 1. Hero — breadcrumbs, title, practical ledger, booking, cover          #}
+{# ======================================================================= #}
+<header class="page-hero page-hero--split walk-hero">
+  <div class="container page-hero__inner">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/walks/">Walks</a></li>
+        <li><span aria-current="page">{{ title }}</span></li>
+      </ol>
+    </nav>
+    {%- if kicker %}
+    <p class="eyebrow {{ eyebrowDomain }}">{{ kicker }}</p>
+    {%- endif %}
+    <h1 class="page-hero__title">{{ (heroTitle or title) | safe }}</h1>
+    {%- if summary %}
+    <p class="lede">{{ summary }}</p>
+    {%- endif %}
+    <div class="cluster page-hero__actions">
+      <a class="btn btn--primary" href="{{ enquiryUrl }}">Request a walk{% icon "arrow-right" %}</a>
+      <a class="btn btn--secondary" href="{{ site.whatsapp }}" rel="noopener">{% icon "whatsapp" %}Message on WhatsApp</a>
+    </div>
+    {%- if practical and practical.length %}
+    <dl class="ledger ledger--compact page-hero__meta">
+      {%- for row in practical %}
+      <div><dt>{{ row.label }}</dt><dd>{{ row.value }}</dd></div>
+      {%- endfor %}
+    </dl>
+    {%- endif %}
+    <div class="page-hero__aside">
+      {% media cover, coverAlt, { ratio: "4/5", kind: coverKind or "walk", eager: true, sizes: "(min-width: 56rem) 28rem, 100vw" } %}
+    </div>
+  </div>
+</header>
+
+{# ======================================================================= #}
+{# 2. Along the way — annotated, numbered stops (field-note style)         #}
+{# ======================================================================= #}
+{%- if stopList.length %}
+<section class="section" aria-labelledby="stops-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow {{ eyebrowDomain }}">Along the way</p>
+      <h2 id="stops-title">{{ stopsHeading or "Along the way" }}</h2>
+      {%- if stopsIntro %}
+      <p class="lede">{{ stopsIntro }}</p>
+      {%- endif %}
+    </header>
+
+    <ol class="walk-stops" role="list" data-domain="{{ domain or 'heritage' }}">
+      {%- for s in stopList %}
+      {%- set hasImage = s.image and (s.image | imageExists) %}
+      <li class="walk-stop{% if s.parts or s.diagram %} walk-stop--detail{% endif %}">
+        <span class="marker walk-stop__marker" aria-hidden="true">{{ ("0" + loop.index) if loop.index < 10 else loop.index }}</span>
+        <div class="walk-stop__body">
+          <h3 class="walk-stop__title">
+            <span class="walk-stop__name">{{ s.name }}</span>
+            {%- if s.deva %} <span class="deva walk-stop__deva" lang="new">{{ s.deva }}</span>{% endif %}
+            {%- if s.gloss %}<span class="visually-hidden">,</span> <span class="walk-stop__gloss">{{ s.gloss }}</span>{% endif %}
+          </h3>
+          {%- if s.note %}
+          <p class="walk-stop__note">{{ s.note }}</p>
+          {%- endif %}
+          {%- if hasImage and not (s.parts or s.diagram) %}
+          <div class="walk-stop__image">{% media s.image, s.imageAlt, { ratio: "3/2", kind: "photo", sizes: "(min-width: 56rem) 40rem, 100vw" } %}</div>
+          {%- endif %}
+        </div>
+
+        {%- if s.parts or s.diagram %}
+        <div class="card walk-stop__detail" data-domain="{{ domain or 'heritage' }}">
+          {%- if s.parts %}
+          <div class="walk-stop__parts">
+            <p class="label">Reading a {{ s.name | lower }} in section</p>
+            <dl class="walk-parts">
+              {%- for p in s.parts %}
+              <div class="walk-parts__row">
+                <dt>
+                  {%- if p.deva %}<span class="deva walk-parts__deva" lang="new">{{ p.deva }}</span>{% endif %}
+                  {%- if p.roman %}<span class="label">{{ p.roman }}</span>{% endif -%}
+                </dt>
+                <dd>{{ p.note }}</dd>
+              </div>
+              {%- endfor %}
+            </dl>
+          </div>
+          {%- endif %}
+          {%- if s.diagram == "hiti" %}
+          <div class="walk-stop__figure">
+            {% include "partials/hiti-diagram.njk" %}
+          </div>
+          {%- endif %}
+          {%- if hasImage %}
+          <div class="walk-stop__image">{% media s.image, s.imageAlt, { ratio: "3/2", kind: "photo", sizes: "(min-width: 56rem) 40rem, 100vw" } %}</div>
+          {%- endif %}
+        </div>
+        {%- endif %}
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>
+{%- endif %}
+
+{# ======================================================================= #}
+{# 3. About this walk — prose body + "Good for" aside                      #}
+{# ======================================================================= #}
+<section class="section section--alt" aria-labelledby="about-title">
+  <div class="container with-aside">
+    <div class="with-aside__main stack stack--m">
+      <header class="stack stack--xs">
+        <p class="eyebrow">Field notes</p>
+        <h2 id="about-title">{{ aboutHeading or "About this walk" }}</h2>
+      </header>
+      <div class="prose">
+        {{ content | safe }}
+      </div>
+    </div>
+
+    {%- if suitableFor or themes or pastGroups %}
+    <aside class="with-aside__aside" aria-label="Who this walk is for">
+      <div class="card walk-facts" data-domain="{{ domain or 'heritage' }}">
+        <div class="card__body stack stack--l">
+          {%- if suitableFor %}
+          <div class="stack stack--xs">
+            <h3 class="label">Good for</h3>
+            <ul class="checklist" role="list">
+              {%- for g in suitableFor | arrayify %}
+              <li>{% icon "check" %}<span>{{ g }}</span></li>
+              {%- endfor %}
+            </ul>
+          </div>
+          {%- endif %}
+          {%- if themes %}
+          <div class="stack stack--xs">
+            <h3 class="label">Themes</h3>
+            <ul class="tags" role="list">
+              {%- for t in themes | arrayify %}
+              <li class="tag {{ tagDomain }}">{{ t }}</li>
+              {%- endfor %}
+            </ul>
+          </div>
+          {%- endif %}
+          {%- if pastGroups %}
+          <div class="stack stack--xs">
+            <h3 class="label">Walked with</h3>
+            <ul class="checklist checklist--dots" role="list">
+              {%- for g in pastGroups | arrayify %}
+              <li><span>{{ g }}</span></li>
+              {%- endfor %}
+            </ul>
+          </div>
+          {%- endif %}
+          <a class="link-arrow" href="{{ enquiryUrl }}">Plan this walk with me{% icon "arrow-right" %}</a>
+        </div>
+      </div>
+    </aside>
+    {%- endif %}
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 4. How a walk comes together                                            #}
+{# ======================================================================= #}
+{%- if bookingSteps %}
+<section class="section" aria-labelledby="steps-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Booking</p>
+      <h2 id="steps-title">How a walk comes together</h2>
+    </header>
+    <ol class="steps">
+      {%- for st in bookingSteps %}
+      <li><h3 class="steps__title">{{ st.title }}</h3><p class="steps__text">{{ st.text }}</p></li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>
+{%- endif %}
+
+{# ======================================================================= #}
+{# 5. Booking CTA band                                                     #}
+{# ======================================================================= #}
+<section class="band--dark band--edge" aria-labelledby="cta-title">
+  <div class="container cta-band">
+    <div class="stack stack--s">
+      <p class="eyebrow">Request a walk</p>
+      <h2 class="cta-band__title" id="cta-title">{{ (ctaTitle or "Plan a walk for your <em>group</em>") | safe }}</h2>
+      <p class="lede">Tell me who is coming, roughly when, and what they want to understand. I usually reply {{ site.replyTime }}; WhatsApp is fastest.</p>
+    </div>
+    <div class="cluster">
+      <a class="btn btn--primary" href="{{ enquiryUrl }}">Request a walk{% icon "arrow-right" %}</a>
+      <a class="btn btn--on-dark" href="{{ site.whatsapp }}" rel="noopener">{% icon "whatsapp" %}Message on WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 6. Other walks                                                          #}
+{# ======================================================================= #}
+{%- if (collections.walks | length) > 1 %}
+<section class="section" aria-labelledby="more-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">More walks</p>
+      <h2 id="more-title">Other walks</h2>
+      <a class="link-arrow section-head__action" href="/walks/">All walks{% icon "arrow-right" %}</a>
+    </header>
+    <div class="grid grid--2">
+      {%- for w in collections.walks %}
+      {%- if w.url != page.url %}
+      <article class="card card--link" data-domain="{{ w.data.domain or 'heritage' }}">
+        <div class="card__media">
+          {% media w.data.cover, "", { ratio: "3/2", kind: w.data.coverKind or "walk", sizes: "(min-width: 64rem) 34rem, 100vw" } %}
+        </div>
+        <div class="card__body">
+          <p class="card__meta">
+            {%- if w.data.featured %}<span>Signature walk</span>{% endif -%}
+            {%- if w.data.programme %}<span>{{ w.data.programme }}</span>{% endif -%}
+            {%- if w.data.duration %}<span>{{ w.data.duration }}</span>{% endif -%}
+          </p>
+          <h3 class="card__title"><a href="{{ w.url }}">{{ w.data.title }}</a></h3>
+          <p class="card__text">{{ w.data.summary }}</p>
+          <div class="card__footer"><span class="card__cue" aria-hidden="true">See the walk{% icon "arrow-right" %}</span></div>
+        </div>
+      </article>
+      {%- endif %}
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+{%- endif %}

@@ -1,0 +1,22 @@
+# Stat strip numbers (docs/FACTS.md → Numbers). Render as written — never
+# animate from zero. `value` is the big figure, `label` completes the sentence.
+- id: students
+  value: "300+"
+  label: students reached
+  detail: Robotics programme in Lalitpur public schools
+- id: schools
+  value: "10+"
+  label: public schools in the programme
+  detail: Lalitpur
+- id: walks
+  value: "50+"
+  label: heritage walks led
+  detail: Water, food and urban heritage across the Kathmandu Valley
+- id: systems
+  value: "1,500"
+  label: year-old water systems studied
+  detail: Hiti (dhunge dhara) stone-spout networks of the Kathmandu Valley
+- id: recharge
+  value: "3"
+  label: active groundwater-recharge projects
+  detail: Kathmandu Metropolitan City core area, Balaju–Nagarjun and Lalitpur Metropolitan City

@@ -1,0 +1,309 @@
+/* ==========================================================================
+   /photos/ — page layout only.
+   Components (page hero, ledger, chips, label, media/placeholder, lightbox,
+   hiti diagram) come from main.css. Tokens only; no hex, no ad-hoc sizes.
+
+   Gallery grid ("plates"):
+     < 40rem   2 columns, tiles keep their own aspect ratio (square; large and
+               wide tiles run full width at 4:3 and 2:1), captions wrap.
+     ≥ 40rem   fixed row tracks sized from the column width (container query
+               units) so tall / large / wide tiles span cleanly; the image
+               fills what the one-line caption leaves. 2 → 3 (56rem) → 4
+               (72rem) columns. Shapes come from photos.yml (`shape`).
+   ========================================================================== */
+@layer page {
+
+  /* ---------- Set accents (decorative ticks — the set name is in text) ---------- */
+  .photos-key [data-category],
+  .plate[data-category] { --cat: var(--decor); }
+  .photos-key [data-category="water"],
+  .plate[data-category="water"] { --cat: var(--accent-water); }
+  .photos-key [data-category="heritage"],
+  .plate[data-category="heritage"] { --cat: var(--accent); }
+  .photos-key [data-category="walks"],
+  .plate[data-category="walks"] { --cat: color-mix(in srgb, var(--accent) 55%, var(--decor)); }
+  .photos-key [data-category="robotics"],
+  .plate[data-category="robotics"] { --cat: var(--decor); }
+  .photos-key [data-category="portfolio"],
+  .plate[data-category="portfolio"] { --cat: var(--text-2); }
+
+
+  /* ---------- Hero: key to the sets (a .card, like the /work/ field index) ---------- */
+  .photos-key { margin-block-start: var(--space-l); }
+  .photos-key dt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+  }
+  .photos-key__tick {
+    flex: none;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 50%;
+    background: var(--cat);
+  }
+  .photos-key dd {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s);
+  }
+  .photos-key__count { flex: none; } /* .label.label--plain */
+  @media (min-width: 56rem) {
+    .photos-key { margin-block-start: 0; }
+  }
+
+
+  /* ---------- Contact sheet: heading + toolbar ---------- */
+  .photos-sheet { padding-block-start: clamp(2.5rem, 6vw, 4.5rem); }
+
+  .photos-sheet__head {
+    display: grid;
+    gap: var(--space-s) var(--space-xl);
+    margin-block-end: var(--space-l);
+  }
+  .photos-sheet__note {
+    max-inline-size: 46ch;
+    font-size: var(--step--1);
+    color: var(--text-2);
+  }
+  @media (min-width: 56rem) {
+    .photos-sheet__head {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+      align-items: end;
+    }
+  }
+
+  /* Chips + live count: .filter-bar (main.css). */
+
+
+  /* ---------- Plates (the gallery grid) ---------- */
+  .plates-wrap { container-type: inline-size; }
+
+  .plates {
+    --cols: 2;
+    --gap-x: var(--space-xs);
+    --gap-y: var(--space-l);
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    grid-auto-rows: auto;
+    gap: var(--gap-y) var(--gap-x);
+  }
+
+  .plate { min-inline-size: 0; }
+  .plate[data-shape="large"],
+  .plate[data-shape="wide"] { grid-column: span 2; }
+
+  .plate__figure {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    block-size: 100%;
+    margin: 0;
+  }
+
+  .plate__frame {
+    position: relative;
+    display: block;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--radius-s);
+    background-color: var(--surface-2);
+    color: inherit;
+    text-decoration: none;
+  }
+  .plate[data-shape="large"] .plate__frame { aspect-ratio: 4 / 3; }
+  .plate[data-shape="wide"] .plate__frame { aspect-ratio: 2 / 1; }
+
+  .plate__frame > .media,
+  .plate__frame picture {
+    display: block;
+    block-size: 100%;
+  }
+  .plate__frame :is(img, .placeholder) {
+    inline-size: 100%;
+    block-size: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease);
+  }
+
+  /* Placeholder tiles: the hatched paper fills the tile, the line drawing
+     keeps one modest size whatever the tile shape (it would otherwise scale
+     with the tile and turn giant in large tiles). */
+  .plate__frame > .media--placeholder {
+    display: grid;
+    place-items: center;
+    background-color: var(--surface-2);
+    background-image: var(--hatch);
+    outline: 1px dashed var(--line-strong);
+    outline-offset: -10px;
+  }
+  .plate__frame .media--placeholder .placeholder {
+    inline-size: clamp(9rem, 55%, 16rem);
+    block-size: auto;
+    aspect-ratio: 4 / 3;
+    background: none;
+    outline: 0;
+  }
+
+  /* "View larger" cue on tiles that open in the viewer. */
+  .plate__zoom {
+    position: absolute;
+    inset-block-start: var(--space-2xs);
+    inset-inline-end: var(--space-2xs);
+    display: grid;
+    place-items: center;
+    inline-size: 2rem;
+    block-size: 2rem;
+    color: var(--lime);
+    background-color: color-mix(in srgb, var(--soot) 72%, transparent);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease);
+  }
+  a.plate__frame:is(:hover, :focus-visible) .plate__zoom { opacity: 1; }
+  a.plate__frame:focus-visible { outline-offset: 3px; border-radius: var(--radius-s); }
+  .plate:has(a.plate__frame:hover) .plate__title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: var(--cat);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    a.plate__frame:hover :is(img, .placeholder) { transform: scale(1.03); }
+  }
+
+  /* Caption: title + plate number, then place · year in mono. */
+  .plate__caption {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.15rem var(--space-xs);
+  }
+  .plate__title {
+    font-family: var(--font-display);
+    font-size: var(--step--1);
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--text);
+  }
+  .plate__no { /* .label.label--plain */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+  }
+  .plate__no::before {
+    content: "";
+    flex: none;
+    inline-size: 0.45rem;
+    block-size: 0.45rem;
+    border-radius: 50%;
+    background: var(--cat);
+  }
+  .plate__meta {
+    grid-column: 1 / -1;
+    display: block;
+    line-height: 1.5;
+  }
+  .plate__meta > * + *::before {
+    content: "·";
+    margin-inline: 0.5em;
+    color: var(--decor);
+  }
+
+  /* Re-shown tiles fade in after a filter change (set by lightbox.js). */
+  @media (prefers-reduced-motion: no-preference) {
+    .plates.is-filtered > .plate:not([hidden]) {
+      animation: photos-plate-in var(--dur-slow) var(--ease) both;
+    }
+  }
+  @keyframes photos-plate-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* ≥ 40rem: fixed row tracks; tiles fill their tracks. */
+  @media (min-width: 40rem) {
+    .plates {
+      --gap-x: var(--space-s);
+      --gap-y: var(--space-l);
+      --cap: 3.35rem; /* caption block: one title line + one meta line */
+      grid-auto-rows: 17rem;
+    }
+    @supports (inline-size: 1cqi) {
+      .plates {
+        /* row = (column width × 3/4, a 4:3 image) + caption */
+        grid-auto-rows: calc((100cqi - (var(--cols) - 1) * var(--gap-x)) / var(--cols) * 0.75 + var(--cap));
+      }
+    }
+
+    .plate[data-shape="large"],
+    .plate[data-shape="tall"] { grid-row: span 2; }
+
+    .plate__figure {
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+    }
+    .plate__frame,
+    .plate[data-shape] .plate__frame {
+      aspect-ratio: auto;
+      block-size: 100%;
+    }
+
+    /* One line each, so every image in a row ends at the same line. */
+    .plate__title,
+    .plate__meta {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  @media (min-width: 56rem) { .plates { --cols: 3; } }
+  @media (min-width: 72rem) { .plates { --cols: 4; } }
+
+
+  /* ---------- Below the frame (hiti interlude) ---------- */
+  .photos-below .hiti {
+    inline-size: 100%;
+    justify-self: center;
+  }
+
+
+  /* ---------- Prints & usage ---------- */
+  .photos-prints__inner { align-items: end; }
+  .photos-prints__actions { margin-block-start: var(--space-xs); }
+  .photos-prints__note {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+
+  /* ---------- Viewer (native <dialog class="lightbox">) ---------- */
+  html.has-lightbox {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+  .photos-viewer { overscroll-behavior: contain; }
+  .photos-viewer__stage {
+    display: grid;
+    place-items: center;
+    min-block-size: 0;
+    touch-action: pan-y pinch-zoom; /* horizontal swipes go to the script */
+  }
+  .photos-viewer__stage > * { inline-size: 100%; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .photos-viewer[open] { animation: photos-viewer-in var(--dur) var(--ease); }
+    .photos-viewer[open]::backdrop { animation: photos-fade-in var(--dur) var(--ease); }
+    .photos-viewer__stage img { transition: opacity var(--dur) var(--ease); }
+    .photos-viewer__stage.is-loading img { opacity: 0; }
+  }
+  @keyframes photos-viewer-in {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes photos-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}

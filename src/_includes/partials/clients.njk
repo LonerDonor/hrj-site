@@ -1,0 +1,28 @@
+{#-
+  "Worked with and for" — clients.yml as a typographic logo row (home, /work/,
+  /work-with-me/). The page supplies the heading (its level differs per page)
+  and sets `clientsLabelledBy` to that heading's id before the include.
+  Acronyms (KMC, OLE Nepal …) are wrapped in <abbr> and expanded in a visible
+  key under the row: title tooltips don't work on touch screens, and acronyms
+  are expanded on first use (docs/DESIGN.md §8).
+-#}
+{%- set clientKey = [] -%}
+<ul class="logo-row" role="list"{% if clientsLabelledBy %} aria-labelledby="{{ clientsLabelledBy }}"{% endif %}>
+  {%- for c in clients %}
+  {%- set shown = c.short or c.name %}
+  {%- set first = shown.split(" ")[0] %}
+  {%- if c.short and first.length > 1 and first == (first | upper) and not c.name.startsWith(first) %}
+  {%- set _k = clientKey.push({ short: shown, name: c.name }) %}
+  <li><span><abbr title="{{ c.name }}">{{ first }}</abbr>{{ shown.slice(first.length) }}</span></li>
+  {%- else %}
+  <li>{{ shown }}</li>
+  {%- endif %}
+  {%- endfor %}
+</ul>
+{%- if clientKey.length %}
+<dl class="logo-row__key">
+  {%- for k in clientKey %}
+  <div><dt class="label">{{ k.short }}</dt><dd>{{ k.name }}</dd></div>
+  {%- endfor %}
+</dl>
+{%- endif %}

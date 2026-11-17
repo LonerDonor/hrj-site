@@ -1,0 +1,48 @@
+# Awards and press. Exact phrasing per docs/FACTS.md → Press & citations.
+# `beyondWork: true` items belong in a short "Beyond work" line, not the main list.
+# `date` is "YYYY" or "YYYY-MM" (format with the readableDate filter).
+awards:
+  - title: Core team, UNESCO Creative City of Music application
+    org: Lalitpur
+    date: "2023"
+  - title: Outstanding Secretary
+    org: Rotaract District 3292 (Nepal and Bhutan)
+    beyondWork: true
+  - title: Most Extraordinary Member
+    org: Rotaract Club of Kopundol
+    period: 2015–16
+    beyondWork: true
+  - title: Most Active Member
+    org: Rotaract Club of Kopundol
+    period: 2014–15
+    beyondWork: true
+  - title: 1st Degree Black Belt, Shito-Ryu Karate
+    beyondWork: true
+
+press:
+  - outlet: Hyperallergic
+    place: New York
+    date: "2025-09"
+    role: quoted
+    title: Quoted on the destruction of Singha Durbar
+    url: https://hyperallergic.com/historic-singha-durbar-palace-destroyed-as-nepal-protests-turn-deadly/
+  - outlet: Setopati English
+    date: "2025-09"
+    role: co-author
+    title: "“Flames of September”, co-authored with Sadichchha Shrestha"
+    note: Referenced in Nepal News’ 2025 year-end national review.
+    url: https://en.setopati.com/blog/165327
+  # A thesis, not a publication: name it as one (FACTS.md: "cited in a TU
+  # Berlin master's thesis (2023)"; never "worked with TU Berlin").
+  - outlet: TU Berlin master’s thesis
+    date: "2023"
+    role: cited
+    title: Hiti CAD cross-section drawings cited in a master’s thesis
+  - outlet: Nepali Times
+    date: "2022"
+    role: technical contributor
+    title: Drawings and technical input featured in “Kathmandu’s ancient water spouts still functioning”
+    url: https://www.nepalitimes.com/here-now/kathmandus-ancient-water-spouts-still-functioning
+  - outlet: Rethinking the Future and Architexturez
+    role: republished
+    title: Hiti drawings republished by online architecture platforms

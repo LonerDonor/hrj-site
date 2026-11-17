@@ -1,0 +1,743 @@
+---
+layout: layouts/base.njk
+title: Styleguide
+description: Reference for the HRJ site design system — tokens, type, layout primitives and every component, with copyable markup.
+pageCss: styleguide
+noindex: true
+sitemap: false
+eleventyExcludeFromCollections: true
+---
+{#-
+  KITCHEN SINK. Page builders: copy markup from here. Each pattern below is the
+  canonical version; the grey "source" blocks show the exact HTML.
+-#}
+{%- macro source(markup) -%}
+<pre class="sg-code"><code>{{ markup | trim | forceescape }}</code></pre>
+{%- endmacro -%}
+
+<header class="page-hero">
+  <div class="container page-hero__inner">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><span aria-current="page">Styleguide</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow">Design system · v2</p>
+    <h1 class="page-hero__title">Field notebook <em>styleguide</em></h1>
+    <p class="lede">Every token and component in <code>main.css</code>, rendered with real markup. Copy patterns from here; don’t re-implement buttons, cards or labels in page CSS.</p>
+    <dl class="ledger page-hero__meta">
+      <div><dt>Stylesheet</dt><dd>/assets/css/main.css — layers: reset, tokens, base, layout, components, page, utilities</dd></div>
+      <div><dt>Docs</dt><dd>docs/DESIGN.md §4–6 and §10</dd></div>
+      <div><dt>Status</dt><dd>Not indexed (noindex), not in the sitemap</dd></div>
+    </dl>
+  </div>
+</header>
+
+<nav class="sg-nav" aria-label="Styleguide sections">
+  <div class="container">
+    <ul>
+      <li><a href="#colour">Colour</a></li>
+      <li><a href="#type">Type</a></li>
+      <li><a href="#space">Space</a></li>
+      <li><a href="#layout">Layout</a></li>
+      <li><a href="#actions">Actions</a></li>
+      <li><a href="#icons">Icons</a></li>
+      <li><a href="#cards">Cards</a></li>
+      <li><a href="#tags">Tags</a></li>
+      <li><a href="#data">Ledger · stats</a></li>
+      <li><a href="#timeline">Timeline</a></li>
+      <li><a href="#logos">Logo row</a></li>
+      <li><a href="#patterns">Shared patterns</a></li>
+      <li><a href="#quote">Quote</a></li>
+      <li><a href="#notices">Notices</a></li>
+      <li><a href="#media">Media</a></li>
+      <li><a href="#forms">Forms</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#heroes">Page hero</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#bands">Dark bands</a></li>
+      <li><a href="#hiti">Hiti diagram</a></li>
+    </ul>
+  </div>
+</nav>
+
+{# ======================================================================= #}
+<section class="sg-section" id="colour">
+  <div class="container">
+    <h2>Colour</h2>
+    <p class="sg-intro">Brick is for primary actions and heritage emphasis (one primary button per view). Copper is for links, water and focus. Gilt is decorative only on light surfaces — use <code>--gilt-text</code> for gold-toned text. <code>--ink-3</code> is the minimum for any text on light. Ratios are WCAG 2.2 contrast against <code>--paper</code> (light) or <code>--soot</code> (dark).</p>
+    {%- set swatches = [
+      ["paper", "#f3ede1", "Page background."],
+      ["paper-2", "#ebe3d3", "Alternate band (.section--alt)."],
+      ["card", "#fbf8f2", "Raised surfaces, inputs. Ink on card 16.2:1."],
+      ["rule", "#cfc4ae", "Decorative hairlines only — 1.5:1."],
+      ["field-border", "#8f8270", "Input and chip borders — 3.2:1 (non-text)."],
+      ["ink", "#1f1b16", "Body and headings — 14.7:1."],
+      ["ink-2", "#4a4237", "Secondary text — 8.5:1."],
+      ["ink-3", "#675c4b", "Captions, labels — 5.6:1 (5.1 on paper-2). Minimum for text."],
+      ["brick", "#9c3f26", "Primary button bg, heritage accent text — 5.7:1. Card text on brick 6.3:1."],
+      ["brick-hover", "#84341f", "Primary hover — 7.2:1."],
+      ["copper", "#33604f", "Links, water accent, focus ring — 6.2:1."],
+      ["gilt-text", "#7d5f17", "Gold-toned text on light — 5.1:1 (4.7 on paper-2: large text only there)."],
+      ["gilt", "#b08a2e", "Decorative only on light — 2.8:1, never text."],
+      ["brick-tint", "#f2e2d9", "Heritage tag bg. Brick on it 5.3:1."],
+      ["copper-tint", "#dfe9e3", "Water tag / success bg. Copper on it 5.8:1."],
+      ["gilt-tint", "#f1e6c8", "Education tag / info bg. Gilt-text on it 4.8:1."],
+      ["soot", "#1c1915", "Dark band background."],
+      ["soot-2", "#26221c", "Raised surface on dark."],
+      ["lime", "#efe8d8", "Text on dark — 14.4:1."],
+      ["lime-2", "#c4b89e", "Secondary on dark — 8.9:1."],
+      ["lime-3", "#a39579", "Captions on dark — 6.0:1."],
+      ["gilt-on-dark", "#d4b25a", "Links, accents, focus on dark — 8.6:1."],
+      ["terra-on-dark", "#e08a68", "Heritage accent on dark — 6.7:1."],
+      ["patina-on-dark", "#8cc0a6", "Water accent on dark — 8.5:1."]
+    ] -%}
+    <ul class="sg-swatches">
+      {%- for s in swatches %}
+      <li class="sg-swatch" data-token="{{ s[0] }}">
+        <div class="sg-swatch__chip"></div>
+        <div class="sg-swatch__body">
+          <span class="sg-swatch__name">--{{ s[0] }}</span>
+          <span class="sg-swatch__value">{{ s[1] }}</span>
+          <span class="sg-swatch__note">{{ s[2] }}</span>
+        </div>
+      </li>
+      {%- endfor %}
+    </ul>
+    <p class="sg-note mt-m">Components use semantic aliases (--surface, --text, --text-2, --text-3, --line, --line-strong, --link, --focus, --accent, --accent-water, --accent-gold, --decor). Dark bands remap only these.</p>
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="type">
+  <div class="container">
+    <h2>Type</h2>
+    <p class="sg-intro">Fraunces for headings and the wordmark, Public Sans for body and UI, JetBrains Mono for field-note labels, Tiro Devanagari Hindi for Newar and Nepali terms. Use only the scale steps below (utility classes <code>.fs--1</code> … <code>.fs-5</code>).</p>
+
+    <div class="sg-scale">
+      <div class="sg-scale__row"><span class="sg-note">--step-5 · home hero</span><span class="sg-scale__sample fs-5">Engineering the ancient</span></div>
+      <div class="sg-scale__row"><span class="sg-note">--step-4 · page h1</span><span class="sg-scale__sample fs-4">Water that still flows</span></div>
+      <div class="sg-scale__row"><span class="sg-note">--step-3 · h2</span><span class="sg-scale__sample fs-3">Selected work</span></div>
+      <div class="sg-scale__row"><span class="sg-note">--step-2 · h3</span><span class="sg-scale__sample fs-2">Alko Hiti reconstruction</span></div>
+      <div class="sg-scale__row"><span class="sg-note">--step-1 · lead / h4</span><span class="fs-1">A lede paragraph sits at step 1 in ink-2.</span></div>
+      <div class="sg-scale__row"><span class="sg-note">--step-0 · body</span><span class="fs-0">Body copy, 1.65 line-height, measure ≤ 68ch.</span></div>
+      <div class="sg-scale__row"><span class="sg-note">--step--1 · small</span><span class="fs--1">Captions, card text, form hints.</span></div>
+      <div class="sg-scale__row"><span class="sg-note">--label · mono</span><span class="label">Mono label · 0.78rem · uppercase</span></div>
+    </div>
+
+    <h3 class="sg-h3">Headings, eyebrow, lede, Devanagari</h3>
+    {% set typeDemo %}
+<div class="stack stack--s">
+  <p class="eyebrow">Heritage engineering</p>
+  <h2>Hiti stone-spout systems</h2>
+  <p class="lede">Living hydraulic infrastructure, still carrying water after 1,500 years.</p>
+  <p>The <span class="deva" lang="new">नाभिमण्डल</span> (nabhi mandal) calms the spring’s pressure before water reaches the spout.</p>
+</div>
+    {% endset %}
+    <div class="sg-frame">{{ typeDemo | safe }}</div>
+    {{ source(typeDemo) }}
+    <p class="sg-note mt-s">Eyebrow variants: <code>.eyebrow--plain</code> (no rule), <code>.eyebrow--water</code>, <code>.eyebrow--heritage</code>. Generic mono label: <code>.label</code>.</p>
+
+    <h3 class="sg-h3">Prose (Markdown body)</h3>
+    <div class="sg-frame">
+      <div class="prose">
+        <h2>How a hiti works</h2>
+        <p>Water from an aquifer travels through <a href="#type">underground channels</a> into a stepped, sunken courtyard. The spout itself — the <em>ga hiti</em> — is often carved as a <strong>makara</strong>, a mythical water creature.</p>
+        <ul>
+          <li>Source: spring or pond recharge</li>
+          <li>Conveyance: <code>hiti duun</code> conduit</li>
+          <li>Outlet: stone spout</li>
+        </ul>
+        <blockquote><p>The hiti is not a relic. It is a functioning technology.</p></blockquote>
+        <h3>Measured data</h3>
+        <table>
+          <thead><tr><th>Spout</th><th>Discharge</th><th>Season</th></tr></thead>
+          <tbody><tr><td>Example A</td><td>0.4 L/s</td><td>Dry</td></tr><tr><td>Example B</td><td>1.1 L/s</td><td>Monsoon</td></tr></tbody>
+        </table>
+        <hr>
+        <ol><li>Survey</li><li>Calculate</li><li>Draw</li></ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="space">
+  <div class="container">
+    <h2>Space, shape, motion</h2>
+    <p class="sg-intro">Spacing tokens, radii (<code>--radius-s 4px</code>, <code>--radius 8px</code>, <code>--radius-l 14px</code>), one paper shadow (<code>--shadow</code>), <code>--ease</code> with 150/250/400ms. Section padding is <code>--section-pad</code>. All motion is disabled under reduced motion.</p>
+    <div class="sg-space">
+      {%- for s in ["3xs", "2xs", "xs", "s", "m", "l", "xl", "2xl", "3xl"] %}
+      <div class="sg-space__row"><span class="sg-note">--space-{{ s }}</span><span class="sg-space__bar" data-space="{{ s }}"></span></div>
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="layout">
+  <div class="container">
+    <h2>Layout primitives</h2>
+    <p class="sg-intro"><code>.container</code> (72rem) / <code>--narrow</code> (46rem) / <code>--wide</code> (86rem). <code>.section</code>, <code>.section--alt</code>, <code>.section--tight</code>. Base margins are zero — use <code>.stack</code> (with <code>--2xs … --2xl</code>) or <code>.prose</code> for vertical rhythm.</p>
+
+    <h3 class="sg-h3">.stack · .cluster</h3>
+    {% set stackDemo %}
+<div class="stack stack--xs">
+  <div class="sg-box">.stack child</div>
+  <div class="sg-box">.stack child</div>
+</div>
+<div class="cluster mt-m">
+  <span class="sg-box">.cluster</span><span class="sg-box">wraps</span><span class="sg-box">with gap</span>
+</div>
+    {% endset %}
+    <div class="sg-frame">{{ stackDemo | safe }}</div>
+    {{ source(stackDemo) }}
+    <p class="sg-note mt-s">.cluster modifiers: --tight, --loose, --between, --baseline.</p>
+
+    <h3 class="sg-h3">.grid--2 / --3 / --4</h3>
+    <div class="sg-frame stack stack--m">
+      <div class="grid grid--2"><div class="sg-box">grid--2</div><div class="sg-box">grid--2</div></div>
+      <div class="grid grid--3"><div class="sg-box">grid--3</div><div class="sg-box">grid--3</div><div class="sg-box">grid--3</div></div>
+      <div class="grid grid--4"><div class="sg-box">grid--4</div><div class="sg-box">grid--4</div><div class="sg-box">grid--4</div><div class="sg-box">grid--4</div></div>
+    </div>
+
+    <h3 class="sg-h3">.split (text + media, stacks below 52rem)</h3>
+    {% set splitDemo %}
+<div class="split">
+  <div class="stack stack--s">
+    <p class="eyebrow">Split</p>
+    <h3>Text column</h3>
+    <p>Modifiers: <code>.split--reverse</code>, <code>.split--media-wide</code>, <code>.split--text-wide</code>, <code>.split--top</code>.</p>
+  </div>
+  {% media "", "", { kind: "heritage", ratio: "4/3" } %}
+</div>
+    {% endset %}
+    <div class="sg-frame">{{ splitDemo | safe }}</div>
+
+    <h3 class="sg-h3">.with-aside (detail pages)</h3>
+    <div class="sg-frame">
+      <div class="with-aside">
+        <div class="with-aside__main sg-box">.with-aside__main — prose, gallery…</div>
+        <aside class="with-aside__aside sg-box">.with-aside__aside — sticky ledger (≥ 60rem)</aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="actions">
+  <div class="container">
+    <h2>Buttons and links</h2>
+    <p class="sg-intro">Min target 44px. One <code>.btn--primary</code> per view. Focus is a 2px copper outline (gilt on dark).</p>
+    {% set btnDemo %}
+<div class="cluster">
+  <a class="btn btn--primary" href="#actions">Work with me{% icon "arrow-right" %}</a>
+  <a class="btn btn--secondary" href="#actions">View the work</a>
+  <a class="btn btn--secondary" href="#actions" download>{% icon "download" %}Download CV</a>
+  <button class="btn btn--primary btn--small" type="button">Small</button>
+  <button class="btn btn--primary" type="button" disabled>Disabled</button>
+  <button class="btn btn--secondary" type="button" disabled>Disabled</button>
+  <a class="link-arrow" href="#actions">All projects{% icon "arrow-right" %}</a>
+  <a class="link-arrow" href="#actions">{% icon "arrow-left" %}Back to work</a>
+</div>
+    {% endset %}
+    <div class="sg-frame">{{ btnDemo | safe }}</div>
+    {{ source('<a class="btn btn--primary" href="/work-with-me/">Work with me{% icon "arrow-right" %}</a>\n<a class="btn btn--secondary" href="/work/">View the work</a>\n<a class="link-arrow" href="/work/">All projects{% icon "arrow-right" %}</a>') }}
+    <div class="band--dark sg-frame mt-m">
+      <div class="cluster">
+        <a class="btn btn--primary" href="#actions">Primary on dark</a>
+        <a class="btn btn--on-dark" href="#actions">.btn--on-dark</a>
+        <a class="link-arrow" href="#actions">Link on dark{% icon "arrow-right" %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="icons">
+  <div class="container">
+    <h2>Icons</h2>
+    <p class="sg-intro"><code>{{ '{% icon "name" %}' }}</code> or <code>{{ '{% icon "name", "icon--l" %}' }}</code> → inline SVG, <code>aria-hidden</code>, <code>currentColor</code>, 1.5 stroke. Size follows the font (1.15em); <code>.icon--s</code>, <code>.icon--l</code>.</p>
+    <ul class="sg-icons">
+      {%- for name in ["arrow-right", "arrow-left", "arrow-up-right", "chevron-down", "chevron-left", "chevron-right", "download", "mail", "whatsapp", "phone", "map-pin", "linkedin", "medium", "menu", "close", "water", "heritage", "robot", "walk", "pen", "calendar", "users", "clock", "globe", "check", "plus", "minus"] %}
+      <li>{% icon name %}{{ name }}</li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section section--alt" id="cards">
+  <div class="container">
+    <h2>Cards</h2>
+    <p class="sg-intro"><code>.card--link</code>: the whole card is clickable through the <strong>title link’s ::after overlay</strong>. Never wrap a card in <code>&lt;a&gt;</code>. Thumbnails in link cards use <code>alt=""</code> (the title names the card). Optional <code>data-domain="water|heritage|education"</code> adds a coloured top rule. Placeholders shown for every media <code>kind</code>.</p>
+
+    {% set cardDemo %}
+<article class="card card--link" data-domain="heritage">
+  <div class="card__media">
+    {% media "/assets/images/work/example/cover.jpg", "", { ratio: "3/2", kind: "heritage" } %}
+  </div>
+  <div class="card__body">
+    <p class="card__meta"><span>Heritage</span><span>2022–present</span></p>
+    <h3 class="card__title"><a href="#cards">Hiti stone-spout systems</a></h3>
+    <p class="card__text">Measured cross-sections of the Valley’s living water spouts.</p>
+    <div class="card__footer">
+      <span class="card__cue" aria-hidden="true">Read the case study{% icon "arrow-right" %}</span>
+    </div>
+  </div>
+</article>
+    {% endset %}
+
+    <div class="grid grid--3">
+      {{ cardDemo | safe }}
+      {%- set kinds = [["photo", "Photo", "water", "Groundwater recharge, Balaju"], ["drawing", "Drawing", "heritage", "Measured hiti section"], ["water", "Water", "water", "Rajkulo canal survey"], ["walk", "Walk", "heritage", "Patan water walk"], ["robotics", "Robotics", "education", "Yala Mayor’s Cup"], ["map", "Map", "water", "Canal route map"], ["portrait", "Portrait", "", "Portrait placeholder"]] %}
+      {%- for k in kinds %}
+      <article class="card card--link"{% if k[2] %} data-domain="{{ k[2] }}"{% endif %}>
+        <div class="card__media">{% media "", "", { ratio: "3/2", kind: k[0] } %}</div>
+        <div class="card__body">
+          <p class="card__meta"><span>kind: {{ k[0] }}</span>{% if k[2] %}<span>{{ k[2] }}</span>{% endif %}</p>
+          <h3 class="card__title"><a href="#cards">{{ k[3] }}</a></h3>
+          <p class="card__text">Placeholder line-art for <code>kind: "{{ k[0] }}"</code>.</p>
+          <div class="card__footer"><ul class="tags" role="list"><li class="tag tag--{{ 'education' if k[2] == 'education' else ('heritage' if k[2] == 'heritage' else 'water') }}">{{ k[1] }}</li></ul></div>
+        </div>
+      </article>
+      {%- endfor %}
+    </div>
+    {{ source(cardDemo) }}
+
+    <h3 class="sg-h3">Static card and .card--plain</h3>
+    <div class="grid grid--3">
+      <div class="card">
+        <div class="card__body">
+          <p class="eyebrow eyebrow--water">Service</p>
+          <h3 class="card__title">Groundwater recharge studies</h3>
+          <p class="card__text">A static card (no link) — services, notes, contact blocks.</p>
+          <div class="card__footer"><a class="link-arrow" href="#cards">Ask about this{% icon "arrow-right" %}</a></div>
+        </div>
+      </div>
+      <div class="card card--plain">
+        <div class="card__body">
+          <p class="card__meta"><span>Setopati English</span><span>Sept 2025</span></p>
+          <h3 class="card__title">Flames of September</h3>
+          <p class="card__text">.card--plain — top rule only, no surface. Good for lists of writing.</p>
+        </div>
+      </div>
+      <div class="card card--plain">
+        <div class="card__body">
+          <p class="card__meta"><span>Nepali Times</span><span>2022</span></p>
+          <h3 class="card__title"><a href="#cards">Kathmandu’s ancient water spouts</a></h3>
+          <p class="card__text">Plain card with a normal (non-overlay) title link.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="tags">
+  <div class="container">
+    <h2>Tags and chips</h2>
+    <p class="sg-intro"><code>.tag</code> is a static label; <code>.chip</code> is a filter toggle button using <code>aria-pressed</code>. Wrap filter UIs in <code>.js-only</code> (they need JS; without it all items show).</p>
+    {% set tagDemo %}
+<ul class="tags" role="list">
+  <li class="tag">Default</li>
+  <li class="tag tag--water">Water</li>
+  <li class="tag tag--heritage">Heritage</li>
+  <li class="tag tag--education">Education</li>
+</ul>
+<div class="chips js-only mt-m" role="group" aria-label="Filter projects">
+  <button class="chip" type="button" aria-pressed="true">All <span class="chip__count">8</span></button>
+  <button class="chip" type="button" aria-pressed="false">Water <span class="chip__count">3</span></button>
+  <button class="chip" type="button" aria-pressed="false">Heritage <span class="chip__count">4</span></button>
+  <button class="chip" type="button" disabled>Archive</button>
+</div>
+    {% endset %}
+    <div class="sg-frame">{{ tagDemo | safe }}</div>
+    {{ source(tagDemo) }}
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="data">
+  <div class="container">
+    <h2>Ledger and stats</h2>
+    <div class="split split--top">
+      <div>
+        <h3 class="sg-h3 mt-0">.ledger</h3>
+        {% set ledgerDemo %}
+<dl class="ledger">
+  <div><dt>Role</dt><dd>Lead engineer</dd></div>
+  <div><dt>Client</dt><dd>Lalitpur Metropolitan City (LMC)</dd></div>
+  <div><dt>Location</dt><dd>Mangalbazar, Lalitpur</dd></div>
+  <div><dt>Years</dt><dd>2022–present</dd></div>
+</dl>
+        {% endset %}
+        {{ ledgerDemo | safe }}
+        {{ source(ledgerDemo) }}
+      </div>
+      <div>
+        <h3 class="sg-h3 mt-0">.stats (from stats.yml)</h3>
+        <ul class="stats" role="list">
+          {%- for s in stats | limit(4) %}
+          <li class="stats__item">
+            <span class="stats__value">{{ s.value }}</span>
+            <span class="stats__label">{{ s.label }}</span>
+            <span class="stats__detail">{{ s.detail }}</span>
+          </li>
+          {%- endfor %}
+        </ul>
+        {{ source('<ul class="stats" role="list">\n  <li class="stats__item">\n    <span class="stats__value">300+</span>\n    <span class="stats__label">students reached</span>\n    <span class="stats__detail">Robotics programme in Lalitpur public schools</span>\n  </li>\n</ul>') }}
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section section--alt" id="timeline">
+  <div class="container container--narrow">
+    <h2>Timeline</h2>
+    <p class="sg-intro">A vertical logbook. <code>data-type</code> (engineering | heritage | education | community) colours the dot.</p>
+    <ol class="timeline">
+      {%- for t in timeline | limit(4) %}
+      <li class="timeline__item" data-type="{{ t.type }}">
+        <p class="timeline__years">{{ t.years }}</p>
+        <h3 class="timeline__role">{{ t.role }}</h3>
+        <p class="timeline__org">{{ t.org }}</p>
+        <p class="timeline__desc">{{ t.desc }}</p>
+      </li>
+      {%- endfor %}
+    </ol>
+    {{ source('<ol class="timeline">\n  <li class="timeline__item" data-type="heritage">\n    <p class="timeline__years">Jun–Dec 2024</p>\n    <h3 class="timeline__role">Technical Advisor, Hiti Reconstruction</h3>\n    <p class="timeline__org">Kathmandu Metropolitan City (KMC)</p>\n    <p class="timeline__desc">…</p>\n  </li>\n</ol>') }}
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="logos">
+  <div class="container">
+    <h2>Logo row and dot list</h2>
+    <p class="sg-intro">Institutions as typographic wordmarks, separated by gilt dots; a wrapped line never starts with a dot. For “Worked with and for” always include <code>partials/clients.njk</code> (set <code>clientsLabelledBy</code> to your heading’s id first): it wraps acronyms in <code>&lt;abbr&gt;</code> and adds a visible key. <code>.dot-list</code> is the same separator without the display type. Neither may contain links or buttons.</p>
+    <h3 class="label" id="sg-clients-title">Worked with and for</h3>
+    {%- set clientsLabelledBy = "sg-clients-title" %}
+    {% include "partials/clients.njk" %}
+    {{ source('<h2 class="label" id="clients-title">Worked with and for</h2>
+{%- set clientsLabelledBy = "clients-title" %}
+{% include "partials/clients.njk" %}') }}
+    <ul class="dot-list mt-l" role="list"><li>AutoCAD</li><li>Python</li><li>Arduino and mBlock</li><li>Hydraulic discharge calculations</li></ul>
+    {{ source('<ul class="dot-list" role="list"><li>AutoCAD</li><li>Python</li></ul>') }}
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section section--alt" id="patterns">
+  <div class="container">
+    <h2>Shared patterns</h2>
+    <p class="sg-intro">Small components that pages used to rebuild. <code>data-domain="water|heritage|education"</code> on any element sets <code>--domain</code> (rings, rules) and <code>--domain-text</code> (text, icons) for everything inside it.</p>
+
+    <h3 class="sg-h3">Horizontal and feature cards</h3>
+    {% set hCard %}
+<article class="card card--link card--horizontal card--feature" data-domain="water">
+  <div class="card__media">{% media "", "", { ratio: "3/2", kind: "water" } %}</div>
+  <div class="card__body">
+    <p class="card__meta"><span>Water engineering</span><span>2022–present</span></p>
+    <h3 class="card__title"><a href="#patterns">Media beside the text from 48rem</a></h3>
+    <p class="card__text">Add .card--reverse to put the media on the right; set --card-media-min for a taller image.</p>
+  </div>
+</article>
+    {% endset %}
+    {{ hCard | safe }}
+    {{ source(hCard) }}
+
+    <h3 class="sg-h3">Markers, tick list, label--plain, pointer</h3>
+    <div class="grid grid--3">
+      <div class="cluster" data-domain="heritage"><span class="marker" aria-hidden="true">01</span><span class="marker marker--icon" aria-hidden="true">{% icon "check", "icon--l" %}</span></div>
+      <ul class="checklist" role="list" data-domain="education"><li>{% icon "check" %}<span>Robotics workshops</span></li><li>{% icon "check" %}<span>Teacher training</span></li></ul>
+      <div class="stack stack--xs"><p class="label label--plain">Showing all 7 projects</p><p class="pointer pointer--hang fs--1">A cross-reference or footnote, with a hanging indent so wrapped lines align with the text.</p></div>
+    </div>
+    {{ source('<span class="marker" aria-hidden="true">01</span>
+<span class="marker marker--icon" aria-hidden="true">{% icon "check", "icon--l" %}</span>
+<ul class="checklist" role="list"><li>{% icon "check" %}<span>…</span></li></ul>
+<ul class="checklist checklist--dots" role="list"><li><span>…</span></li></ul>
+<p class="label label--plain">12 photographs</p>
+<p class="pointer pointer--hang">…</p>') }}
+
+    <h3 class="sg-h3">Filter bar</h3>
+    <div class="filter-bar">
+      <div class="chips" role="group" aria-label="Example filter"><button class="chip" type="button" aria-pressed="true">All <span class="chip__count">7</span></button><button class="chip" type="button" aria-pressed="false">Water <span class="chip__count">4</span></button></div>
+      <p class="label label--plain filter-bar__status" role="status">Showing all 7 projects</p>
+    </div>
+    {{ source('<div class="filter-bar js-only">
+  <div class="chips" role="group" aria-label="…">…</div>
+  <p class="label label--plain filter-bar__status" role="status">…</p>
+</div>') }}
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="quote">
+  <div class="container container--narrow">
+    <h2>Quote</h2>
+    {% set quoteDemo %}
+<figure class="quote">
+  <blockquote><p>The hiti is not a relic. It is a functioning technology that still carries water.</p></blockquote>
+  <figcaption>Hrishav Raj Joshi · <cite>field notes</cite></figcaption>
+</figure>
+    {% endset %}
+    {{ quoteDemo | safe }}
+    {{ source(quoteDemo) }}
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="notices">
+  <div class="container container--narrow">
+    <h2>Notices</h2>
+    <p class="sg-intro">Static notices carry their own role; notices updated by JS (form results) use <code>role="status"</code> / <code>role="alert"</code> and are revealed by removing <code>hidden</code>.</p>
+    {% set noticeDemo %}
+<div class="stack stack--s">
+  <div class="notice notice--info" role="note">{% icon "clock" %}<p><strong class="notice__title">Replies within 2–3 working days</strong>WhatsApp is fastest for anything urgent.</p></div>
+  <div class="notice notice--success" role="status">{% icon "check" %}<p><strong class="notice__title">Message sent</strong>Thank you — I’ll reply by email.</p></div>
+  <div class="notice notice--error" role="alert">{% icon "close" %}<p><strong class="notice__title">That didn’t go through</strong>Please email me directly instead.</p></div>
+  <div class="notice">{% icon "pen" %}<p>Neutral notice (no modifier).</p></div>
+</div>
+    {% endset %}
+    {{ noticeDemo | safe }}
+    {{ source(noticeDemo) }}
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section section--alt" id="media">
+  <div class="container">
+    <h2>Media</h2>
+    <p class="sg-intro"><code>{{ '{% media src, alt, { ratio, kind, caption, eager, sizes, widths, class, focus } %}' }}</code>. Real files become responsive <code>&lt;picture&gt;</code> (AVIF/WebP/JPEG). Missing files render a decorative placeholder (aria-hidden, no caption). Supported ratios: 1/1, 5/4, 4/3, 3/2, 16/10, 16/9, 2/1, 21/9, 4/5, 3/4, 2/3, 9/16 — others snap to the nearest.</p>
+    <div class="grid grid--3">
+      {% media "", "", { ratio: "16/9", kind: "photo" } %}
+      {% media "", "", { ratio: "1/1", kind: "drawing" } %}
+      {% media "", "", { kind: "portrait" } %}
+      {% media "", "", { ratio: "3/2", kind: "walk", class: "media--rounded" } %}
+      {% media "", "", { ratio: "4/3", kind: "robotics", class: "media--framed" } %}
+      {% media "", "", { ratio: "21/9", kind: "map" } %}
+    </div>
+    {{ source('{% media "/assets/images/work/hiti-research/cover.jpg", "Hiti spout at Mangalbazar", { ratio: "3/2", kind: "heritage", caption: "Mangalbazar, 2023" } %}\n\n→ <figure class="media" data-ratio="3/2"><picture>…</picture><figcaption>Mangalbazar, 2023</figcaption></figure>') }}
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="forms">
+  <div class="container container--narrow">
+    <h2>Forms</h2>
+    <p class="sg-intro">Inputs on <code>--card</code> with a 1.5px <code>--field-border</code>, copper focus ring, brick error state. Required fields show <code>*</code> plus visually-hidden “required”. Errors link via <code>aria-describedby</code> and <code>aria-invalid="true"</code>.</p>
+    {% set formDemo %}
+<form class="form" action="#forms" method="get" novalidate>
+  <div class="form__row">
+    <div class="field">
+      <label class="field__label" for="sg-name">Full name<span class="field__req" aria-hidden="true">*</span><span class="visually-hidden"> (required)</span></label>
+      <input id="sg-name" name="name" type="text" autocomplete="name" required>
+    </div>
+    <div class="field field--error">
+      <label class="field__label" for="sg-email">Email<span class="field__req" aria-hidden="true">*</span><span class="visually-hidden"> (required)</span></label>
+      <input id="sg-email" name="email" type="email" autocomplete="email" required aria-invalid="true" aria-describedby="sg-email-error" value="hrishav@">
+      <p class="field__error" id="sg-email-error">{% icon "close" %}Enter an email address like name@example.com</p>
+    </div>
+  </div>
+  <div class="field">
+    <label class="field__label" for="sg-topic">What is it about?</label>
+    <select id="sg-topic" name="topic">
+      {%- for s in services.items %}
+      <option value="{{ s.topic }}">{{ s.title }}</option>
+      {%- endfor %}
+      <option value="other">Something else</option>
+    </select>
+  </div>
+  <div class="field">
+    <label class="field__label" for="sg-msg">Message</label>
+    <p class="field__hint" id="sg-msg-hint">A few lines on what you need and by when.</p>
+    <textarea id="sg-msg" name="message" aria-describedby="sg-msg-hint" placeholder="Tell me about your project…"></textarea>
+  </div>
+  <div class="field">
+    <label class="field__label" for="sg-disabled">Disabled field</label>
+    <input id="sg-disabled" type="text" value="Not editable" disabled>
+  </div>
+  <div class="field field--check">
+    <input id="sg-check" type="checkbox" name="consent">
+    <label class="field__label" for="sg-check">Keep my details only to reply to this message</label>
+  </div>
+  <div class="form__actions">
+    <button class="btn btn--primary" type="button">Send message{% icon "arrow-right" %}</button>
+    <p class="form__note">I usually reply within 2–3 working days.</p>
+  </div>
+</form>
+    {% endset %}
+    <div class="sg-frame">{{ formDemo | safe }}</div>
+    {{ source(formDemo) }}
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section section--alt" id="faq">
+  <div class="container container--narrow">
+    <h2>FAQ</h2>
+    <p class="sg-intro">Native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> with a custom plus/minus marker. No JS.</p>
+    <div class="faq">
+      {%- for f in faq | limit(3) %}
+      <details class="faq__item"{% if loop.first %} open{% endif %}>
+        <summary>{{ f.question }}</summary>
+        <div class="faq__answer"><p>{{ f.answer | safe }}</p></div>
+      </details>
+      {%- endfor %}
+    </div>
+    {{ source('<div class="faq">\n  <details class="faq__item">\n    <summary>Question?</summary>\n    <div class="faq__answer"><p>Answer.</p></div>\n  </details>\n</div>') }}
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="heroes">
+  <div class="container">
+    <h2>Page hero and breadcrumbs</h2>
+    <p class="sg-intro">Every inner page opens with <code>.page-hero</code> (it ends in a hairline with a hatched strip). Use <code>&lt;header class="page-hero"&gt;</code> inside <code>main</code>. <code>.page-hero--split</code> adds an aside column for a drawing or photo.</p>
+  </div>
+  {% set heroDemo %}
+<header class="page-hero">
+  <div class="container page-hero__inner">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/work/">Work</a></li>
+        <li><span aria-current="page">Rajkulo canal</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow eyebrow--water">Heritage engineering · 2022–present</p>
+    <h1 class="page-hero__title">Rajkulo royal canal</h1>
+    <p class="lede">A feasibility study for reviving Lalitpur’s historic irrigation canal.</p>
+    <dl class="ledger ledger--compact page-hero__meta">
+      <div><dt>Role</dt><dd>Research lead</dd></div>
+      <div><dt>Location</dt><dd>Lalitpur</dd></div>
+    </dl>
+  </div>
+</header>
+  {% endset %}
+  <div class="sg-frame sg-frame--flush sg-frame--paper">{{ heroDemo | replace("<h1", "<p role=\"presentation\"") | replace("</h1>", "</p>") | safe }}</div>
+  <div class="container">
+    {{ source(heroDemo) }}
+    <p class="sg-note mt-s">(In the demo above the h1 is rendered as a &lt;p&gt; so this page keeps one h1.)</p>
+  </div>
+  <div class="sg-frame sg-frame--flush sg-frame--paper mt-l">
+    <div class="page-hero page-hero--split">
+      <div class="container page-hero__inner">
+        <p class="eyebrow">Split hero</p>
+        <p class="page-hero__title" role="presentation">Water <em>walks</em></p>
+        <p class="lede">.page-hero--split puts .page-hero__aside in a second column from 56rem.</p>
+        <div class="cluster page-hero__actions"><a class="btn btn--primary" href="#heroes">Book a walk</a></div>
+        <div class="page-hero__aside">{% media "", "", { ratio: "4/3", kind: "walk" } %}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section section--alt" id="gallery">
+  <div class="container">
+    <h2>Gallery and lightbox</h2>
+    <p class="sg-intro"><code>.gallery</code> is a dense CSS grid; <code>.gallery__item--tall</code> / <code>--wide</code> span rows/columns. Items are links to the full image (work without JS); the photos page script upgrades them to a <code>&lt;dialog class="lightbox"&gt;</code>.</p>
+    {% set galleryDemo %}
+<ul class="gallery" role="list">
+  <li class="gallery__item gallery__item--tall"><a href="#gallery">{% media "", "", { kind: "heritage" } %}<span class="gallery__caption">Tusha Hiti, Patan · 2023</span></a></li>
+  <li class="gallery__item gallery__item--wide"><a href="#gallery">{% media "", "", { kind: "water" } %}<span class="gallery__caption">Recharge pit, Balaju</span></a></li>
+  <li class="gallery__item"><a href="#gallery">{% media "", "", { kind: "walk" } %}<span class="gallery__caption">Water walk</span></a></li>
+  <li class="gallery__item"><a href="#gallery">{% media "", "", { kind: "robotics" } %}<span class="gallery__caption">Robotics class</span></a></li>
+  <li class="gallery__item gallery__item--tall"><a href="#gallery">{% media "", "", { kind: "portrait" } %}<span class="gallery__caption">Portrait</span></a></li>
+  <li class="gallery__item"><a href="#gallery">{% media "", "", { kind: "photo" } %}<span class="gallery__caption">Landscape</span></a></li>
+  <li class="gallery__item gallery__item--wide"><a href="#gallery">{% media "", "", { kind: "map" } %}<span class="gallery__caption">Canal survey</span></a></li>
+</ul>
+    {% endset %}
+    {{ galleryDemo | safe }}
+    <p class="sg-note mt-s">Real items: <code>&lt;li class="gallery__item"&gt;&lt;a href=&quot;/assets/img/…&quot;&gt;{{ '{% media src, alt %}' }}&lt;span class="gallery__caption"&gt;…&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;</code></p>
+
+    <h3 class="sg-h3">.lightbox (static demo)</h3>
+    <dialog class="lightbox sg-lightbox-demo" open aria-label="Lightbox demo">
+      <figure class="lightbox__figure">
+        {% media "", "", { kind: "heritage", ratio: "3/2" } %}
+        <figcaption class="lightbox__caption"><span>Tusha Hiti, Patan</span><span>3 / 12</span></figcaption>
+      </figure>
+      <div class="lightbox__controls">
+        <button class="lightbox__btn" type="button" aria-label="Previous photo">{% icon "chevron-left" %}</button>
+        <button class="lightbox__btn" type="button" aria-label="Next photo">{% icon "chevron-right" %}</button>
+        <button class="lightbox__btn" type="button" aria-label="Close">{% icon "close" %}</button>
+      </div>
+    </dialog>
+  </div>
+</section>
+
+{# ======================================================================= #}
+<section class="sg-section" id="steps">
+  <div class="container">
+    <h2>Steps</h2>
+    <p class="sg-intro"><code>.steps</code> — numbered process (from <code>services.process</code>).</p>
+    <ol class="steps">
+      {%- for p in services.process %}
+      <li><h3 class="steps__title">{{ p.step }}</h3><p class="steps__text">{{ p.text }}</p></li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>
+
+{# ======================================================================= #}
+<div id="bands">
+  <section class="section band--dark">
+    <div class="container stack stack--m">
+      <p class="eyebrow">.band--dark</p>
+      <h2>Dark band — soot with lime text</h2>
+      <p class="lede">Semantic colours are remapped inside the band: links and focus turn gilt, accents terracotta and patina. Use sparingly — home hero foot, footer, one CTA band.</p>
+      <p>Body text with an <a href="#bands">inline link</a> and a <span class="text-accent">heritage accent</span> and <span class="text-water">water accent</span>.</p>
+      <ul class="tags" role="list"><li class="tag">On dark</li><li class="tag">Tag</li></ul>
+      <ul class="stats" role="list">
+        <li class="stats__item"><span class="stats__value">50+</span><span class="stats__label">heritage walks led</span></li>
+        <li class="stats__item"><span class="stats__value">300+</span><span class="stats__label">students reached</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band--dark band--edge">
+    <div class="container cta-band">
+      <div class="stack stack--s">
+        <p class="eyebrow">.band--dark.band--edge + .cta-band</p>
+        <h2 class="cta-band__title">Restoring a spout? Planning a <em>walk</em>?</h2>
+        <p class="lede">Tell me what you need — I usually reply within 2–3 working days.</p>
+      </div>
+      <div class="cluster">
+        <a class="btn btn--primary" href="#bands">Work with me{% icon "arrow-right" %}</a>
+        <a class="btn btn--on-dark" href="#bands">{% icon "whatsapp" %}WhatsApp</a>
+      </div>
+    </div>
+  </section>
+  <div class="container">
+    {{ source('<section class="band--dark band--edge">\n  <div class="container cta-band">\n    <div class="stack stack--s">\n      <p class="eyebrow">…</p>\n      <h2 class="cta-band__title">Restoring a spout? Planning a <em>walk</em>?</h2>\n      <p class="lede">…</p>\n    </div>\n    <div class="cluster">\n      <a class="btn btn--primary" href="/work-with-me/">Work with me</a>\n      <a class="btn btn--on-dark" href="…">WhatsApp</a>\n    </div>\n  </div>\n</section>') }}
+  </div>
+</div>
+
+{# ======================================================================= #}
+<section class="sg-section" id="hiti">
+  <div class="container">
+    <h2>Hiti diagram</h2>
+    <p class="sg-intro"><code>{{ '{% include "partials/hiti-diagram.njk" %}' }}</code> — a container-query component: below 36rem the italic notes hide and labels scale up; below 26rem they scale again so text stays ≥ 11px rendered. For a second copy on one page set <code>{{ '{% set hitiId = "hiti-2" %}' }}</code> first.</p>
+    {% include "partials/hiti-diagram.njk" %}
+    <h3 class="sg-h3">Narrow containers (20rem and 30rem)</h3>
+    <div class="sg-hiti-widths">
+      <div class="sg-w-20">{% set hitiId = "hiti-narrow" %}{% include "partials/hiti-diagram.njk" %}</div>
+      <div class="sg-w-30">{% set hitiId = "hiti-medium" %}{% include "partials/hiti-diagram.njk" %}</div>
+    </div>
+  </div>
+  <div class="band--dark section--tight mt-xl">
+    <div class="container">
+      <p class="eyebrow">On a dark band</p>
+      {% set hitiId = "hiti-dark" %}{% include "partials/hiti-diagram.njk" %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <p class="reveal sg-note">This line uses <code>.reveal</code>: it fades in when scrolled into view (JS + motion allowed only).</p>
+  </div>
+</section>

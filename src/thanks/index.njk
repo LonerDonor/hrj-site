@@ -1,0 +1,64 @@
+---
+layout: layouts/base.njk
+permalink: /thanks/
+title: Thank you
+description: "Your enquiry has been sent. I reply within 2–3 working days."
+pageCss: wwm
+noindex: true
+sitemap: false
+eleventyExcludeFromCollections: true
+---
+{#-
+  /thanks/ — where the enquiry form lands after a normal (no-JS) submit:
+  Formspree redirects here via the form's hidden `_next` field. With JS the
+  form confirms in place and this page is not shown. Not indexed.
+-#}
+<header class="page-hero wwm-thanks">
+  <div class="container page-hero__inner">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/work-with-me/">Work with me</a></li>
+        <li><span aria-current="page">Enquiry sent</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow">Enquiry sent</p>
+    <h1 class="page-hero__title">Thank <em>you</em></h1>
+    <p class="lede">Your message is on its way. I’ll reply {{ site.replyTime }} — if it’s urgent, WhatsApp is the fastest way to reach me.</p>
+    <div class="cluster page-hero__actions">
+      <a class="btn btn--secondary" href="{{ site.whatsapp }}" rel="noopener">{% icon "whatsapp" %}<span>Message on WhatsApp <span class="nowrap">{{ site.phone }}</span></span></a>
+      <a class="link-arrow" href="/work-with-me/">{% icon "arrow-left" %}Back to Work with me</a>
+    </div>
+  </div>
+</header>
+
+<section class="section" aria-labelledby="next-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">What happens next</p>
+      <h2 id="next-title">From here</h2>
+      <p class="lede">You’ve done the first step. This is how the rest usually goes.</p>
+    </header>
+    <ol class="steps wwm-steps">
+      {%- for p in services.process %}
+      <li{% if loop.first %} class="wwm-steps__done"{% endif %}>
+        <h3 class="steps__title">{{ p.step }}</h3>
+        <p class="steps__text">{{ p.text }}</p>
+        {%- if loop.first %}
+        <p class="label wwm-steps__flag">{% icon "check" %}Done</p>
+        {%- endif %}
+      </li>
+      {%- endfor %}
+    </ol>
+
+    <div class="wwm-thanks__more">
+      <p class="label" id="more-title">While you wait</p>
+      <ul class="cluster cluster--loose" role="list" aria-labelledby="more-title">
+        <li><a class="link-arrow" href="/work/">See the work{% icon "arrow-right" %}</a></li>
+        <li><a class="link-arrow" href="/walks/">Heritage walks{% icon "arrow-right" %}</a></li>
+        <li><a class="link-arrow" href="/writing/">Writing and press{% icon "arrow-right" %}</a></li>
+      </ul>
+      <p class="form__note">Forgot something? Write to <a href="mailto:{{ site.email }}">{{ site.email }}</a> and I’ll add it to your enquiry.</p>
+    </div>
+  </div>
+</section>

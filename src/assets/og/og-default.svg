@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Default social card. Rendered to /assets/og/og-default.png at build time
+       (librsvg has no web fonts, so type uses generic serif / mono stacks). -->
+  <defs>
+    <pattern id="grav" width="14" height="14" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="1" fill="#675c4b" opacity="0.3"/>
+      <circle cx="10" cy="8" r="1.4" fill="#675c4b" opacity="0.26"/>
+      <circle cx="6" cy="11.5" r="0.7" fill="#675c4b" opacity="0.34"/>
+    </pattern>
+    <pattern id="pave" width="11" height="20" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="20" x2="11" y2="0" stroke="#675c4b" stroke-width="0.6" opacity="0.55"/>
+    </pattern>
+    <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="8" stroke="#cfc4ae" stroke-width="1.5"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="#f3ede1"/>
+
+  <!-- Roles line -->
+  <rect x="80" y="139" width="44" height="2" fill="#b08a2e"/>
+  <text x="140" y="148" font-family="'DejaVu Sans Mono', 'Liberation Mono', Consolas, monospace" font-size="21" letter-spacing="3" fill="#675c4b">CIVIL ENGINEER · HERITAGE PRACTITIONER · EDUCATOR</text>
+
+  <!-- Name -->
+  <text font-family="Georgia, 'DejaVu Serif', 'Liberation Serif', 'Times New Roman', serif" font-size="98" font-weight="700" fill="#1f1b16" letter-spacing="-2">
+    <tspan x="76" y="262">Hrishav Raj</tspan>
+    <tspan x="76" y="364">Joshi<tspan fill="#9c3f26">.</tspan></tspan>
+  </text>
+
+  <!-- Tagline -->
+  <text font-family="Georgia, 'DejaVu Serif', 'Liberation Serif', 'Times New Roman', serif" font-size="34" font-style="italic" fill="#4a4237">
+    <tspan x="80" y="440">Engineering the ancient.</tspan>
+    <tspan x="80" y="484">Educating the future.</tspan>
+  </text>
+
+  <!-- Hiti cross-section, simplified -->
+  <g transform="translate(728 62) scale(0.66)">
+    <rect x="0" y="160" width="600" height="20" fill="url(#pave)"/>
+    <rect x="0" y="180" width="600" height="360" fill="url(#grav)"/>
+    <line x1="0" y1="180" x2="600" y2="180" stroke="#675c4b" stroke-width="1.4"/>
+    <path d="M170,400 Q170,255 240,242 Q310,255 310,400 Z" fill="#fbf8f2" stroke="#1f1b16" stroke-width="2.2" stroke-linejoin="round"/>
+    <path d="M196,385 Q196,398 240,398 Q284,398 284,385 L284,399 L196,399 Z" fill="#33604f" opacity="0.22"/>
+    <path d="M290,400 Q290,358 312,358 L312,400 Z" fill="#4a4237" stroke="#1f1b16" stroke-width="1.8"/>
+    <g fill="#b08a2e">
+      <circle cx="240" cy="282" r="2.6"/><circle cx="215" cy="302" r="2.6"/><circle cx="265" cy="302" r="2.6"/>
+      <circle cx="200" cy="332" r="2.6"/><circle cx="280" cy="332" r="2.6"/><circle cx="220" cy="354" r="2.6"/>
+      <circle cx="260" cy="354" r="2.6"/><circle cx="240" cy="376" r="2.6"/>
+    </g>
+    <rect x="215" y="234" width="50" height="11" rx="1.5" fill="#ebe3d3" stroke="#1f1b16" stroke-width="2.2"/>
+    <ellipse cx="240" cy="226" rx="7" ry="5" fill="#ebe3d3" stroke="#1f1b16" stroke-width="2.2"/>
+    <line x1="240" y1="221" x2="240" y2="213" stroke="#b08a2e" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="240" cy="211.5" r="3" fill="#b08a2e"/>
+    <rect x="310" y="370" width="152" height="32" fill="#fbf8f2" stroke="#1f1b16" stroke-width="2.2"/>
+    <g stroke="#675c4b" stroke-width="1" opacity="0.6">
+      <line x1="312" y1="382" x2="460" y2="382"/><line x1="312" y1="392" x2="460" y2="392"/>
+      <line x1="345" y1="370" x2="345" y2="402"/><line x1="385" y1="370" x2="385" y2="402"/><line x1="425" y1="370" x2="425" y2="402"/>
+    </g>
+    <path d="M460,180 L460,402 L490,402 L490,180 Z" fill="#ebe3d3" stroke="#1f1b16" stroke-width="2.2" stroke-linejoin="round"/>
+    <path d="M490,162 L522,178 L490,194 Z" fill="#f1e6c8" stroke="#1f1b16" stroke-width="2.2" stroke-linejoin="round"/>
+    <circle cx="498" cy="176" r="2.6" fill="#b08a2e"/>
+    <g stroke="#33604f" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M205,510 L215,490 L225,510"/><path d="M245,520 L255,500 L265,520"/><path d="M275,510 L285,490 L295,510"/>
+    </g>
+    <path d="M524 186 q6 18 4 40" stroke="#33604f" stroke-width="2.2" fill="none" stroke-dasharray="3 6" stroke-linecap="round"/>
+  </g>
+
+  <!-- Foot: hatched rule + URL -->
+  <rect x="80" y="536" width="1040" height="8" fill="url(#hatch)"/>
+  <line x1="80" y1="536" x2="1120" y2="536" stroke="#cfc4ae" stroke-width="1.5"/>
+  <line x1="80" y1="544" x2="1120" y2="544" stroke="#cfc4ae" stroke-width="1.5"/>
+  <text x="80" y="588" font-family="'DejaVu Sans Mono', 'Liberation Mono', Consolas, monospace" font-size="22" letter-spacing="2" fill="#33604f">hrishavjoshi.com</text>
+  <text x="1120" y="588" text-anchor="end" font-family="'DejaVu Sans Mono', 'Liberation Mono', Consolas, monospace" font-size="20" letter-spacing="3" fill="#675c4b">LALITPUR · NEPAL</text>
+</svg>

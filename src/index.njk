@@ -1,0 +1,356 @@
+---
+layout: layouts/base.njk
+title: Home
+# ≤ 60–65 characters so search results show it whole (owner may reword).
+metaTitle: "Hrishav Raj Joshi — Engineer, heritage practitioner, educator"
+description: "Civil engineer, heritage practitioner and educator in Lalitpur, Nepal: hiti and groundwater studies, heritage walks and robotics for schools."
+pageCss: home
+jsonld: person
+
+# Hero — audience routing. Each route pairs who it is for with what to do next.
+# `?topic=` uses the enquiry form's values (services.yml `topic`).
+routes:
+  - audience: For municipalities & non-profits
+    label: Commission a study
+    url: /work-with-me/?topic=heritage-engineering#enquire
+    style: primary
+  - audience: For visiting groups
+    label: See the heritage walks
+    url: /walks/
+    style: secondary
+  - audience: For schools
+    label: Robotics for your school
+    url: /work-with-me/?topic=education#enquire
+    style: link
+
+# "Three ways I work on one question". `deva` is Nepali (lang="ne"), shown as a
+# decorative accent with its romanisation; the h3 carries the meaning.
+ways:
+  - domain: water
+    icon: water
+    deva: जल
+    roman: jal · water
+    title: Water engineering
+    text: >-
+      Groundwater recharge and hiti hydraulics: site surveys, discharge
+      calculations, computer-aided design (CAD) sections and cost estimates.
+    url: /work/?domain=water
+    cta: Water projects
+  - domain: heritage
+    icon: heritage
+    deva: सम्पदा
+    roman: sampada · heritage
+    title: Heritage practice
+    text: >-
+      Walks through the Valley’s water, food and urban heritage for visiting
+      groups, and technical advice on hiti reconstruction.
+    url: /walks/
+    cta: Heritage walks
+  - domain: education
+    icon: robot
+    deva: शिक्षा
+    roman: shiksha · education
+    title: Education
+    text: >-
+      Robotics in Lalitpur’s public schools with Open Learning Exchange (OLE)
+      Nepal, and the inter-school challenge that grew into the annual Yala
+      Mayor’s Cup.
+    url: /work/?domain=education
+    cta: Education projects
+---
+{#- ---------------------------------------------------------------------------
+  Home (/). Section order: hero → field record (stats) → three ways → selected
+  work → worked with → press → photographs → closing CTA. Layout lives in
+  /assets/css/pages/home.css; every component comes from main.css.
+--------------------------------------------------------------------------- -#}
+{#- Domain labels and placeholder kinds: src/_data/domains.js (same as /work/). -#}
+{%- set photoKinds = { water: "water", heritage: "heritage", walks: "walk", robotics: "robotics", portfolio: "photo" } -%}
+
+{%- set nameParts = site.name.split(" ") -%}
+{%- set surname = nameParts | last -%}
+{%- set givenNames = nameParts.slice(0, -1).join(" ") -%}
+
+{#- Featured work: only items that have a page of their own. -#}
+{%- set featured = (collections.featuredWork or []) | selectattr("url") -%}
+
+{#- Press: outlets as clippings; "republished" items become a footnote. -#}
+{%- set clippings = [] -%}
+{%- set republished = [] -%}
+{%- for p in recognition.press -%}
+  {%- if p.role == "republished" -%}{%- set _r = republished.push(p) -%}{%- else -%}{%- set _c = clippings.push(p) -%}{%- endif -%}
+{%- endfor -%}
+
+{#- Photographs: photos.yml (owned by the Photos builder) may be a list or { items }.
+    Only photos whose files exist are shown; with none, the section is left out. -#}
+{%- set photoSource = [] -%}
+{%- if photos -%}
+  {%- if photos.items -%}{%- set photoSource = photos.items -%}
+  {%- elif photos.photos -%}{%- set photoSource = photos.photos -%}
+  {%- elif photos.length -%}{%- set photoSource = photos -%}
+  {%- endif -%}
+{%- endif -%}
+{%- set photoReady = [] -%}
+{%- for p in photoSource -%}
+  {%- if p.src and (p.src | imageExists) -%}{%- set _p = photoReady.push(p) -%}{%- endif -%}
+{%- endfor -%}
+{%- set photoPicks = photoReady | selectattr("home") -%}
+{%- set photoList = (photoPicks if photoPicks.length else photoReady) | limit(6) -%}
+
+{# ======================================================================= #}
+{# 1. Hero — name and routes first; the hiti drawing follows on mobile      #}
+{# ======================================================================= #}
+<section class="home-hero" aria-labelledby="home-title">
+  <div class="container home-hero__grid">
+    <div class="home-hero__text">
+      <p class="eyebrow">{{ site.locality }}, {{ site.country }}<span class="home-hero__coords"> · {{ site.coordinates.lat }}° N, {{ site.coordinates.lng }}° E</span></p>
+      <h1 class="home-hero__name" id="home-title"><span class="home-hero__given">{{ givenNames }}</span> <span class="home-hero__surname">{{ surname }}</span></h1>
+      <ul class="label home-hero__roles" role="list">
+        {%- for role in site.roles %}
+        <li>{{ role }}</li>
+        {%- endfor %}
+      </ul>
+      <p class="lede home-hero__lede">{{ site.positioning }}</p>
+      <ul class="home-hero__routes" role="list">
+        {%- for r in routes %}
+        <li class="home-hero__route">
+          <span class="label">{{ r.audience }}</span>
+          {%- if r.style == "link" %}
+          <a class="link-arrow" href="{{ r.url }}">{{ r.label }}{% icon "arrow-right" %}</a>
+          {%- else %}
+          <a class="btn btn--{{ r.style }}" href="{{ r.url }}">{{ r.label }}{% if r.style == "primary" %}{% icon "arrow-right" %}{% endif %}</a>
+          {%- endif %}
+        </li>
+        {%- endfor %}
+      </ul>
+    </div>
+
+    <div class="home-hero__sheet">
+      <p class="label home-hero__fig"><span>Fig. 1 · A hiti, in section</span><span>Not to scale</span></p>
+      {% include "partials/hiti-diagram.njk" %}
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 2. Field record — the stats strip as the hero's dark foot               #}
+{# ======================================================================= #}
+{%- if stats and stats.length %}
+<section class="section section--tight band--dark band--edge home-record" aria-labelledby="record-title">
+  <div class="container">
+    <h2 class="label home-record__title" id="record-title">Field record</h2>
+    <ul class="stats" role="list">
+      {%- for s in stats %}
+      <li class="stats__item">
+        <span class="stats__value">{{ s.value }}</span>
+        <span class="stats__label">{{ s.label }}</span>
+        {%- if s.detail %}
+        <span class="stats__detail">{{ s.detail }}</span>
+        {%- endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>
+{%- endif %}
+
+{# ======================================================================= #}
+{# 3. Three ways — numbered like grid lines on a drawing                    #}
+{# ======================================================================= #}
+<section class="section home-ways" aria-labelledby="ways-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">What I do</p>
+      <h2 id="ways-title">Three ways I work on one question</h2>
+      <p class="lede">How does a place keep what works — its water, its heritage, its know-how — and hand it on? I come at it as an engineer, as a heritage practitioner and as a teacher.</p>
+    </header>
+
+    <ol class="home-ways__list reveal" role="list">
+      {%- for w in ways %}
+      <li class="home-ways__item" data-domain="{{ w.domain }}">
+        <div class="home-ways__mark" aria-hidden="true">
+          <span class="marker home-ways__bubble">{{ loop.index }}</span>
+          <span class="home-ways__deva deva" lang="ne">{{ w.deva }}</span>
+          <span class="label home-ways__roman">{{ w.roman }}</span>
+        </div>
+        <div class="home-ways__body">
+          <span class="home-ways__icon">{% icon w.icon, "icon--l" %}</span>
+          <h3 class="home-ways__title">{{ w.title }}</h3>
+          <p class="home-ways__text">{{ w.text }}</p>
+          <a class="link-arrow home-ways__link" href="{{ w.url }}">{{ w.cta }}{% icon "arrow-right" %}</a>
+        </div>
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 4. Selected work — lead item with media, the rest as plain notes         #}
+{#    Hidden entirely until the Work collection has featured items.         #}
+{# ======================================================================= #}
+{%- if featured.length %}
+{%- set lead = featured[0] %}
+{%- set more = featured.slice(1, 4) %}
+<section class="section section--alt home-work" aria-labelledby="work-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Selected work</p>
+      <h2 id="work-title">A few projects, up close</h2>
+      <p class="lede">Studies, drawings and programmes in more detail. Everything else, sorted by water, heritage and education, is on the work page.</p>
+      <a class="link-arrow section-head__action" href="/work/">All work{% icon "arrow-right" %}</a>
+    </header>
+
+    <div class="home-work__grid{% if not more.length %} home-work__grid--solo{% endif %} reveal">
+      <article class="card card--link card--feature{% if not more.length %} card--horizontal{% endif %} home-work__lead"{% if lead.data.domain %} data-domain="{{ lead.data.domain }}"{% endif %}>
+        <div class="card__media">
+          {% media lead.data.cover, "", { ratio: "3/2", kind: lead.data.coverKind or (domains[lead.data.domain].kind if domains[lead.data.domain]) or "photo", sizes: "(min-width: 60rem) 40rem, 100vw" } %}
+        </div>
+        <div class="card__body">
+          {%- set leadMeta = [domains[lead.data.domain].label if domains[lead.data.domain], lead.data.years] | arrayify %}
+          {%- if leadMeta.length %}
+          <p class="card__meta">{% for m in leadMeta %}<span>{{ m }}</span>{% endfor %}</p>
+          {%- endif %}
+          <h3 class="card__title"><a href="{{ lead.url }}">{{ lead.data.title }}</a></h3>
+          {%- if lead.data.summary %}
+          <p class="card__text">{{ lead.data.summary }}</p>
+          {%- endif %}
+          {%- if lead.data.role or lead.data.client %}
+          <dl class="ledger ledger--compact home-work__ledger">
+            {%- if lead.data.role %}<div><dt>Role</dt><dd>{{ lead.data.role }}</dd></div>{% endif %}
+            {%- if lead.data.client %}<div><dt>Client</dt><dd>{{ lead.data.client }}</dd></div>{% endif %}
+          </dl>
+          {%- endif %}
+          <div class="card__footer">
+            <span class="card__cue" aria-hidden="true">Read the case study{% icon "arrow-right" %}</span>
+          </div>
+        </div>
+      </article>
+
+      {%- if more.length %}
+      <div class="home-work__more">
+        <p class="label home-work__more-label">Also in the notebook</p>
+        {%- for item in more %}
+        <article class="card card--plain home-work__item"{% if item.data.domain %} data-domain="{{ item.data.domain }}"{% endif %}>
+          <div class="card__body">
+            {%- set itemMeta = [domains[item.data.domain].label if domains[item.data.domain], item.data.years] | arrayify %}
+            {%- if itemMeta.length %}
+            <p class="card__meta">{% for m in itemMeta %}<span>{{ m }}</span>{% endfor %}</p>
+            {%- endif %}
+            <h3 class="card__title"><a href="{{ item.url }}">{{ item.data.title }}</a></h3>
+            {%- if item.data.summary %}
+            <p class="card__text">{{ item.data.summary }}</p>
+            {%- endif %}
+          </div>
+        </article>
+        {%- endfor %}
+      </div>
+      {%- endif %}
+    </div>
+  </div>
+</section>
+{%- endif %}
+
+{# ======================================================================= #}
+{# 5. Worked with — typographic logo row + a key to the acronyms            #}
+{# ======================================================================= #}
+{%- if clients and clients.length %}
+<section class="section section--tight home-clients" aria-labelledby="clients-title">
+  <div class="container home-clients__inner">
+    <h2 class="label home-clients__title" id="clients-title">Worked with and for</h2>
+    <div class="home-clients__body">
+      {%- set clientsLabelledBy = "clients-title" %}
+      {% include "partials/clients.njk" %}
+    </div>
+  </div>
+</section>
+{%- endif %}
+
+{# ======================================================================= #}
+{# 6. Recognition — outlets as clippings, linking on to /writing/           #}
+{# ======================================================================= #}
+{%- if clippings.length %}
+<section class="section section--alt home-press" aria-labelledby="press-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Recognition</p>
+      <h2 id="press-title">Quoted, cited and published</h2>
+      <a class="link-arrow section-head__action" href="/writing/">All writing and press{% icon "arrow-right" %}</a>
+    </header>
+
+    <ul class="home-press__list reveal" role="list">
+      {%- for p in clippings %}
+      <li class="card card--plain home-press__item">
+        <div class="card__body">
+          <h3 class="home-press__outlet">{{ p.outlet }}</h3>
+          {%- if p.role %}
+          <p class="label home-press__role">{{ p.role | capitalize }}</p>
+          {%- endif %}
+          {%- if p.place or p.date %}
+          <p class="card__meta">
+            {%- if p.place %}<span>{{ p.place }}</span>{% endif %}
+            {%- if p.date %}<span><time datetime="{{ p.date | isoDate }}">{{ p.date | readableDate }}</time></span>{% endif -%}
+          </p>
+          {%- endif %}
+          <p class="home-press__title">{% if p.url %}<a href="{{ p.url }}" rel="noopener">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</p>
+          {%- if p.note %}
+          <p class="card__text">{{ p.note }}</p>
+          {%- endif %}
+        </div>
+      </li>
+      {%- endfor %}
+    </ul>
+
+    {%- for r in republished %}
+    <p class="pointer home-press__foot">{{ r.title }}: {{ r.outlet }}.</p>
+    {%- endfor %}
+  </div>
+</section>
+{%- endif %}
+
+{# ======================================================================= #}
+{# 7. Photographs — a contact-sheet strip teasing /photos/. Left out until   #}
+{#    at least one photo file exists (/photos/ isn't built before then).    #}
+{# ======================================================================= #}
+{%- if photoList.length %}
+<section class="section home-photos" aria-labelledby="photos-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">Photographs</p>
+      <h2 id="photos-title">Seen along the way</h2>
+      <p class="lede">Water systems, heritage, walks and classrooms — and a personal portfolio.</p>
+      <a class="link-arrow section-head__action" href="/photos/">See the photographs{% icon "arrow-right" %}</a>
+    </header>
+
+    <ul class="home-photos__strip reveal" role="list">
+      {%- for p in photoList %}
+      <li class="home-photos__frame">
+        {% media p.src, p.alt, { ratio: "4/5", kind: photoKinds[p.category] or "photo", sizes: "(min-width: 64rem) 11rem, (min-width: 40rem) 30vw, 46vw" } %}
+        <p class="home-photos__meta"><span class="label" aria-hidden="true">{{ "0" + loop.index if loop.index < 10 else loop.index }}</span>
+          {%- set frameNote = [p.caption or p.place, p.year] | arrayify %}
+          {%- if frameNote.length %}<span>{{ frameNote | join(" · ") }}</span>{% endif %}</p>
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>
+{%- endif %}
+
+{# ======================================================================= #}
+{# 8. Closing CTA — dark band                                              #}
+{# ======================================================================= #}
+<section class="band--dark band--edge home-cta" aria-labelledby="cta-title">
+  <div class="container cta-band">
+    <div class="stack stack--s">
+      <p class="eyebrow">Get in touch</p>
+      <h2 class="cta-band__title" id="cta-title">Have a site, a <em>spring</em> or a school in mind?</h2>
+      <p class="lede">Tell me what you need and by when. I usually reply {{ site.replyTime }}.</p>
+    </div>
+    <div class="stack stack--s home-cta__actions">
+      <div class="cluster">
+        <a class="btn btn--primary" href="{{ nav.cta.url }}#enquire">{{ nav.cta.label }}{% icon "arrow-right" %}</a>
+        <a class="btn btn--on-dark" href="{{ site.whatsapp }}" rel="noopener">{% icon "whatsapp" %}Message on WhatsApp</a>
+      </div>
+      <a class="link-arrow" href="mailto:{{ site.email }}">{% icon "mail" %}{{ site.email }}</a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,17 @@
+# Primary navigation (header + footer). aria-current is set by URL prefix.
+# `needs: photos` → shown only once a photo file exists (data: photosLive.js).
+items:
+  - label: Work
+    url: /work/
+  - label: Walks
+    url: /walks/
+  - label: Photos
+    url: /photos/
+    needs: photos
+  - label: Writing
+    url: /writing/
+  - label: About
+    url: /about/
+cta:
+  label: Work with me
+  url: /work-with-me/

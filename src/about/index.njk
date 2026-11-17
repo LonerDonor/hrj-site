@@ -1,0 +1,277 @@
+---
+layout: layouts/base.njk
+permalink: /about/
+title: About
+description: "Hrishav Raj Joshi: civil engineer, heritage practitioner and educator in Lalitpur, Nepal. How I work, where I’ve worked, my skills and press."
+pageCss: about
+jsonld: person
+eleventyComputed:
+  structuredData:
+    "@context": "https://schema.org"
+    "@type": "ProfilePage"
+    url: "{{ site.url }}/about/"
+    name: "About {{ site.name }}"
+    mainEntity:
+      "@id": "{{ site.url }}/#person"
+
+# "How I work": client-facing principles, rewritten from the old philosophy
+# cards. Facts only; no grades/transcript or "no specialist team" lines.
+principles:
+  - title: I look at the whole system
+    text: >-
+      A hiti ties together geology, hydraulics, masonry, ritual and the community
+      that looks after it. Fix one part without understanding the rest and the fix
+      fails. Before I recommend anything, I map how the parts depend on each other,
+      so what you build works with the system rather than against it.
+  - title: I start on site
+    text: >-
+      I understand a structure by surveying it, measuring it and talking to the
+      people who use it, then I work back to the numbers. You get recommendations
+      grounded in what is actually there, documented as survey notes, hydraulic
+      calculations, CAD drawings and a cost estimate.
+  - title: I make it understandable
+    text: >-
+      Engineering, heritage, teaching and making sit in one practice. Leading walks
+      and running classrooms has taught me to explain a hydraulic calculation to a
+      community group, or the role of a ritual to an engineering team. Reports,
+      drawings and briefings are written for the people who have to act on them.
+  - title: I treat heritage as technology
+    text: >-
+      A hiti is not a relic. It is a working technology that moves water with
+      gravity, stone and community institutions (no pumps, no electricity) and it
+      still works. I treat that traditional knowledge as engineering evidence, so a
+      restoration keeps the water running, not just the stonework looking right.
+---
+{#- Timeline `type` → visible label and tag colour (dot colours come from main.css §5.11). -#}
+{%- set typeLabels = { engineering: "Engineering", water: "Water", heritage: "Heritage", education: "Education", community: "Community" } -%}
+{%- set typeTags = { engineering: "tag--water", water: "tag--water", heritage: "tag--heritage", education: "tag--education", community: "" } -%}
+{%- set legend = ["engineering", "heritage", "education", "community"] -%}
+{%- set awards = recognition.awards | rejectattr("beyondWork") -%}
+{%- set beyond = recognition.awards | selectattr("beyondWork") -%}
+{%- set hasCv = site.cv | fileExists -%}
+{#- Press: "republished" items become a footnote under the grid (as on the home page). -#}
+{%- set pressItems = [] -%}
+{%- set republished = [] -%}
+{%- for p in recognition.press -%}
+  {%- if p.role == "republished" -%}{%- set _r = republished.push(p) -%}{%- else -%}{%- set _p = pressItems.push(p) -%}{%- endif -%}
+{%- endfor -%}
+
+{# ======================================================================= #}
+{# 1. Hero: portrait, positioning, ledger, actions                          #}
+{# ======================================================================= #}
+<header class="page-hero page-hero--split about-hero">
+  <div class="container page-hero__inner">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><span aria-current="page">About</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow">{{ site.roles | join(" · ") }}</p>
+    <h1 class="page-hero__title">Hrishav Raj <em>Joshi</em></h1>
+    <p class="lede">{{ site.positioning }}</p>
+    {#- "Work with me" is already in the header, so the hero's own action is the CV (or the work). -#}
+    <div class="cluster page-hero__actions">
+      {%- if hasCv %}
+      <a class="btn btn--primary" href="{{ site.cv }}" download>{% icon "download" %}Download CV (PDF)</a>
+      <a class="link-arrow" href="/work/">See the work{% icon "arrow-right" %}</a>
+      {%- else %}
+      <a class="btn btn--primary" href="/work/">See the work{% icon "arrow-right" %}</a>
+      {%- endif %}
+    </div>
+    <dl class="ledger ledger--compact page-hero__meta">
+      <div><dt>Based in</dt><dd>{{ site.location }}</dd></div>
+      <div><dt>Practice</dt><dd>Heritage water systems, groundwater recharge, heritage walks and robotics education</dd></div>
+      <div><dt>Registration</dt><dd>{{ site.necLine }}</dd></div>
+      <div><dt>Education</dt><dd>{{ site.education }}</dd></div>
+    </dl>
+    <div class="page-hero__aside about-hero__aside">
+      <div class="about-hero__portrait">
+        {% media "/assets/images/portrait/hrishav-raj-joshi.jpg", "Hrishav Raj Joshi, civil engineer, heritage practitioner and educator", { ratio: "4/5", kind: "portrait", eager: true, focus: "top", sizes: "(min-width: 56rem) 24rem, 20rem", class: "media--framed" } %}
+      </div>
+      <p class="label about-hero__note"><span class="visually-hidden">Mangalbazar, Lalitpur: </span>{{ site.coordinates.lat }}° N · {{ site.coordinates.lng }}° E</p>
+    </div>
+  </div>
+</header>
+
+{# ======================================================================= #}
+{# 2. Short bio + pull quote                                               #}
+{# ======================================================================= #}
+<section class="section" aria-labelledby="bio-title">
+  <div class="container about-bio">
+    <header class="section-head about-bio__head">
+      <p class="eyebrow">01 · In brief</p>
+      <h2 id="bio-title">Broad on purpose, anchored in water</h2>
+    </header>
+
+    <div class="prose about-bio__text">
+      <p class="lede">As a civil and rural engineer I move between engineering, heritage, ecology and the social systems that hold them together, anchored in one specialism: the traditional water infrastructure of the Kathmandu Valley.</p>
+      <p>At the centre is the <em>hiti</em> (<span class="deva" lang="new">हिति</span>), also called <em>dhunge dhara</em> (<span class="deva" lang="ne">ढुङ्गे धारा</span>): the Valley’s 1,500-year-old stone-spout water systems. I study them not as historical artefacts but as living hydraulic systems, where groundwater, masonry, community governance and ritual work as one. My computer-aided design (CAD) cross-sections of their internal structure were cited in a TU Berlin master’s thesis (2023), and my drawings and technical input were featured in <a href="https://www.nepalitimes.com/here-now/kathmandus-ancient-water-spouts-still-functioning" rel="noopener">Nepali Times</a>. Today that work includes three groundwater-recharge projects I lead as engineer with the Centre for Integrated Urban Development (CIUD).</p>
+      <p>The rest of my work is about passing that knowledge on. Since 2017 I have led 50+ heritage walks on water, food and urban heritage for researchers, diplomats, water professionals and World Economic Forum Global Shapers. With Open Learning Exchange (OLE) Nepal I coordinate a robotics programme that has reached 300+ students in 10+ Lalitpur public schools, and I created the inter-school challenge that grew into the annual Yala Mayor’s Cup, supported by KDDI Foundation (Japan).</p>
+    </div>
+
+    <div class="about-bio__aside stack stack--xl">
+      <figure class="quote">
+        <blockquote><p>{{ site.tagline }}</p></blockquote>
+        <figcaption>{{ site.name }}</figcaption>
+      </figure>
+      {% media "/assets/images/portrait/field-survey.jpg", "Hrishav Raj Joshi measuring a hiti stone spout during a field survey", { ratio: "3/2", kind: "heritage", sizes: "(min-width: 60rem) 24rem, 100vw" } %}
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 3. How I work: principles beside the hiti cross-section                 #}
+{# ======================================================================= #}
+<section class="section section--alt" aria-labelledby="how-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">02 · In practice</p>
+      <h2 id="how-title">How I work</h2>
+      <p class="lede">What you can expect when we work together, whether the project is a stone spout, a recharge site or a classroom.</p>
+    </header>
+
+    <div class="about-how">
+      <ol class="about-principles" role="list">
+        {%- for p in principles %}
+        <li class="about-principles__item">
+          <span class="label text-accent about-principles__num" aria-hidden="true">{{ "0" if loop.index < 10 }}{{ loop.index }}</span>
+          <h3 class="about-principles__title">{{ p.title }}</h3>
+          <p class="about-principles__text">{{ p.text }}</p>
+        </li>
+        {%- endfor %}
+      </ol>
+      <div class="about-how__figure">
+        {% set hitiId = "hiti-about" %}{% include "partials/hiti-diagram.njk" %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 4. Career logbook: timeline.yml, newest first, tagged by area           #}
+{# ======================================================================= #}
+<section class="section" aria-labelledby="log-title">
+  <div class="container about-log">
+    <div class="about-log__head">
+      <header class="section-head">
+        <p class="eyebrow">03 · Logbook</p>
+        <h2 id="log-title">Career logbook</h2>
+        <p class="lede">Engineering, heritage, education and community roles since 2013, newest first.</p>
+      </header>
+      <ul class="tags" role="list" aria-label="Areas of work">
+        {%- for key in legend %}
+        <li class="tag {{ typeTags[key] }}">{{ typeLabels[key] }}</li>
+        {%- endfor %}
+      </ul>
+    </div>
+
+    <ol class="timeline about-log__list">
+      {%- for t in timeline %}
+      <li class="timeline__item" data-type="{{ t.type }}">
+        <p class="timeline__years">{{ t.years }}</p>
+        <h3 class="timeline__role">{{ t.role }}</h3>
+        {%- if t.org %}
+        <p class="timeline__org">{{ t.org }}</p>
+        {%- endif %}
+        {%- if t.desc %}
+        <p class="timeline__desc">{{ t.desc }}</p>
+        {%- endif %}
+        {%- if t.type %}
+        <p class="about-log__type"><span class="visually-hidden">Area: </span><span class="tag {{ typeTags[t.type] }}">{{ typeLabels[t.type] or t.type }}</span></p>
+        {%- endif %}
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 5. Skills and tools: skills.yml, grouped (no ratings)                   #}
+{# ======================================================================= #}
+<section class="section section--alt" aria-labelledby="skills-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">04 · Toolkit</p>
+      <h2 id="skills-title">Skills and tools</h2>
+      <p class="lede">What I bring to a project, grouped by discipline.</p>
+      <a class="link-arrow section-head__action" href="/work/">See them in use{% icon "arrow-right" %}</a>
+    </header>
+
+    <div class="about-skills">
+      {%- for g in skills %}
+      <div class="about-skills__row">
+        <h3 class="about-skills__group fs-1"{% if g.domain %} data-domain="{{ g.domain }}"{% endif %}>{% if g.icon %}{% icon g.icon %}{% endif %}{{ g.group }}</h3>
+        <ul class="dot-list about-skills__items" role="list">
+          {%- for item in g.items %}
+          <li>{{ item }}</li>
+          {%- endfor %}
+        </ul>
+      </div>
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 6. Recognition and press  ·  7. Beyond work                             #}
+{# ======================================================================= #}
+<section class="section" aria-labelledby="recog-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow">05 · On the record</p>
+      <h2 id="recog-title">Recognition and press</h2>
+      <p class="lede">Where my drawings, writing and comments have appeared, and the roles I’ve been trusted with.</p>
+      <a class="link-arrow section-head__action" href="/writing/">All writing and press{% icon "arrow-right" %}</a>
+    </header>
+
+    <ul class="grid grid--3 about-record" role="list">
+      {%- for a in awards %}
+      <li class="card card--plain about-record__item" data-domain="heritage">
+        <div class="card__body">
+          <p class="card__meta"><span>Recognition</span>{% if a.org %}<span>{{ a.org }}</span>{% endif %}{% if a.date %}<span><time datetime="{{ a.date | isoDate }}">{{ a.date | readableDate }}</time></span>{% elif a.period %}<span>{{ a.period }}</span>{% endif %}</p>
+          <h3 class="card__title">{{ a.title }}</h3>
+        </div>
+      </li>
+      {%- endfor %}
+      {%- for p in pressItems %}
+      <li class="card card--plain about-record__item">
+        <div class="card__body">
+          <p class="card__meta"><span>{{ p.outlet }}{% if p.place %}, {{ p.place }}{% endif %}</span>{% if p.date %}<span><time datetime="{{ p.date | isoDate }}">{{ p.date | readableDate }}</time></span>{% endif %}{% if p.role %}<span>{{ p.role }}</span>{% endif %}</p>
+          <h3 class="card__title">{{ p.title }}</h3>
+          {%- if p.note %}
+          <p class="card__text">{{ p.note }}</p>
+          {%- endif %}
+          {%- if p.url %}
+          <div class="card__footer"><a class="link-arrow" href="{{ p.url }}" rel="noopener">Read on {{ p.outlet }}{% icon "arrow-up-right" %}</a></div>
+          {%- endif %}
+        </div>
+      </li>
+      {%- endfor %}
+    </ul>
+    {%- for r in republished %}
+    <p class="pointer about-record__foot">{{ r.title }}: {{ r.outlet }}.</p>
+    {%- endfor %}
+
+    {%- if beyond | length %}
+    <p class="about-beyond"><span class="label about-beyond__label">Beyond work</span> <span class="about-beyond__text">{% for a in beyond | reverse %}{{ a.title }}{% if a.org %}, {{ a.org }}{% endif %}{% if a.period %} ({{ a.period }}){% elif a.date %} ({{ a.date | readableDate }}){% endif %}{% if not loop.last %}; {% else %}.{% endif %}{% endfor %}</span></p>
+    {%- endif %}
+  </div>
+</section>
+
+{# ======================================================================= #}
+{# 8. Closing CTA band                                                     #}
+{# ======================================================================= #}
+<section class="band--dark band--edge" aria-labelledby="cta-title">
+  <div class="container cta-band">
+    <div class="stack stack--s">
+      <p class="eyebrow">Work with me</p>
+      <h2 class="cta-band__title" id="cta-title">Have a water system, a walk or a classroom in <em>mind</em>?</h2>
+      <p class="lede">Heritage water engineering, groundwater studies, walks for groups or robotics programmes for schools: tell me what you need. I usually reply {{ site.replyTime }}.</p>
+    </div>
+    <div class="cluster">
+      <a class="btn btn--primary" href="{{ nav.cta.url }}#enquire">{{ nav.cta.label }}{% icon "arrow-right" %}</a>
+      <a class="btn btn--on-dark" href="mailto:{{ site.email }}">{% icon "mail" %}Email me</a>
+    </div>
+  </div>
+</section>

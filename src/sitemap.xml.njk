@@ -1,0 +1,15 @@
+---
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+{%- set excluded = ["/404.html", "/thanks/", "/styleguide/"] -%}
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- for item in collections.all %}
+{%- if item.url and item.data.sitemap !== false and not item.data.noindex and not (item.url in excluded) and (item.url.endsWith("/") or item.url.endsWith(".html")) %}
+  <url>
+    <loc>{{ item.url | absoluteUrl(site.url) }}</loc>
+  </url>
+{%- endif %}
+{%- endfor %}
+</urlset>

@@ -1,0 +1,101 @@
+# Services (old content.js → rewritten client-facing). `topic` is the value
+# used by the enquiry form's <select name="topic">. `icon` is an {% icon %} name.
+# Use `services.items` for the list and `services.process` for the steps.
+items:
+  - slug: heritage-water-engineering
+    topic: heritage-engineering
+    icon: water
+    title: Heritage water-system engineering
+    summary: >-
+      Technical advice for restoring or rebuilding hiti (dhunge dhara) stone spouts
+      and other traditional water structures — so the work respects how the system
+      was built and still carries water when it is finished.
+    deliverables:
+      - Site survey and condition notes
+      - Hydraulic discharge calculations
+      - CAD plans and cross-sections
+      - Reconstruction recommendations and cost estimate
+    idealFor: Municipalities and ward offices, conservation organisations and community groups restoring a spout.
+
+  - slug: groundwater-studies
+    topic: groundwater
+    icon: globe
+    title: Groundwater recharge and water studies
+    summary: >-
+      Recharge feasibility studies, water audits and field surveys that combine
+      traditional water knowledge with modern hydrogeology, so you know what will
+      work on your site before you build.
+    deliverables:
+      - Groundwater-recharge feasibility study
+      - Recharge design options for your site
+      - Water audit
+      - Survey maps and technical drawings
+    idealFor: Municipalities, NGOs, schools and institutions with land to recharge.
+
+  - slug: heritage-walks
+    topic: heritage-walk
+    icon: walk
+    title: Heritage walks for groups
+    summary: >-
+      Custom walks through the Kathmandu Valley’s water, food and urban heritage —
+      stone spouts, canals, ponds and the community institutions that keep them
+      running — planned around what your group wants to understand.
+    deliverables:
+      - A route planned around your group’s interests
+      - A guided walk explaining how each system works
+      - Timing and logistics agreed with the organiser
+    idealFor: Visiting delegations, researchers, students, water professionals and institutional groups.
+
+  - slug: stem-education
+    topic: education
+    icon: robot
+    title: Robotics and STEM education
+    summary: >-
+      Robotics and computational-thinking programmes for schools — from curriculum
+      and lesson plans to training teachers and running hands-on workshops and
+      inter-school challenges.
+    deliverables:
+      - Curriculum and lesson plans
+      - Teacher and trainer training
+      - Hands-on workshops for students
+      - Inter-school challenge design
+    idealFor: Schools, municipalities and education organisations.
+
+  - slug: research-writing
+    topic: research-writing
+    icon: pen
+    title: Research and technical writing
+    summary: >-
+      Clear reports, feasibility studies and technical documentation — plus
+      public-facing writing that explains heritage and water infrastructure to
+      non-specialists.
+    deliverables:
+      - Research and feasibility reports
+      - Technical documentation and drawings
+      - Water-audit reports
+      - Articles and explainers for a general audience
+    idealFor: NGOs, municipalities, researchers and media.
+
+  - slug: talks-facilitation
+    topic: speaking
+    icon: users
+    title: Talks and facilitation
+    summary: >-
+      Talks, panels and facilitated sessions on traditional water systems, heritage
+      infrastructure and where engineering meets culture.
+    deliverables:
+      - A talk shaped for your audience
+      - Panel participation
+      - Facilitated workshops and discussions
+    idealFor: Conferences, universities, institutions and visiting groups.
+
+# How an engagement runs (from the old services page).
+process:
+  - step: Enquiry
+    text: Tell me about your project or group — what you need and by when.
+  - step: Scoping call
+    text: A free 30-minute conversation about scope, timeline and fit.
+  - step: Proposal
+    text: A written proposal with approach, deliverables and cost.
+  - step: Delivery
+    text: The work itself, with regular check-ins and clear documentation at the end.

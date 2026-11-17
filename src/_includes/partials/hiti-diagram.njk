@@ -1,0 +1,119 @@
+{#-
+  Hiti (stone-spout) cross-section — the site's signature drawing.
+  Ported from the old home hero, re-coloured for the light theme via semantic
+  tokens (so it also works inside .band--dark). Styles: main.css §5.23.
+  Usage:  {% include "partials/hiti-diagram.njk" %}
+  Twice on one page? Set a unique prefix first: {% set hitiId = "hiti-2" %}
+-#}
+{%- set hid = hitiId or "hiti" -%}
+<figure class="hiti{% if hitiClass %} {{ hitiClass }}{% endif %}">
+  <svg class="hiti__svg" viewBox="0 0 600 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="{{ hid }}-title {{ hid }}-desc">
+    <title id="{{ hid }}-title">Cross-section of a hiti, a traditional stone water spout</title>
+    <desc id="{{ hid }}-desc">Water from a natural spring rises under pressure into the nabhi mandal, a domed chamber that calms the flow. The chamber sits in chyaphi, a packed gravel bed, and is crowned by a salicha finial. From the chamber the water runs sideways through the hiti duun conduit and pours out at the ga hiti, the carved stone spout.</desc>
+
+    <defs>
+      <pattern id="{{ hid }}-gravel" width="14" height="14" patternUnits="userSpaceOnUse">
+        <circle class="hiti__grain" cx="3" cy="3" r="1"/>
+        <circle class="hiti__grain" cx="10" cy="8" r="1.4"/>
+        <circle class="hiti__grain" cx="6" cy="11.5" r="0.7"/>
+      </pattern>
+      <pattern id="{{ hid }}-paving" width="11" height="20" patternUnits="userSpaceOnUse">
+        <line class="hiti__pave" x1="0" y1="20" x2="11" y2="0"/>
+      </pattern>
+    </defs>
+
+    <!-- Ground: paving above, chyaphi (gravel bed) below -->
+    <rect x="0" y="160" width="600" height="20" fill="url(#{{ hid }}-paving)"/>
+    <rect x="0" y="180" width="600" height="360" fill="url(#{{ hid }}-gravel)"/>
+    <line class="hiti__ground" x1="0" y1="180" x2="600" y2="180"/>
+
+    <!-- Nabhi mandal (domed chamber) -->
+    <path class="hiti__body" d="M170,400 Q170,255 240,242 Q310,255 310,400 Z"/>
+    <g class="hiti__mandala">
+      <circle cx="240" cy="282" r="1.7"/>
+      <circle cx="215" cy="302" r="1.7"/>
+      <circle cx="265" cy="302" r="1.7"/>
+      <circle cx="200" cy="332" r="1.7"/>
+      <circle cx="280" cy="332" r="1.7"/>
+      <circle cx="220" cy="354" r="1.7"/>
+      <circle cx="260" cy="354" r="1.7"/>
+      <circle cx="240" cy="376" r="1.7"/>
+    </g>
+    <!-- Water collected in the chamber -->
+    <path class="hiti__pool" d="M196,385 Q196,398 240,398 Q284,398 284,385 L284,399 L196,399 Z"/>
+    <!-- Arched exit into the conduit -->
+    <path class="hiti__void" d="M290,400 Q290,358 312,358 L312,400 Z"/>
+    <!-- Cap and salicha (finial) -->
+    <rect class="hiti__raised" x="215" y="234" width="50" height="11" rx="1.5"/>
+    <ellipse class="hiti__raised" cx="240" cy="226" rx="7" ry="5"/>
+    <line class="hiti__gilt-line" x1="240" y1="221" x2="240" y2="214"/>
+    <circle class="hiti__gilt" cx="240" cy="212.5" r="2"/>
+
+    <!-- Hiti duun (lateral conduit) -->
+    <rect class="hiti__body" x="310" y="370" width="152" height="32"/>
+    <g class="hiti__hatch">
+      <line x1="312" y1="382" x2="460" y2="382"/>
+      <line x1="312" y1="392" x2="460" y2="392"/>
+      <line x1="345" y1="370" x2="345" y2="402"/>
+      <line x1="385" y1="370" x2="385" y2="402"/>
+      <line x1="425" y1="370" x2="425" y2="402"/>
+    </g>
+
+    <!-- Ga hiti: shaft and makara spout head -->
+    <path class="hiti__raised" d="M460,180 L460,402 L490,402 L490,180 Z"/>
+    <path class="hiti__spout" d="M490,162 L522,178 L490,194 Z"/>
+    <circle class="hiti__gilt" cx="498" cy="176" r="1.8"/>
+
+    <!-- Natural spring: pressurised inflow -->
+    <g class="hiti__spring">
+      <path d="M205,510 L215,490 L225,510"/>
+      <line x1="215" y1="492" x2="215" y2="528" stroke-dasharray="1 3"/>
+      <path d="M245,520 L255,500 L265,520"/>
+      <line x1="255" y1="502" x2="255" y2="536" stroke-dasharray="1 3"/>
+      <path d="M275,510 L285,490 L295,510"/>
+      <line x1="285" y1="492" x2="285" y2="528" stroke-dasharray="1 3"/>
+    </g>
+
+    <!-- Flow droplets (decorative; static under reduced motion) -->
+    <circle class="hiti__droplet hiti__droplet--spring" cx="240" cy="486" r="2.6"/>
+    <circle class="hiti__droplet hiti__droplet--duun" cx="318" cy="386" r="2.6"/>
+    <circle class="hiti__droplet hiti__droplet--spout" cx="518" cy="184" r="2.6"/>
+
+    <!-- Labels: mark on the feature, leader to the text -->
+    <g class="hiti__label" data-stage="0">
+      <line class="hiti__leader" x1="300" y1="505" x2="318" y2="505"/>
+      <circle class="hiti__mark" cx="300" cy="505" r="2"/>
+      <text class="hiti__text" x="326" y="509"><tspan class="hiti__roman">NATURAL SPRING</tspan><tspan class="hiti__note" x="326" dy="1.4em">high-pressure source</tspan></text>
+    </g>
+
+    <g class="hiti__label" data-stage="1">
+      <line class="hiti__leader" x1="118" y1="222" x2="148" y2="222"/>
+      <circle class="hiti__mark" cx="150" cy="222" r="2"/>
+      <text class="hiti__text" x="112" y="216" text-anchor="end"><tspan class="hiti__deva" lang="new" xml:lang="new">च्याफि</tspan><tspan class="hiti__roman" x="112" dy="1.25em">CHYAPHI</tspan><tspan class="hiti__note" x="112" dy="1.4em">gravel bed</tspan></text>
+    </g>
+
+    <g class="hiti__label" data-stage="2">
+      <line class="hiti__leader" x1="240" y1="207" x2="240" y2="146"/>
+      <text class="hiti__text" x="250" y="128"><tspan class="hiti__deva" lang="new" xml:lang="new">सलिचा</tspan><tspan class="hiti__roman" x="250" dy="1.25em">SALICHA</tspan></text>
+    </g>
+
+    <g class="hiti__label" data-stage="3">
+      <line class="hiti__leader" x1="186" y1="372" x2="122" y2="424"/>
+      <circle class="hiti__mark" cx="186" cy="372" r="2"/>
+      <text class="hiti__text" x="12" y="448"><tspan class="hiti__deva" lang="new" xml:lang="new">नाभिमण्डल</tspan><tspan class="hiti__roman" x="12" dy="1.25em">NABHI MANDAL</tspan><tspan class="hiti__note" x="12" dy="1.4em">turbulence-calming chamber</tspan></text>
+    </g>
+
+    <g class="hiti__label" data-stage="4">
+      <line class="hiti__leader" x1="392" y1="402" x2="392" y2="424"/>
+      <circle class="hiti__mark" cx="392" cy="402" r="2"/>
+      <text class="hiti__text" x="400" y="440"><tspan class="hiti__deva" lang="new" xml:lang="new">हितिदुं</tspan><tspan class="hiti__roman" x="400" dy="1.25em">HITI DUUN</tspan><tspan class="hiti__note" x="400" dy="1.4em">conduit</tspan></text>
+    </g>
+
+    <g class="hiti__label" data-stage="5">
+      <line class="hiti__leader" x1="524" y1="174" x2="566" y2="134"/>
+      <circle class="hiti__mark" cx="524" cy="174" r="2"/>
+      <text class="hiti__text" x="590" y="92" text-anchor="end"><tspan class="hiti__deva" lang="new" xml:lang="new">ग हिति</tspan><tspan class="hiti__roman" x="590" dy="1.25em">GA HITI</tspan><tspan class="hiti__note" x="590" dy="1.4em">stone spout</tspan></text>
+    </g>
+  </svg>
+  <figcaption class="hiti__caption">After <cite>Hiti Pranali</cite>, Padma Sundar Joshi</figcaption>
+</figure>

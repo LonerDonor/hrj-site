@@ -1,0 +1,164 @@
+---
+layout: layouts/base.njk
+title: Photographs
+description: "Photographs of the Kathmandu Valley’s stone spouts, canals and temples, heritage walks and robotics classrooms, alongside a personal portfolio."
+pageCss: photos
+pageJs: lightbox
+---
+{#-
+  /photos/ — gallery of src/_data/photos.yml (prepared as `gallery` by
+  index.11tydata.js). Without JS: every photo is shown, real images link to a
+  full-size JPEG, placeholders are not links. With JS (assets/js/lightbox.js):
+  category chips (?category=<id>) and a <dialog> viewer.
+  Only photos whose files exist are listed; until the first one exists the
+  page is not built at all (permalink in index.11tydata.js, data photosLive).
+-#}
+{%- set g = gallery -%}
+
+<header class="page-hero page-hero--split photos-hero">
+  <div class="container page-hero__inner">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><span aria-current="page">Photos</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow">Photographs</p>
+    <h1 class="page-hero__title">The valley, <em>through a lens</em></h1>
+    <p class="lede">Stone spouts that still run, an old royal canal, temple squares, heritage walks and robotics classrooms — the Kathmandu Valley as I meet it through my work, alongside a portfolio of photographs I make for myself.</p>
+    {%- if g.total %}
+    <div class="cluster page-hero__actions">
+      <a class="link-arrow" href="#plates">See the photographs{% icon "chevron-down" %}</a>
+      {%- if g.hasImages %}
+      <a class="link-arrow" href="#prints">Prints &amp; usage{% icon "chevron-down" %}</a>
+      {%- endif %}
+    </div>
+    <div class="page-hero__aside card photos-key">
+      <div class="card__body">
+      <p class="label photos-key__title">Key to the sets</p>
+      <dl class="ledger ledger--compact">
+        {%- for c in g.categories %}
+        <div data-category="{{ c.id }}">
+          <dt><span class="photos-key__tick" aria-hidden="true"></span>{{ c.label }}</dt>
+          <dd>{% if c.note %}<span>{{ c.note }}</span>{% endif %}<span class="label label--plain photos-key__count">{{ c.countLabel }}<span class="visually-hidden"> {{ "photograph" if c.count == 1 else "photographs" }}</span></span></dd>
+        </div>
+        {%- endfor %}
+      </dl>
+      </div>
+    </div>
+    {%- endif %}
+  </div>
+</header>
+
+{%- if g.total %}
+<section class="section photos-sheet" id="plates" aria-labelledby="plates-title">
+  <div class="container container--wide">
+    <header class="photos-sheet__head">
+      <div class="stack stack--2xs">
+        <p class="eyebrow">Contact sheet</p>
+        <h2 id="plates-title">Selected photographs</h2>
+      </div>
+      <p class="photos-sheet__note">{% if g.hasImages %}Select a photograph to see it larger. {% endif %}Each one keeps its plate number when you filter the sets — quote it if you’d like to use a photograph.</p>
+    </header>
+
+    <div class="filter-bar">
+      {%- if g.categories | length > 1 %}
+      <div class="chips js-only" role="group" aria-label="Show photographs by set" data-gallery-filter>
+        <button class="chip" type="button" aria-pressed="true" data-filter="all" data-label="All">All <span class="chip__count">{{ g.total }}</span></button>
+        {%- for c in g.categories %}
+        <button class="chip" type="button" aria-pressed="false" data-filter="{{ c.id }}" data-label="{{ c.label }}">{{ c.label }} <span class="chip__count">{{ c.count }}</span></button>
+        {%- endfor %}
+      </div>
+      {%- endif %}
+      <p class="label label--plain filter-bar__status" role="status" data-gallery-status>{{ g.total }} {{ "photograph" if g.total == 1 else "photographs" }}</p>
+    </div>
+
+    <div class="plates-wrap">
+      <ul class="gallery plates" role="list" data-gallery>
+        {%- for p in g.items %}
+        <li class="plate" id="{{ p.id }}" data-category="{{ p.category }}" data-shape="{{ p.shape }}">
+          <figure class="plate__figure">
+            {%- if p.full %}
+            <a class="plate__frame" href="{{ p.full.url }}" data-lightbox>
+              {%- media p.src, p.alt, { kind: p.kind, sizes: p.sizes, focus: p.focus } -%}
+              <span class="plate__zoom" aria-hidden="true">{% icon "plus" %}</span>
+              <span class="visually-hidden"> (view larger)</span>
+            </a>
+            {%- else %}
+            <div class="plate__frame">
+              {%- media p.src, p.alt, { kind: p.kind, sizes: p.sizes, focus: p.focus, ratio: "4/3" } -%}
+            </div>
+            {%- endif %}
+            <figcaption class="plate__caption">
+              <span class="plate__title">{{ p.caption }}</span>
+              <span class="label label--plain plate__no"><span class="visually-hidden">Plate </span>{{ p.n }}</span>
+              {%- if p.place or p.year %}
+              <span class="plate__meta label">{% if p.place %}<span>{{ p.place }}</span>{% endif %}{% if p.year %}<span>{{ p.year }}</span>{% endif %}</span>
+              {%- endif %}
+            </figcaption>
+          </figure>
+        </li>
+        {%- endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+{%- endif %}
+
+<section class="section section--alt photos-below" aria-labelledby="below-title">
+  <div class="container">
+    <div class="split">
+      <div class="stack stack--s">
+        <p class="eyebrow eyebrow--water">Below the frame</p>
+        <h2 id="below-title">What a photograph of a hiti can’t show</h2>
+        <p>A photograph catches the spout — the <span class="deva" lang="new">ग हिति</span> (ga hiti) — and the water falling from it. Most of the system is out of sight: the spring, the gravel bed, the chamber that calms the flow and the conduit that carries water to the spout.</p>
+        <p>That hidden part is what my computer-aided design (CAD) cross-sections record — drawings since cited in a TU Berlin master’s thesis (2023) and featured in Nepali Times.</p>
+        <p><a class="link-arrow" href="/work/">See the engineering work{% icon "arrow-right" %}</a></p>
+      </div>
+      {% include "partials/hiti-diagram.njk" %}
+    </div>
+  </div>
+</section>
+
+{%- if g.hasImages %}
+<section class="section photos-prints" id="prints" aria-labelledby="prints-title">
+  <div class="container">
+    <div class="split split--text-wide photos-prints__inner">
+      <div class="stack stack--s">
+        <p class="eyebrow">Prints &amp; usage</p>
+        <h2 id="prints-title">Want to use a photograph? <em>Ask.</em></h2>
+        <p class="lede">Tell me which photograph and where you’d like it to appear — a report, a publication, a presentation or a print. I usually reply {{ site.replyTime }}.</p>
+        <div class="cluster photos-prints__actions">
+          <a class="btn btn--primary" href="/work-with-me/?topic=other#enquire">Ask about a photograph{% icon "arrow-right" %}</a>
+          <a class="link-arrow" href="mailto:{{ site.email }}">{% icon "mail" %}Or email me</a>
+        </div>
+      </div>
+      <div class="photos-prints__note">
+        <p class="label">Useful to include</p>
+        <dl class="ledger">
+          <div><dt>Which one</dt><dd>The plate number under the photograph, or its caption</dd></div>
+          <div><dt>Where</dt><dd>Print, publication, report, website or talk</dd></div>
+          <div><dt>When</dt><dd>The date you need it by</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+{%- endif %}
+
+{%- if g.hasImages %}
+<dialog class="lightbox photos-viewer" aria-label="Photograph viewer" data-lightbox-dialog>
+  <figure class="lightbox__figure">
+    <div class="photos-viewer__stage" data-lightbox-stage></div>
+    <figcaption class="lightbox__caption" aria-live="polite">
+      <span data-lightbox-caption></span>
+      <span data-lightbox-count></span>
+    </figcaption>
+  </figure>
+  <div class="lightbox__controls">
+    <button class="lightbox__btn" type="button" aria-label="Previous photograph" data-lightbox-prev>{% icon "chevron-left" %}</button>
+    <button class="lightbox__btn" type="button" aria-label="Next photograph" data-lightbox-next>{% icon "chevron-right" %}</button>
+    <button class="lightbox__btn" type="button" aria-label="Close viewer" data-lightbox-close autofocus>{% icon "close" %}</button>
+  </div>
+</dialog>
+{%- endif %}

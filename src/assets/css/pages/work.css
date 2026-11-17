@@ -1,0 +1,274 @@
+/* ==========================================================================
+   Work — /work/ index and /work/<slug>/ case studies (layouts/project.njk).
+   Page-specific layout only; components come from main.css.
+   ========================================================================== */
+@layer page {
+
+  /* ---------- Index hero: the "field index" aside (a .card) ---------- */
+  .work-key > .card__body { gap: var(--space-s); }
+  .work-key .ledger dd { color: var(--text-2); }
+  .work-key__count {
+    display: inline-block;
+    min-inline-size: 1.4ch;
+    margin-inline-end: 0.35em;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    line-height: 1;
+    font-variant-numeric: lining-nums;
+    color: var(--text);
+    vertical-align: -0.12em;
+  }
+  .work-key__coords {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+  .work-key__coords .icon { color: var(--accent); }
+  @media (min-width: 56rem) {
+    .work-hero .page-hero__aside { align-self: end; }
+  }
+
+
+  /* Filter bar: .filter-bar (main.css). */
+
+
+  /* ---------- Featured projects: an editorial spread, not a uniform grid ----
+     Unfiltered (and without JS): the 1st and 4th items are wide, horizontal
+     cards; the 2nd and 3rd share a row at 7:5. While a filter is on
+     (.is-filtered) the layout falls back to an even two-column grid. */
+  .work-features {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .work-features > li { display: flex; min-inline-size: 0; }
+  .work-features > li > .card { flex: 1; }
+
+  @media (min-width: 40rem) {
+    .work-features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .work-features:not(.is-filtered) > li:is(:nth-child(1), :nth-child(4)) { grid-column: 1 / -1; }
+  }
+  @media (min-width: 64rem) {
+    .work-features:not(.is-filtered) { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    .work-features:not(.is-filtered) > li { grid-column: span 6; }
+    .work-features:not(.is-filtered) > li:nth-child(2) { grid-column: span 7; }
+    .work-features:not(.is-filtered) > li:nth-child(3) { grid-column: span 5; }
+    .work-features:not(.is-filtered) > li:is(:nth-child(1), :nth-child(4)) { grid-column: 1 / -1; }
+  }
+
+  .work-card__role {
+    font-size: var(--step--1);
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+  .work-card__role .label { margin-inline-end: 0.4em; }
+
+  /* Items 1 and 4 are .card--horizontal .card--feature (main.css). While a
+     filter is on they fall back to ordinary stacked cards in the even grid. */
+  .work-features.is-filtered .card--horizontal { display: flex; }
+  .work-features.is-filtered .card--horizontal > .card__media {
+    order: 0;
+    border-inline: 0;
+    border-block-end: 1px solid var(--line);
+  }
+  .work-features.is-filtered .card--horizontal > .card__media :is(img, .placeholder) {
+    block-size: auto;
+    min-block-size: 0;
+    aspect-ratio: var(--ratio);
+  }
+  .work-features.is-filtered .card--horizontal > .card__body {
+    justify-content: flex-start;
+    padding: var(--space-m);
+  }
+  .work-features.is-filtered .card--feature .card__title { font-size: var(--step-1); }
+  .work-features.is-filtered .card--feature .card__text { font-size: var(--step--1); }
+  @media (min-width: 64rem) {
+    .work-features:not(.is-filtered) > li:nth-child(1) .card__title { font-size: var(--step-3); }
+  }
+
+
+  /* ---------- More projects: compact index cards in one column ---------- */
+  .work-more { margin-block-start: var(--space-2xl); }
+  .work-more__head { margin-block-end: var(--space-l); }
+  .work-rows {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-m);
+  }
+  .work-rows > li { display: flex; min-inline-size: 0; }
+  .work-rows > li > .card { flex: 1; }
+  /* Phones: a short strip of image above the text. */
+  .work-row > .card__media :is(img, .placeholder) { aspect-ratio: 21 / 9; }
+  @media (min-width: 40rem) {
+    .work-row {
+      display: grid;
+      grid-template-columns: minmax(10rem, 15rem) minmax(0, 1fr);
+    }
+    .work-row > .card__media {
+      border-block-end: 0;
+      border-inline-end: 1px solid var(--line);
+    }
+    .work-row > .card__media :is(.media, picture) { block-size: 100%; }
+    .work-row > .card__media :is(img, .placeholder) {
+      block-size: 100%;
+      min-block-size: 9rem;
+      aspect-ratio: auto;
+      object-fit: cover;
+    }
+    .work-row > .card__body { justify-content: center; }
+  }
+  @media (min-width: 64rem) {
+    .work-row > .card__body {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: var(--space-xl);
+      align-content: center;
+    }
+    .work-row > .card__body > .card__meta { grid-column: 1 / -1; }
+    .work-row > .card__body > .card__title { grid-column: 1; }
+    .work-row > .card__body > .card__text { grid-column: 2; grid-row: 2; }
+  }
+
+
+  /* ---------- How I work + Worked with ---------- */
+  .work-clients {
+    display: grid;
+    gap: var(--space-s);
+    padding-block-start: var(--space-m);
+    border-block-start: 1px solid var(--line-strong);
+  }
+  @media (min-width: 56rem) {
+    .work-clients {
+      grid-template-columns: 12rem minmax(0, 1fr);
+      column-gap: var(--space-xl);
+      align-items: baseline;
+    }
+  }
+
+
+  /* ======================================================================
+     Case-study pages
+     ====================================================================== */
+
+  .project-hero__domain {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+  }
+  .project-hero__domain .icon { color: var(--domain-text); }
+
+  .project-hero__cover { max-inline-size: 34rem; }
+
+  /* Body */
+  .project-prose { max-inline-size: var(--measure); }
+  .project-prose > h2:first-child { margin-block-start: 0; }
+  .project-section-title { font-size: var(--step-2); }
+  .project-diagram,
+  .project-scope {
+    padding-block-start: var(--space-l);
+    border-block-start: 1px solid var(--line-strong);
+  }
+  .project-diagram__intro { max-inline-size: var(--measure); color: var(--text-2); }
+  .project-diagram .hiti { max-inline-size: 40rem; }
+
+  /* Aside: numbered field notes + links */
+  .project-aside .card__body { padding: var(--space-l) var(--space-m); }
+  .project-notes {
+    counter-reset: note;
+    border-block-start: 1px solid var(--line-strong);
+  }
+  .project-notes > li {
+    counter-increment: note;
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: var(--space-2xs);
+    padding-block: var(--space-xs);
+    border-block-end: 1px dashed var(--line-strong);
+    font-size: var(--step--1);
+    line-height: 1.5;
+    color: var(--text-2);
+  }
+  .project-notes > li::before {
+    content: counter(note, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: var(--label);
+    font-weight: 500;
+    letter-spacing: var(--label-tracking);
+    line-height: 1.9;
+    color: var(--domain-text, var(--accent));
+  }
+
+  .project-links { display: grid; gap: var(--space-xs); }
+  .project-links > li { display: grid; gap: 0.1rem; }
+  .project-links .link-arrow { font-size: var(--step--1); line-height: 1.35; }
+  /* .project-links__host is a .label.label--plain */
+
+  /* Map */
+  .project-map { display: grid; gap: var(--space-s); }
+  .project-map__canvas {
+    position: relative;
+    z-index: 0; /* keep Leaflet's panes under the sticky site header */
+    block-size: clamp(20rem, 62vh, 34rem);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background-color: var(--surface-2);
+    background-image: var(--hatch);
+  }
+  /* leaflet.css is unlayered and paints .leaflet-container grey; !important
+     lets this layer keep the hatched paper behind the tiles (and behind the
+     basemap-free "sketch" drawn when no tile key is configured). */
+  .project-map__canvas.leaflet-container {
+    background-color: var(--surface-2) !important;
+    background-image: var(--hatch) !important;
+    font-family: var(--font-body);
+  }
+  /* Marker only, no basemap: a shorter, fixed field sketch. */
+  .project-map.is-pin .project-map__canvas { block-size: clamp(14rem, 34vh, 19rem); }
+
+  .project-map__hint {
+    font-size: var(--step--1);
+    color: var(--text-3);
+  }
+  .project-map__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-l);
+    color: var(--text-2);
+  }
+  .project-map__legend > li { display: inline-flex; align-items: center; gap: 0.6em; }
+  .project-map__swatch {
+    display: inline-block;
+    inline-size: 1.5rem;
+    block-size: 4px;
+    border-radius: 2px;
+  }
+  .project-map__caption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3xs) var(--space-m);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--text-3);
+  }
+  .project-map__place { color: var(--text-2); }
+  .project-map__caption .link-arrow { font-family: var(--font-body); }
+  .project-map__popup {
+    display: grid;
+    gap: 0.2rem;
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    line-height: 1.4;
+    color: var(--text);
+  }
+  .project-map__popup-note { color: var(--text-2); }
+
+  /* Next project */
+  .project-next { border-block-start: 1px solid var(--line); }
+  .project-next__prev { margin: 0; }
+}
